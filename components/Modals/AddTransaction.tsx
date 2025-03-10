@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  ScrollView
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { Text, View } from "@/components/Themed";
@@ -17,10 +18,9 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { useTransactionsCategory } from "@/context/transCategory";
 import DateAndTimePicker from "../Pickers/DateAndTimePicker";
 import CategoryPicker from "../Pickers/CategoryPicker";
-import ImagePicker from "../Pickers/ImagePicker";
-import { Image } from "react-native";
-import { ScrollView } from "react-native";
-import { useTransactionImage } from "@/context/image";
+// import ImagePicker from "../Pickers/ImagePicker";
+// import { Image } from "react-native";
+// import { useTransactionImage } from "@/context/image";
 import { useTransactions } from "@/context/transactions";
 import { useCategory } from "@/context/categories";
 import { useAnalytics } from "@/context/analytics";
