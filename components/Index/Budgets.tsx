@@ -48,7 +48,7 @@ export default function Budgets({
   showMonthBudgetFlag,
 }: {
   clickable?: boolean;
-  showMonthBudgetFlag?: boolean;
+  showMonthBudgetFlag: boolean;
 }) {
   const { budgetList, currencyObj, loadingUserDetails } = useUserData();
 
@@ -99,10 +99,10 @@ export default function Budgets({
     });
   }
 
-  useEffect(() => {
-    if (!showMonthBudgetFlag) setShowBudget(yearlyBudget);
-    else setShowBudget(monthlyBudget);
-  }, [budgetList]);
+  // useEffect(() => {
+  //   if (!showMonthBudgetFlag) setShowBudget(yearlyBudget);
+  //   else setShowBudget(monthlyBudget);
+  // }, [showMonthBudgetFlag]);
 
   return (
     <>
@@ -180,14 +180,18 @@ export default function Budgets({
                     : `Year: ${showBudget?.period.year ?? "Unknown"}`}
                 </Text>
 
-                <Pressable onPress={handleEditBudget} style={styles.flex_row}>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={handleEditBudget}
+                  style={styles.flex_row}
+                >
                   <Text style={styles.mediumFont}>
                     <Text style={styles.greyText}>Budget:</Text>
                     {"  "}
                     {formatAmount(showBudget?.totalBudget, currencyObj)}
                   </Text>
                   <FontAwesome6 name="pen-clip" color={textColor} size={16} />
-                </Pressable>
+                </TouchableOpacity>
               </SafeAreaView>
 
               <SafeAreaView style={[styles.flex_row_btw, { marginTop: 15 }]}>
@@ -225,7 +229,7 @@ export default function Budgets({
           {/* Add More Button */}
           <SafeAreaView
             style={{
-              marginBottom: 15,
+              marginBottom: 20,
               marginTop: 10,
               display: clickable ? "flex" : "none",
             }}
@@ -293,7 +297,9 @@ export default function Budgets({
 
       {loadingUserDetails && (
         <>
-          <SafeAreaView style={[styles.flex_row_btw, { marginBottom: 15 }]}>
+          <SafeAreaView
+            style={[styles.flex_row_btw, { marginBottom: 15, marginTop: 5 }]}
+          >
             <View
               style={{
                 width: 120,

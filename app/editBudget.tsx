@@ -2,6 +2,7 @@ import {
   ActivityIndicator,
   Alert,
   Pressable,
+  RefreshControl,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -10,7 +11,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { Text, View } from "@/components/Themed";
 import { useColorScheme } from "@/components/useColorScheme";
-import { useLocalSearchParams, useNavigation } from "expo-router";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 
 import PeriodPicker from "@/components/Budget/PeriodPicker";
 import Amount from "@/components/Budget/Amount";
@@ -104,6 +105,7 @@ const EditBudget = () => {
 
   const [showError, setShowError] = useState(false);
   const [showNoCatSelectedError, setShowNoCatSelectedError] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   const includedCount = includedCategories?.reduce(
     (count: number, category: IncludedCategory) =>
@@ -169,10 +171,17 @@ const EditBudget = () => {
     }
   }
 
+  function pushBack() {
+    router.push({
+      pathname: "/readBudget",
+      params: { clickedBudget: JSON.stringify(clickedBudget) },
+    });
+  }
+
   async function handleSaveBudget() {
     try {
       if (noChangesDone()) {
-        navigation.navigate("(tabs)");
+        pushBack();
       } else {
         const values = {
           type,
@@ -183,97 +192,71 @@ const EditBudget = () => {
         };
 
         await saveEditedBudget(_id, values);
-        navigation.navigate("(tabs)");
         await fetchUserDetails();
+        pushBack();
       }
     } catch (error) {
-      navigation.navigate("(tabs)");
+      pushBack();
       Alert.alert("Failed", "Failed to Save");
     }
   }
 
   async function handleBudgetDelete() {
-    try {
-      await deleteBudget(_id);
-      await fetchUserDetails();
-      navigation.navigate("(tabs)");
-    } catch (error) {
-      console.log(error);
-      Alert.alert("Failed", "Failed to Delete");
-    }
+    Alert.alert(
+      "Confirm Deletion",
+      "Are you sure you want to delete this budget?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          onPress: async () => {
+            try {
+              await deleteBudget(_id);
+              await fetchUserDetails();
+              navigation.navigate("(tabs)");
+            } catch (error) {
+              console.log(error);
+              Alert.alert("Failed", "Failed to Delete");
+            }
+          },
+          style: "destructive",
+        },
+      ]
+    );
   }
 
-  function handleGoBack() {
-    setFirstPage(true);
+  async function refreshPage() {
+    setRefresh(true);
+
+    try {
+      console.log("Fetching on Reload");
+
+      await fetchUserDetails();
+    } catch (error) {
+      console.error("Error Refreshing: ", error);
+    } finally {
+      setRefresh(false);
+    }
   }
 
   useEffect(() => {
     if (includedCount > 0) setShowNoCatSelectedError(false);
   }, [includedCount]);
 
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <>
-          {firstPage ? (
-            // Trash Button
-            <TouchableOpacity
-              style={[styles.doneButton, { backgroundColor: "red" }]}
-              activeOpacity={0.5}
-              onPress={handleBudgetDelete}
-            >
-              {budgetProcessing ? (
-                <ActivityIndicator size="small" color={"#FFF"} />
-              ) : (
-                <FontAwesome6 name="trash" size={18} color={textColor} />
-              )}
-            </TouchableOpacity>
-          ) : (
-            // Save Button
-            <SafeAreaView style={styles.flex_row}>
-              <Text style={styles.nextText}>Save</Text>
-              <TouchableOpacity
-                activeOpacity={0.5}
-                onPress={handleSaveBudget}
-                style={styles.doneButton}
-                disabled={budgetProcessing || leftBudget < 0}
-              >
-                {budgetProcessing ? (
-                  <ActivityIndicator size="small" color={"#FFF"} />
-                ) : (
-                  <FontAwesome6
-                    name="save"
-                    color={"#FFF"}
-                    style={styles.doneText}
-                  />
-                )}
-              </TouchableOpacity>
-            </SafeAreaView>
-          )}
-        </>
-      ),
-      headerLeft: () => (
-        // Back button
-        <SafeAreaView style={styles.flex_row}>
-          <TouchableOpacity
-            activeOpacity={0.5}
-            onPress={
-              !firstPage ? handleGoBack : () => navigation.navigate("(tabs)")
-            }
-            disabled={budgetProcessing}
-            style={{ marginRight: !firstPage ? 10 : 20 }}
-          >
-            <Ionicons name="arrow-back" color={textColor} size={24} />
-          </TouchableOpacity>
-          {!firstPage && <Text style={styles.nextText}>Back</Text>}
-        </SafeAreaView>
-      ),
-      title: firstPage ? "Edit Budget" : "",
-    });
-  }, [navigation, budgetProcessing, firstPage, handleBudgetDelete]);
-
   return (
-    <ScrollView style={[styles.container, { backgroundColor: bgColor }]}>
+    <ScrollView
+      refreshControl={
+        <RefreshControl
+          refreshing={refresh}
+          onRefresh={() => refreshPage()}
+          colors={["#000"]}
+        />
+      }
+      style={[styles.container, { backgroundColor: bgColor }]}
+    >
       {firstPage ? (
         <>
           <PeriodPicker type={type} setPeriod={setEditedPeriod} />
@@ -292,24 +275,67 @@ const EditBudget = () => {
             showNoCatSelectedError={showNoCatSelectedError}
           />
 
-          <TouchableOpacity
-            activeOpacity={0.5}
-            onPress={handleNextClick}
-            style={[styles.nextButton, { backgroundColor: "#4FB92D" }]}
-          >
-            <Text style={[styles.nextText, { color: "#FFF" }]}>Next</Text>
-          </TouchableOpacity>
+          <SafeAreaView style={styles.flex_row}>
+            {/* Delete */}
+            <TouchableOpacity
+              style={[styles.doneButton, { backgroundColor: "red" }]}
+              activeOpacity={0.5}
+              onPress={handleBudgetDelete}
+            >
+              {budgetProcessing ? (
+                <ActivityIndicator size="small" color={"#FFF"} />
+              ) : (
+                <FontAwesome6 name="trash" size={18} color={textColor} />
+              )}
+            </TouchableOpacity>
+
+            <Text style={{ marginTop: 15 }}> {`{ Or }`} </Text>
+
+            {/* Next */}
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={handleNextClick}
+              style={[styles.nextButton, { backgroundColor: "#4FB92D" }]}
+            >
+              <Text style={[styles.nextText, { color: "#FFF" }]}>Next</Text>
+            </TouchableOpacity>
+          </SafeAreaView>
         </>
       ) : (
         <>
-          <Text style={[styles.title, { marginTop: 15 }]}>
-            Set Category-wise Limits{" "}
-            <Text style={{ color: "#8a8a8a" }}>(Optional)</Text>
-          </Text>
-          <Text style={{ color: "#8a8a8a" }}>
-            You can set limits for each category that you included in your
-            budget, if you want.
-          </Text>
+          <SafeAreaView style={[styles.flex_row, { alignItems: "flex-start" }]}>
+            {/* Text */}
+            <SafeAreaView style={{ flex: 1 }}>
+              <Text style={styles.title}>
+                Set Category-wise Limits{" "}
+                <Text style={{ color: "#8a8a8a" }}>(Optional)</Text>
+              </Text>
+              <Text style={{ color: "#8a8a8a" }}>
+                You can set limits for each category that you included in your
+                budget, if you want.
+              </Text>
+            </SafeAreaView>
+
+            {/* Save button */}
+            <SafeAreaView style={styles.flex_row}>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={handleSaveBudget}
+                style={styles.saveButton}
+                disabled={budgetProcessing || leftBudget < 0}
+              >
+                {budgetProcessing ? (
+                  <ActivityIndicator size="small" color={"#FFF"} />
+                ) : (
+                  <FontAwesome6
+                    name="save"
+                    color={"#FFF"}
+                    style={{ fontSize: 24, fontWeight: 500 }}
+                  />
+                )}
+              </TouchableOpacity>
+            </SafeAreaView>
+          </SafeAreaView>
 
           <TotalBudget
             totalBudget={editedTotalBudget}
@@ -347,7 +373,8 @@ const styles = StyleSheet.create({
     padding: 7,
     borderRadius: 10,
     marginTop: 15,
-    width: "100%",
+    flex: 1,
+    // width: "100%",
   },
   nextText: {
     textAlign: "center",
@@ -359,6 +386,16 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     flexDirection: "row",
+  },
+  saveButton: {
+    borderRadius: 30,
+    backgroundColor: "#4FB92D",
+    alignSelf: "flex-end",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    height: 50,
+    width: 50,
   },
   doneButton: {
     borderRadius: 30,

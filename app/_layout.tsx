@@ -137,7 +137,10 @@ function RootLayoutNav() {
                                     />
                                     <Stack.Screen
                                       name="editBudget"
-                                      options={{ title: "Edit Budget" }}
+                                      options={{
+                                        title: "Edit Budget",
+                                        // headerShown: false,
+                                      }}
                                     />
                                     <Stack.Screen
                                       name="categoryTransactions"

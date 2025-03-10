@@ -9,6 +9,7 @@ import { useColorScheme } from "@/components/useColorScheme";
 import { Text, View } from "../Themed";
 import { Ionicons } from "@expo/vector-icons";
 import { useTransactionFilter } from "@/context/filterTransByDate";
+import { useUserData } from "@/context/user";
 
 interface Option {
   title: string;
@@ -28,6 +29,7 @@ const Filter = ({ tabTwoFlag }: { tabTwoFlag: boolean }) => {
   const btnBg = colorScheme === "dark" ? "#1a1a1a" : "#c9c9c9";
   const textColor = colorScheme === "dark" ? "#FFF" : "#000";
 
+  const { loadingUserDetails } = useUserData();
   const { setTransactionsFilter, setDonutTransactionsFilter } =
     useTransactionFilter();
 
@@ -48,7 +50,7 @@ const Filter = ({ tabTwoFlag }: { tabTwoFlag: boolean }) => {
     } else {
       setDonutTransactionsFilter(buttonsName[0]);
     }
-  }, []);
+  }, [loadingUserDetails]);
 
   function handleOptionSelect(btn: Option, index: number) {
     setSelectedOption(btn);

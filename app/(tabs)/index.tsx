@@ -94,7 +94,7 @@ export default function TabOne() {
 
           <RecentTransFlatList />
 
-          <Budgets clickable />
+          <Budgets showMonthBudgetFlag={true} clickable />
         </ScrollView>
       </View>
     </View>
