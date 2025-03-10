@@ -11,7 +11,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { Text, View } from "@/components/Themed";
 import { useColorScheme } from "@/components/useColorScheme";
-import { router, useLocalSearchParams, useNavigation } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 
 import PeriodPicker from "@/components/Budget/PeriodPicker";
 import Amount from "@/components/Budget/Amount";
@@ -171,17 +171,10 @@ const EditBudget = () => {
     }
   }
 
-  function pushBack() {
-    router.push({
-      pathname: "/readBudget",
-      params: { clickedBudget: JSON.stringify(clickedBudget) },
-    });
-  }
-
   async function handleSaveBudget() {
     try {
       if (noChangesDone()) {
-        pushBack();
+        navigation.navigate("(tabs)");
       } else {
         const values = {
           type,
@@ -193,10 +186,10 @@ const EditBudget = () => {
 
         await saveEditedBudget(_id, values);
         await fetchUserDetails();
-        pushBack();
+        navigation.navigate("(tabs)");
       }
     } catch (error) {
-      pushBack();
+      navigation.navigate("(tabs)");
       Alert.alert("Failed", "Failed to Save");
     }
   }
