@@ -106,10 +106,10 @@ const DonutTransactions = () => {
                             <Text numberOfLines={1} style={{ width: "50%" }}>{cat.name}</Text>
                         </View>
 
-                        <TouchableOpacity style={styles.flex_row} activeOpacity={0.7}>
+                        <SafeAreaView style={styles.flex_row}>
                             <Text style={{ fontWeight: '500' }}>{formatAmount(cat.spent, currencyObj)}</Text>
                             <FontAwesome6 name="angle-right" size={16} color={lightText} />
-                        </TouchableOpacity>
+                        </SafeAreaView>
                     </View>
                 </TouchableOpacity>
             ))}
