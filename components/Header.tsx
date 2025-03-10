@@ -1,16 +1,25 @@
 import {
+  Image,
   Pressable,
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { Text, View } from "./Themed";
 import { Link } from "expo-router";
-import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
-import ProfilePhoto from "./Index/ProfilePhoto";
+import { FontAwesome, FontAwesome6, Ionicons } from "@expo/vector-icons";
+import { useUserData } from "@/context/user";
+import { useProfile } from "@/context/profilePhoto";
 
 const Header = ({ showSlider }: { showSlider: any }) => {
+  const { userDetails, loadingUserDetails } = useUserData();
+  const { profilePhoto, setProfilePhoto } = useProfile();
+
+  useEffect(() => {
+    if (userDetails) setProfilePhoto(userDetails.userImage);
+  }, [userDetails, loadingUserDetails]);
+
   return (
     <View style={styles.container}>
       <TouchableOpacity activeOpacity={0.5} onPress={() => showSlider()}>
@@ -43,8 +52,48 @@ const Header = ({ showSlider }: { showSlider: any }) => {
           />
         </Link>
         <Link href="/profile" asChild>
-          <Pressable>
-            {({ pressed }) => <ProfilePhoto pressed={pressed} />}
+          <Pressable
+            style={[
+              styles.imageContainer,
+              {
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              },
+            ]}
+          >
+            {({ pressed }) => (
+              <>
+                {profilePhoto ? (
+                  <Image
+                    source={profilePhoto}
+                    style={[
+                      styles.imageContainer,
+                      {
+                        opacity: pressed ? 0.7 : 1,
+                        borderColor: "#fff",
+                      },
+                    ]}
+                  />
+                ) : (
+                  <SafeAreaView
+                    style={[
+                      styles.imageContainer,
+                      {
+                        opacity: pressed ? 0.7 : 1,
+                        borderColor: "#fff",
+                      },
+                    ]}
+                  >
+                    <Ionicons
+                      name="person"
+                      size={18}
+                      style={{ color: "#fff" }}
+                    />
+                  </SafeAreaView>
+                )}
+              </>
+            )}
           </Pressable>
         </Link>
       </SafeAreaView>
@@ -69,5 +118,14 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
+  },
+  imageContainer: {
+    width: 30,
+    height: 30,
+    borderWidth: 2,
+    borderRadius: 40,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
