@@ -1,21 +1,39 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from "@react-navigation/native";
+import { useFonts } from "expo-font";
+import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
+import "react-native-reanimated";
 
-import { useColorScheme } from '@/components/useColorScheme';
+import { useColorScheme } from "@/components/useColorScheme";
+import { UserDetailsProvider } from "@/context/user";
+import { AnalyticsProvider } from "@/context/analytics";
+import { TransactionsCategoryProvider } from "@/context/transCategory";
+import { TransactionImageProvider } from "@/context/image";
+import { TransactionsProvider } from "@/context/transactions";
+import { CategoryProvider } from "@/context/categories";
+import { RecurringTransProvider } from "@/context/recurringTransactions";
+import { TranshProvider } from "@/context/trash";
+import { SearchProvider } from "@/context/search";
+import { ProfileProvider } from "@/context/profilePhoto";
+import { EditNotificationProvider } from "@/context/editNotification";
+import { PeopleProvider } from "@/context/people";
+import { BudgetProvider } from "@/context/budget";
+import { FilterByDateProvider } from "@/context/filterTransByDate";
 
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
-} from 'expo-router';
+} from "expo-router";
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
+  initialRouteName: "(tabs)",
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -23,7 +41,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     ...FontAwesome.font,
   });
 
@@ -49,11 +67,101 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
+    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+      <UserDetailsProvider>
+        <AnalyticsProvider>
+          <TransactionsCategoryProvider>
+            <TransactionImageProvider>
+              <TransactionsProvider>
+                <RecurringTransProvider>
+                  <CategoryProvider>
+                    <TranshProvider>
+                      <SearchProvider>
+                        <ProfileProvider>
+                          <EditNotificationProvider>
+                            <PeopleProvider>
+                              <BudgetProvider>
+                                <FilterByDateProvider>
+                                  <Stack
+                                    screenOptions={{
+                                      animation: "fade_from_bottom",
+                                    }}
+                                  >
+                                    <Stack.Screen
+                                      name="(tabs)"
+                                      options={{ headerShown: false }}
+                                    />
+                                    <Stack.Screen
+                                      name="modal"
+                                      options={{ presentation: "modal" }}
+                                    />
+                                    <Stack.Screen
+                                      name="categories"
+                                      options={{ title: "Your Categories" }}
+                                    />
+                                    <Stack.Screen
+                                      name="recurrings"
+                                      options={{ title: "Your Recurrings" }}
+                                    />
+                                    <Stack.Screen
+                                      name="trash"
+                                      options={{ title: "Your Trash" }}
+                                    />
+                                    <Stack.Screen
+                                      name="search"
+                                      options={{ title: "Search Transaction" }}
+                                    />
+                                    <Stack.Screen
+                                      name="notification"
+                                      options={{ title: "Your Notifications" }}
+                                    />
+                                    <Stack.Screen
+                                      name="people"
+                                      options={{ title: "Your People" }}
+                                    />
+                                    <Stack.Screen
+                                      name="profile"
+                                      options={{ title: "Your Profile" }}
+                                    />
+                                    <Stack.Screen
+                                      name="login"
+                                      options={{ headerShown: false }}
+                                    />
+                                    <Stack.Screen
+                                      name="addBudget"
+                                      options={{ title: "Add Budget" }}
+                                    />
+                                    <Stack.Screen
+                                      name="readBudget"
+                                      options={{ title: "Budget Analysis" }}
+                                    />
+                                    <Stack.Screen
+                                      name="editBudget"
+                                      options={{ title: "Edit Budget" }}
+                                    />
+                                    <Stack.Screen
+                                      name="categoryTransactions"
+                                      options={{ title: "Your Transactions" }}
+                                    />
+                                    <Stack.Screen
+                                      name="typeDonut"
+                                      options={{ title: "Your Transactions" }}
+                                    />
+                                  </Stack>
+                                </FilterByDateProvider>
+                              </BudgetProvider>
+                            </PeopleProvider>
+                          </EditNotificationProvider>
+                        </ProfileProvider>
+                      </SearchProvider>
+                    </TranshProvider>
+                  </CategoryProvider>
+                </RecurringTransProvider>
+              </TransactionsProvider>
+            </TransactionImageProvider>
+          </TransactionsCategoryProvider>
+        </AnalyticsProvider>
+      </UserDetailsProvider>
     </ThemeProvider>
   );
 }

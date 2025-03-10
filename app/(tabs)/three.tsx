@@ -1,29 +1,37 @@
-import { Image, ScrollView, StyleSheet, RefreshControl, Button } from "react-native";
-import React, { useEffect, useState } from "react";
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  RefreshControl,
+  Button,
+  Animated,
+  Easing,
+  TouchableWithoutFeedback,
+} from "react-native";
+import React, { useEffect, useRef, useState } from "react";
 import { useColorScheme } from "@/components/useColorScheme";
 
 import { Text, View } from "@/components/Themed";
-import Balance from "@/components/Index/Balance";
-import Budgets from "@/components/Index/Budgets";
-import Header from "@/components/Header";
-import Greeting from "@/components/Index/Greeting";
-import NotificationsFlatList from "@/components/Index/NotificationsFlatList";
-import RecentTransFlatList from "@/components/Index/RecentTransFlatList";
+// import Header from "@/components/Header";
 
 import { useAnalytics } from "@/context/analytics";
 import { StatusBar } from "expo-status-bar";
 import { useUserData } from "@/context/user";
 import Slider from "../slider";
+import Filter from "@/components/Two/Filter";
+import AllTypesDonut from "@/components/Three/AllTypesDonut";
+import TypesIndicator from "@/components/Three/TypesIndicators";
+import TypesSquares from "@/components/Three/TypesSquares";
 
-const GradientImage = require("@/assets/pages/gradientBg.png");
+// const GradientImage = require("@/assets/pages/gradientBg.png");
 
-export default function TabOne() {
+export default function TabThreeScreen() {
   const colorScheme = useColorScheme();
   const { analytics, fetchAnalytics } = useAnalytics();
   const { userDetails, fetchUserDetails } = useUserData();
 
-  const [sliderVisible, setSliderVisible] = useState(false);
   const [refresh, setRefresh] = useState(false);
+  const [sliderVisible, setSliderVisible] = useState(false);
 
   useEffect(() => {
     if (!analytics.totalAmount) fetchAnalytics();
@@ -61,20 +69,23 @@ export default function TabOne() {
     >
       <StatusBar backgroundColor={"transparent"} />
 
-      <Image
+      {/* <Image
         source={GradientImage}
         style={{
           position: "absolute",
           zIndex: 0,
-          height: 250,
+          height: 85,
           objectFit: "cover",
         }}
-      />
-
+      /> */}
       <View style={styles.bodyContainer}>
-        <Header showSlider={showSlider} />
+        {/* <Header showSlider={showSlider} /> */}
+
+        <Text style={styles.headerText}>Analytics</Text>
 
         <Slider isVisible={sliderVisible} hideSlider={hideSlider} />
+
+        <Filter tabTwoFlag={false} />
 
         <ScrollView
           refreshControl={
@@ -86,15 +97,11 @@ export default function TabOne() {
           }
           style={styles.paddings}
         >
-          <Greeting />
+          <AllTypesDonut />
 
-          <Balance />
+          <TypesIndicator />
 
-          <NotificationsFlatList />
-
-          <RecentTransFlatList />
-
-          <Budgets clickable />
+          <TypesSquares />
         </ScrollView>
       </View>
     </View>
@@ -117,5 +124,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
+  },
+  headerText: {
+    fontWeight: 600,
+    fontSize: 22,
+    marginTop: 45,
+    marginHorizontal: 20,
+    marginBottom: 15,
   },
 });

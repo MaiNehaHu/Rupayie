@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "rupaiye",
-    "slug": "rupaiye",
+    "name": "Rupayie",
+    "slug": "rupayie",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -20,7 +20,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.rupayie"
     },
     "web": {
       "bundler": "metro",
@@ -32,6 +33,20 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "9b5d22dd-00d6-4270-8bfe-fc26eafeae94"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/9b5d22dd-00d6-4270-8bfe-fc26eafeae94"
     }
   }
 }
