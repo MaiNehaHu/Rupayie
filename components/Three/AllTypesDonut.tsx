@@ -34,7 +34,7 @@ const AllTypesDonut: React.FC = () => {
   const { donutTransactionsFilter } = useTransactionFilter();
 
   const colorScheme = useColorScheme();
-  const placeholderColor = colorScheme === "dark" ? "#88888850" : "#c4c4c4";
+  const placeholderColor = colorScheme === "dark" ? "#3D3D3D" : "#c4c4c4";
   const screenWidth = Dimensions.get("window").width;
 
   const size = screenWidth - 100;

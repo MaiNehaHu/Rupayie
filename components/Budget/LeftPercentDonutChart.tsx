@@ -6,7 +6,7 @@ import Svg, { Circle, Text as SvgText } from "react-native-svg";
 const LeftPercentDonutChart = React.memo(({ percentage }: { percentage: number }) => {
   const colorScheme = useColorScheme();
   const textColor = colorScheme === "dark" ? "#fff" : "#000";
-  const placeholderColor = colorScheme === "dark" ? "#88888850" : "#c4c4c4";
+  const placeholderColor = colorScheme === "dark" ? "#3D3D3D" : "#c4c4c4";
 
   const size = 150;
   const strokeWidth = 15;

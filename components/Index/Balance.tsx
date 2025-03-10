@@ -107,7 +107,7 @@ const DonutChart: React.FC<DonutChartProps> = React.memo(({ amounts }) => {
   const { loadingUserDetails } = useUserData();
 
   const colorScheme = useColorScheme();
-  const placeholderColor = colorScheme === "dark" ? "#88888850" : "#c4c4c4";
+  const placeholderColor = colorScheme === "dark" ? "#3D3D3D" : "#c4c4c4";
 
   const size = 140;
   const strokeWidth = 17;

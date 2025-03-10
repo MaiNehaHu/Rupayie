@@ -55,7 +55,7 @@ export default function Budgets({
   const colorScheme = useColorScheme();
   const textColor = colorScheme === "dark" ? "#fff" : "#000";
   const bgColor = colorScheme === "light" ? "#fff" : "#000";
-  const placeholderColor = colorScheme === "dark" ? "#88888850" : "#c4c4c4";
+  const placeholderColor = colorScheme === "dark" ? "#3D3D3D" : "#c4c4c4";
 
   const monthlyBudget = budgetList.find(
     (budget: Budget) => budget.type === "month"

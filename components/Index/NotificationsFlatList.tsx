@@ -15,7 +15,7 @@ import { formatAmount } from "@/utils/formatAmount";
 const NotificationsFlatList = () => {
   const { notificationsList, currencyObj, loadingUserDetails } = useUserData();
   const colorScheme = useColorScheme();
-  const placeholderColor = colorScheme === "dark" ? "#88888850" : "#c4c4c4";
+  const placeholderColor = colorScheme === "dark" ? "#3D3D3D" : "#c4c4c4";
 
   const [activeCircle, setActiveCircle] = useState(0);
   const flatListRef = useRef<FlatList>(null);
