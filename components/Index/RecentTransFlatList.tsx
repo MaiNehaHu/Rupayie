@@ -15,8 +15,9 @@ import { formatAmount } from "@/utils/formatAmount";
 
 const RecentTransFlatList = () => {
   const colorScheme = useColorScheme();
+  const placeholderColor = colorScheme === "dark" ? "#88888850" : "#c4c4c4";
 
-  const { recentTransactions, currencyObj } = useUserData();
+  const { recentTransactions, currencyObj, loadingUserDetails } = useUserData();
 
   const renderNotificationItem = ({
     item,
@@ -61,34 +62,74 @@ const RecentTransFlatList = () => {
     </View>
   );
 
-  return (
-    recentTransactions.length >= 1 && (
-      <View style={styles.container}>
-        <View style={styles.flex_row_btw}>
-          <Text style={styles.header}>Recent Transactions</Text>
+  return !loadingUserDetails && recentTransactions.length >= 1 ? (
+    <View style={styles.container}>
+      <View style={styles.flex_row_btw}>
+        <Text style={styles.header}>Recent Transactions</Text>
 
-          <TouchableOpacity
-            style={[
-              styles.button,
-              { backgroundColor: colorScheme == "dark" ? "#000" : "#fff" },
-            ]}
-          >
-            <Link href="/(tabs)/two">
-              <Text style={styles.buttonText}>See All</Text>
-            </Link>
-          </TouchableOpacity>
-        </View>
-
-        <FlatList
-          data={recentTransactions}
-          keyExtractor={(item) => item._id}
-          renderItem={renderNotificationItem}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={{ marginTop: 15 }}
-          ItemSeparatorComponent={() => <SafeAreaView style={{ width: 10 }} />}
-        />
+        <TouchableOpacity
+          style={[
+            styles.button,
+            { backgroundColor: colorScheme == "dark" ? "#000" : "#fff" },
+          ]}
+        >
+          <Link href="/(tabs)/two">
+            <Text style={styles.buttonText}>See All</Text>
+          </Link>
+        </TouchableOpacity>
       </View>
+
+      <FlatList
+        data={recentTransactions}
+        keyExtractor={(item) => item._id}
+        renderItem={renderNotificationItem}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={{ marginTop: 15 }}
+        ItemSeparatorComponent={() => <SafeAreaView style={{ width: 10 }} />}
+      />
+    </View>
+  ) : (
+    loadingUserDetails && (
+      <>
+        <SafeAreaView style={[styles.flex_row_btw, { marginBottom: 15 }]}>
+          <View
+            style={{
+              width: 170,
+              height: 25,
+              backgroundColor: placeholderColor,
+              borderRadius: 5,
+            }}
+          />
+          <View
+            style={{
+              width: 70,
+              height: 25,
+              backgroundColor: placeholderColor,
+              borderRadius: 15,
+            }}
+          />
+        </SafeAreaView>
+
+        <SafeAreaView
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            gap: 10,
+            marginBottom: 20,
+          }}
+        >
+          {Array.from({ length: 3 }).map((_, index) => (
+            <View
+              key={index}
+              style={[
+                styles.cardSkeleton,
+                { backgroundColor: placeholderColor },
+              ]}
+            ></View>
+          ))}
+        </SafeAreaView>
+      </>
     )
   );
 };
@@ -144,5 +185,10 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 20,
+  },
+  cardSkeleton: {
+    width: 240,
+    height: 65,
+    borderRadius: 10,
   },
 });

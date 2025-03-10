@@ -15,9 +15,12 @@ interface DonutChartProps {
 }
 
 function Balance() {
-  const { currencyObj } = useUserData();
+  const { currencyObj, loadingUserDetails } = useUserData();
   const { analytics } = useAnalytics();
   const { totalAmount, totalSpent, totalEarned, balance } = analytics;
+
+  const colorScheme = useColorScheme();
+  const placeholderColor = colorScheme === "dark" ? "#88888850" : "#c4c4c4";
 
   const [clicked, setClicked] = useState<"Spent" | "Earned" | "Balance">(
     "Balance"
@@ -66,13 +69,25 @@ function Balance() {
       {/* Balance Display */}
       <View style={[styles.flex_row_btw, { marginTop: 20 }]}>
         <SafeAreaView style={styles.flex_center}>
-          <Text style={styles.boldText}>
-            {clicked === "Balance"
-              ? formatAmount(balance, currencyObj)
-              : clicked === "Spent"
-              ? formatAmount(totalSpent, currencyObj)
-              : formatAmount(totalEarned, currencyObj)}
-          </Text>
+          {!loadingUserDetails ? (
+            <Text numberOfLines={1} style={styles.boldText}>
+              {clicked === "Balance"
+                ? formatAmount(balance, currencyObj)
+                : clicked === "Spent"
+                ? formatAmount(totalSpent, currencyObj)
+                : formatAmount(totalEarned, currencyObj)}
+            </Text>
+          ) : (
+            <View
+              style={{
+                backgroundColor: placeholderColor,
+                height: 30,
+                width: 90,
+                borderRadius: 10,
+              }}
+            />
+          )}
+
           <Text style={styles.clicked}>{clicked}</Text>
         </SafeAreaView>
 
@@ -89,6 +104,8 @@ function Balance() {
 export default React.memo(Balance);
 
 const DonutChart: React.FC<DonutChartProps> = React.memo(({ amounts }) => {
+  const { loadingUserDetails } = useUserData();
+
   const colorScheme = useColorScheme();
   const placeholderColor = colorScheme === "dark" ? "#88888850" : "#c4c4c4";
 
@@ -119,31 +136,19 @@ const DonutChart: React.FC<DonutChartProps> = React.memo(({ amounts }) => {
       width={size + strokeWidth}
       height={size}
     >
-      {totalAmount === 0 ? (
+      {amounts.map((item, index) => (
         <OneDonut
+          key={index}
           center={center}
           radius={radius}
           circum={circum}
-          percentage={100}
-          angle={startingAngles[0]}
+          percentage={loadingUserDetails ? 100 : item.percentage}
+          angle={startingAngles[index]}
           strokeWidth={strokeWidth}
-          color={placeholderColor}
-          placeholder={true}
+          color={loadingUserDetails ? placeholderColor : item.color}
+          loadingUserDetails={loadingUserDetails}
         />
-      ) : (
-        amounts.map((item, index) => (
-          <OneDonut
-            key={index}
-            center={center}
-            radius={radius}
-            circum={circum}
-            percentage={item.percentage}
-            angle={startingAngles[index]}
-            strokeWidth={strokeWidth}
-            color={item.color}
-          />
-        ))
-      )}
+      ))}
     </Svg>
   );
 }, arePropsEqual);
@@ -163,7 +168,7 @@ const OneDonut = ({
   circum,
   percentage,
   angle,
-  placeholder,
+  loadingUserDetails,
 }: {
   color: string;
   radius: number;
@@ -172,7 +177,7 @@ const OneDonut = ({
   circum: number;
   percentage: number;
   angle: number;
-  placeholder?: boolean;
+  loadingUserDetails?: boolean;
 }) => {
   const colorScheme = useColorScheme();
   const textColor = colorScheme === "dark" ? "#fff" : "#000";
@@ -208,26 +213,30 @@ const OneDonut = ({
         strokeLinecap="butt"
       />
 
-      <Rect
-        x={textX - textWidth / 2 }
-        y={textY - textHeight / 2 - 4}
-        width={textWidth}
-        height={textHeight}
-        rx={borderRadius}
-        ry={borderRadius}
-        fill={percentage == 0 ? "#00000000" : "#00000050"}
-      />
+      {!loadingUserDetails && percentage > 2 && (
+        <>
+          <Rect
+            x={textX - textWidth / 2}
+            y={textY - textHeight / 2 - 4}
+            width={textWidth}
+            height={textHeight}
+            rx={borderRadius}
+            ry={borderRadius}
+            fill={"#00000050"}
+          />
 
-      <SvgText
-        x={textX}
-        y={textY}
-        fontSize="10"
-        fill={textColor}
-        textAnchor="middle"
-        fontWeight="400"
-      >
-        {percentage === 0 || placeholder ? "" : `${percentage?.toFixed(1)}%`}
-      </SvgText>
+          <SvgText
+            x={textX}
+            y={textY}
+            fontSize="10"
+            fill={textColor}
+            textAnchor="middle"
+            fontWeight="400"
+          >
+            {`${percentage?.toFixed(1)}%`}
+          </SvgText>
+        </>
+      )}
     </>
   );
 };

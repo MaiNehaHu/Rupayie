@@ -13,8 +13,9 @@ import { useUserData } from "@/context/user";
 import { formatAmount } from "@/utils/formatAmount";
 
 const NotificationsFlatList = () => {
-  const { notificationsList, currencyObj } = useUserData();
+  const { notificationsList, currencyObj, loadingUserDetails } = useUserData();
   const colorScheme = useColorScheme();
+  const placeholderColor = colorScheme === "dark" ? "#88888850" : "#c4c4c4";
 
   const [activeCircle, setActiveCircle] = useState(0);
   const flatListRef = useRef<FlatList>(null);
@@ -112,6 +113,17 @@ const NotificationsFlatList = () => {
     </View>
   );
 
+  const renderSkeleton = () => (
+    <View
+      style={{
+        height: 90,
+        width: screenWidth,
+        borderRadius: 10,
+        backgroundColor: placeholderColor,
+      }}
+    />
+  );
+
   const randomNumber = () => {
     return Math.random() * 10000;
   };
@@ -123,9 +135,11 @@ const NotificationsFlatList = () => {
         data={dataToShow}
         keyExtractor={() => `item-${randomNumber()}-${Date.now()}`}
         renderItem={
-          notificationsToDisplay.length > 0
-            ? renderNotificationItem
-            : renderWelcomeItem
+          !loadingUserDetails
+            ? notificationsToDisplay.length > 0
+              ? renderNotificationItem
+              : renderWelcomeItem
+            : renderSkeleton
         }
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -139,23 +153,30 @@ const NotificationsFlatList = () => {
 
       {/* Circle Indicators */}
       <SafeAreaView style={[styles.flex_row, { marginTop: 15 }]}>
-        {dataToShow.map((_: any, index: number) => (
-          <Pressable key={index} onPress={() => handleCirclePress(index)}>
-            <View
-              style={[
-                styles.circle,
-                {
-                  backgroundColor:
-                    activeCircle === index
-                      ? "#4588DF"
-                      : colorScheme == "dark"
-                      ? "#3b3b3b"
-                      : "#c2c2c2",
-                },
-              ]}
-            />
-          </Pressable>
-        ))}
+        {!loadingUserDetails
+          ? dataToShow.map((_: any, index: number) => (
+              <Pressable key={index} onPress={() => handleCirclePress(index)}>
+                <View
+                  style={[
+                    styles.circle,
+                    {
+                      backgroundColor:
+                        activeCircle === index
+                          ? "#4588DF"
+                          : colorScheme == "dark"
+                          ? "#3b3b3b"
+                          : "#c2c2c2",
+                    },
+                  ]}
+                />
+              </Pressable>
+            ))
+          : Array.from({ length: 3 }).map((_, index) => (
+              <View
+                key={index}
+                style={[styles.circle, { backgroundColor: placeholderColor }]}
+              ></View>
+            ))}
       </SafeAreaView>
     </View>
   );

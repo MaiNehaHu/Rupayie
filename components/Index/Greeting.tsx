@@ -4,7 +4,7 @@ import { Text, View } from "../Themed";
 import { useUserData } from "@/context/user";
 
 export default function Greeting() {
-  const { userDetails } = useUserData();
+  const { userDetails, loadingUserDetails } = useUserData();
 
   const greeting = () => {
     const time = new Date();
@@ -22,7 +22,13 @@ export default function Greeting() {
   return (
     <View style={styles.container}>
       <Text style={{ fontWeight: 500, color: "white" }}>{greeting()}</Text>
-      <Text style={[styles.text, { color: "white" }]}>{userDetails?.name}</Text>
+      {!loadingUserDetails ? (
+        <Text style={[styles.text, { color: "white" }]}>
+          {userDetails?.name}
+        </Text>
+      ) : (
+        <Text style={[styles.text, { color: "white" }]}>....</Text>
+      )}
     </View>
   );
 }

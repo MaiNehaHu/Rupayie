@@ -178,7 +178,7 @@ const OneDonut = ({
         {formatAmount(totalAmountSpent, currencyObj)}
       </SvgText>
 
-      {!placeholder && percentage > 0 && (
+      {!placeholder && percentage > 2 && (
         <SvgText
           x={textX}
           y={textY + 5}

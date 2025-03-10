@@ -50,10 +50,12 @@ export default function Budgets({
   clickable?: boolean;
   showMonthBudgetFlag?: boolean;
 }) {
-  const { budgetList, currencyObj } = useUserData();
+  const { budgetList, currencyObj, loadingUserDetails } = useUserData();
+
   const colorScheme = useColorScheme();
   const textColor = colorScheme === "dark" ? "#fff" : "#000";
   const bgColor = colorScheme === "light" ? "#fff" : "#000";
+  const placeholderColor = colorScheme === "dark" ? "#88888850" : "#c4c4c4";
 
   const monthlyBudget = budgetList.find(
     (budget: Budget) => budget.type === "month"
@@ -104,7 +106,7 @@ export default function Budgets({
 
   return (
     <>
-      {budgetList.length > 0 ? (
+      {!loadingUserDetails && budgetList.length > 0 ? (
         <>
           <SafeAreaView style={[styles.flex_row_btw, { marginBottom: 12 }]}>
             <Text
@@ -254,37 +256,73 @@ export default function Budgets({
           </SafeAreaView>
         </>
       ) : (
-        <View style={[styles.container, { marginBottom: 25 }]}>
-          <SafeAreaView style={styles.flex_row_btw}>
-            <SafeAreaView style={styles.flex_col}>
-              <Text style={styles.header}>No budget for this month ?</Text>
+        !loadingUserDetails && (
+          <View style={[styles.container, { marginBottom: 25 }]}>
+            <SafeAreaView style={styles.flex_row_btw}>
+              <SafeAreaView style={styles.flex_col}>
+                <Text style={styles.header}>No budget for this month ?</Text>
 
-              <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={() => router.push("/addBudget")}
-              >
-                <LinearGradient
-                  colors={["#4588DF", "#4FB92D"]}
-                  style={styles.button}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={() => router.push("/addBudget")}
                 >
-                  <Text style={styles.buttonText}>Set Up Budget</Text>
-                </LinearGradient>
-              </TouchableOpacity>
-            </SafeAreaView>
+                  <LinearGradient
+                    colors={["#4588DF", "#4FB92D"]}
+                    style={styles.button}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                  >
+                    <Text style={styles.buttonText}>Set Up Budget</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              </SafeAreaView>
 
-            <Image
-              source={icon}
+              <Image
+                source={icon}
+                style={{
+                  width: 40,
+                  height: 40,
+                  marginRight: 10,
+                  objectFit: "contain",
+                }}
+              />
+            </SafeAreaView>
+          </View>
+        )
+      )}
+
+      {loadingUserDetails && (
+        <>
+          <SafeAreaView style={[styles.flex_row_btw, { marginBottom: 15 }]}>
+            <View
               style={{
-                width: 40,
-                height: 40,
-                marginRight: 10,
-                objectFit: "contain",
+                width: 120,
+                height: 25,
+                backgroundColor: placeholderColor,
+                borderRadius: 5,
+              }}
+            />
+            <View
+              style={{
+                width: 140,
+                height: 25,
+                backgroundColor: placeholderColor,
+                borderRadius: 5,
               }}
             />
           </SafeAreaView>
-        </View>
+
+          <SafeAreaView style={{ marginBottom: 30 }}>
+            <View
+              style={{
+                height: 220,
+                width: "100%",
+                borderRadius: 10,
+                backgroundColor: placeholderColor,
+              }}
+            />
+          </SafeAreaView>
+        </>
       )}
     </>
   );
