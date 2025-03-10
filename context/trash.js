@@ -8,6 +8,7 @@ export const TranshProvider = ({ children }) => {
   const [isTransDeleting, setIsTransDeleting] = useState(false);
   const [isTrashCleaning, setIsTrashCleaning] = useState(false);
   const [isReverting, setIsReverting] = useState(false);
+  const [autoDeleteStatus, setAutoDeleteStatus] = useState(false);
 
   async function deleteTranshTrans(transactionId) {
     try {
@@ -86,6 +87,31 @@ export const TranshProvider = ({ children }) => {
     }
   }
 
+  async function autoCleanTrashAfterWeek(autoCleanFlag) {
+    try {
+      const response = await fetch(
+        `${Server_API}/users/Ru-dfrhm8399izhum`,
+        {
+          method: "PUT",
+          body: JSON.stringify({ settings: { autoCleanTrash: autoCleanFlag } }),
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to Turn On Trash Clean After a Week");
+      }
+
+      const data = await response.json();
+
+      console.log("Sucessfully Turned On Trash Clean After a Week to: ", data.settings.autoCleanTrash)
+    } catch (error) {
+      console.log("Error Turning On Trash Clean After a Week:", error);
+      throw new Error("Error Turning On Trash Clean After a Week");
+    }
+  }
+
   return (
     <TranshContext.Provider
       value={{
@@ -94,7 +120,9 @@ export const TranshProvider = ({ children }) => {
         isTransDeleting,
         isTrashCleaning,
         isReverting,
-        revertTrashTransaction
+        revertTrashTransaction,
+        autoDeleteStatus,
+        autoCleanTrashAfterWeek
       }}
     >
       {children}

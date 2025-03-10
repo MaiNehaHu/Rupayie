@@ -47,8 +47,8 @@ interface Transaction {
 }
 
 const trash = () => {
-  const { trashTransactions, fetchUserDetails } = useUserData();
-  const { emptyTrash, isTrashCleaning } = useTrash();
+  const { trashTransactions, fetchUserDetails, autoCleanTrash } = useUserData();
+  const { emptyTrash, isTrashCleaning, autoCleanTrashAfterWeek } = useTrash();
 
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
@@ -56,7 +56,8 @@ const trash = () => {
   const oppBgColor = colorScheme === "dark" ? "#000" : "#FFF";
   const textColor = colorScheme === "dark" ? "#fff" : "#000";
 
-  const [deleteOlderthan7days, setDeleteOlderthan7days] = useState(false);
+  const [toggleDeleteOlderthan7days, setToggleDeleteOlderthan7days] =
+    useState(autoCleanTrash);
 
   const [showReadModal, setShowReadModal] = useState(false);
   const [showClickedReadModal, setClickedShowReadModal] = useState<Transaction>(
@@ -98,6 +99,12 @@ const trash = () => {
     });
   };
 
+  async function handleSwitchAutoDeleteOlderThanWeek(flag: boolean) {
+    setToggleDeleteOlderthan7days(flag);
+    await autoCleanTrashAfterWeek(flag);
+    await fetchUserDetails();
+  }
+
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -134,8 +141,8 @@ const trash = () => {
           for more tha 7 days
         </Text>
         <ToggleSwitch
-          isOn={deleteOlderthan7days}
-          setIsOn={setDeleteOlderthan7days}
+          isOn={toggleDeleteOlderthan7days}
+          setIsOn={handleSwitchAutoDeleteOlderThanWeek}
         />
       </SafeAreaView>
 
@@ -164,7 +171,7 @@ const trash = () => {
                 >
                   <TransactionCard
                     transaction={trans}
-                    deleteOlderthan7days={deleteOlderthan7days}
+                    toggleDeleteOlderthan7days={toggleDeleteOlderthan7days}
                   />
                 </TouchableOpacity>
               );
@@ -208,10 +215,10 @@ const trash = () => {
 
 const TransactionCard = ({
   transaction,
-  deleteOlderthan7days,
+  toggleDeleteOlderthan7days,
 }: {
   transaction: Transaction;
-  deleteOlderthan7days: boolean;
+  toggleDeleteOlderthan7days: boolean;
 }) => {
   const {
     _id,
@@ -271,7 +278,7 @@ const TransactionCard = ({
         </SafeAreaView>
 
         {/* Date */}
-        {deleteOlderthan7days && deletedAt && (
+        {toggleDeleteOlderthan7days && deletedAt && (
           <Text
             style={[
               styles.createdAtText,

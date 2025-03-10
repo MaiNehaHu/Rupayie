@@ -20,6 +20,7 @@ export const UserDetailsProvider = ({ children }) => {
     decimalSeparator: ".",
     thousandSeparator: ",",
   });
+  const [autoCleanTrash, setAutoCleanTrash] = useState(false);
 
   const [loadingUserDetails, setLoadingUserDetails] = useState(false);
   const [savingUserName, setSavingUserName] = useState(false);
@@ -79,6 +80,7 @@ export const UserDetailsProvider = ({ children }) => {
       setPeopleList(data.people);
       setBudgetList(data.budgets);
       setCurrencyObj(data.settings.currency);
+      setAutoCleanTrash(data.settings.autoCleanTrash);
 
       console.log("Fetched User Details");
     } catch (error) {
@@ -133,7 +135,8 @@ export const UserDetailsProvider = ({ children }) => {
         categoriesList,
         peopleList,
         budgetList,
-        currencyObj
+        currencyObj,
+        autoCleanTrash
       }}
     >
       {children}
