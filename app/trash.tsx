@@ -140,6 +140,12 @@ const trash = () => {
       </SafeAreaView>
 
       <ScrollView style={[styles.conatiner, { backgroundColor: bgColor }]}>
+        {isTrashCleaning && (
+          <Text style={{ textAlign: "center", fontSize: 18, marginBottom: 10 }}>
+            Deleting <ActivityIndicator size={16} color={textColor} />
+          </Text>
+        )}
+
         <SafeAreaView
           style={{
             display: "flex",
@@ -227,7 +233,8 @@ const TransactionCard = ({
   const textColor = colorScheme == "dark" ? "#FFF" : "#000";
 
   const isRecurring =
-    (pushedIntoTransactions == false || pushedIntoTransactions == true) && pushedIntoTransactions !== undefined;
+    (pushedIntoTransactions == false || pushedIntoTransactions == true) &&
+    pushedIntoTransactions !== undefined;
 
   return (
     <View style={styles.transactionsCard}>

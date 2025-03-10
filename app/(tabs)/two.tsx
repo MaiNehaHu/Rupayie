@@ -60,8 +60,8 @@ export default function TabTwoScreen() {
     setRefresh(true);
 
     try {
-      await fetchAnalytics();
       await fetchUserDetails();
+      await fetchAnalytics();
     } catch (error) {
       console.error("Error Refreshing: ", error);
     } finally {

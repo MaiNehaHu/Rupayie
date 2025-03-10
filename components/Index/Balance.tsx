@@ -20,7 +20,7 @@ function Balance() {
   const { totalAmount, totalSpent, totalEarned, balance } = analytics;
 
   const colorScheme = useColorScheme();
-  const placeholderColor = colorScheme === "dark" ? "#88888850" : "#c4c4c4";
+  const placeholderColor = colorScheme === "dark" ? "#3D3D3D" : "#c4c4c4";
 
   const [clicked, setClicked] = useState<"Spent" | "Earned" | "Balance">(
     "Balance"

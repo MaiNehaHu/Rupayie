@@ -22,16 +22,16 @@ export const TranshProvider = ({ children }) => {
       );
 
       if (!response.ok) {
+        setIsTransDeleting(false);
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to delete transaction");
       }
 
+      setIsTransDeleting(false);
       console.log("Transaction Deleted from Trash Successfully");
     } catch (error) {
       console.log("Error Delete Transaction from Trash: ", error)
       throw new Error("Error Delete Transaction from Trash")
-    } finally {
-      setIsTransDeleting(false);
     }
   }
 
@@ -47,16 +47,16 @@ export const TranshProvider = ({ children }) => {
       );
 
       if (!response.ok) {
+        setIsTrashCleaning(false);
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to clean trash");
       }
 
+      setIsTrashCleaning(false);
       console.log("Trash Cleaned Successfully");
     } catch (error) {
       console.log("Error Cleaning Trash: ", error);
       throw new Error("Error Cleaning Trash");
-    } finally {
-      setIsTrashCleaning(false);
     }
   }
 
@@ -73,16 +73,16 @@ export const TranshProvider = ({ children }) => {
       );
 
       if (!response.ok) {
+        setIsReverting(false);
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to revert transaction");
       }
 
+      setIsReverting(false);
       console.log("Transaction Reverted from Trash Successfully");
     } catch (error) {
       console.log("Error Delete Transaction from Trash:", error);
       throw new Error("Error Delete Transaction from Trash");
-    } finally {
-      setIsReverting(false)
     }
   }
 

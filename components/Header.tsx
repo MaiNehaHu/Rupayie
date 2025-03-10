@@ -52,7 +52,8 @@ const Header = ({ showSlider }: { showSlider: any }) => {
           />
         </Link>
         <Link href="/profile" asChild>
-          <Pressable
+          <TouchableOpacity
+            activeOpacity={0.7}
             style={[
               styles.imageContainer,
               {
@@ -62,25 +63,23 @@ const Header = ({ showSlider }: { showSlider: any }) => {
               },
             ]}
           >
-            {({ pressed }) => (
-              <>
-                {profilePhoto ? (
-                  <Image
-                    source={profilePhoto}
-                    style={[
-                      styles.imageContainer,
-                      {
-                        opacity: pressed ? 0.7 : 1,
-                        borderColor: "#fff",
-                      },
-                    ]}
-                  />
-                ) : (
+            <>
+              {!loadingUserDetails && profilePhoto ? (
+                <Image
+                  source={profilePhoto}
+                  style={[
+                    styles.imageContainer,
+                    {
+                      borderColor: "#fff",
+                    },
+                  ]}
+                />
+              ) : (
+                (loadingUserDetails || !profilePhoto) && (
                   <SafeAreaView
                     style={[
                       styles.imageContainer,
                       {
-                        opacity: pressed ? 0.7 : 1,
                         borderColor: "#fff",
                       },
                     ]}
@@ -91,10 +90,10 @@ const Header = ({ showSlider }: { showSlider: any }) => {
                       style={{ color: "#fff" }}
                     />
                   </SafeAreaView>
-                )}
-              </>
-            )}
-          </Pressable>
+                )
+              )}
+            </>
+          </TouchableOpacity>
         </Link>
       </SafeAreaView>
     </View>

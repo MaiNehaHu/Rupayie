@@ -44,8 +44,8 @@ export default function TabThreeScreen() {
     try {
       console.log("Fetching on Reload");
 
-      await fetchAnalytics();
       await fetchUserDetails();
+      await fetchAnalytics();
     } catch (error) {
       console.error("Error Refreshing: ", error);
     } finally {

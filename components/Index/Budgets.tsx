@@ -99,10 +99,15 @@ export default function Budgets({
     });
   }
 
-  // useEffect(() => {
-  //   if (!showMonthBudgetFlag) setShowBudget(yearlyBudget);
-  //   else setShowBudget(monthlyBudget);
-  // }, [showMonthBudgetFlag]);
+  useEffect(() => {
+    if (!showMonthBudgetFlag) {
+      setShowMonthlyBudget(false);
+      setShowBudget(yearlyBudget);
+    } else {
+      setShowMonthlyBudget(true);
+      setShowBudget(monthlyBudget);
+    }
+  }, [showMonthBudgetFlag]);
 
   return (
     <>
