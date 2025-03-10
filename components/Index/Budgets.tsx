@@ -107,7 +107,7 @@ export default function Budgets({
       setShowMonthlyBudget(true);
       setShowBudget(monthlyBudget);
     }
-  }, [showMonthBudgetFlag]);
+  }, [showMonthBudgetFlag, loadingUserDetails]);
 
   return (
     <>
