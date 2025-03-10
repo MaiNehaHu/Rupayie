@@ -198,7 +198,7 @@ const OneDonut: React.FC<OneDonutProps> = ({
             height={textHeight}
             rx={borderRadius}
             ry={borderRadius}
-            fill={percentage == 0 ? "#00000000" : "#00000080"}
+            fill={"#00000080"}
           />
 
           <SvgText

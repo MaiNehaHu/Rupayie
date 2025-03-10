@@ -114,39 +114,39 @@ const CategoryDonutChart: React.FC<{ categories: CategorySpent[] }> =
 
       return (
         <SafeAreaView>
-          <Svg
-            viewBox={`0 0 ${size} ${size}`}
-            width={size + strokeWidth}
-            height={size}
-          >
-            {totalAmountSpent === 0 ? (
-              <OneDonut
-                center={center}
-                radius={radius}
-                circum={circum}
-                percentage={100}
-                angle={startingAngles[0] || 0}
-                strokeWidth={strokeWidth}
-                color={placeholderColor}
-                placeholder={true}
-                totalAmountSpent={totalAmountSpent}
-              />
-            ) : (
-              categories.map((item, index) => (
+          {categories.length > 0 ? (
+            <Svg
+              viewBox={`0 0 ${size} ${size}`}
+              width={size + strokeWidth}
+              height={size}
+            >
+              {categories.map((item, index) => (
                 <OneDonut
                   key={index}
                   center={center}
                   radius={radius}
                   circum={circum}
-                  percentage={(item.spent / totalAmountSpent) * 100}
+                  percentage={
+                    totalAmountSpent === 0
+                      ? 100
+                      : (item.spent / totalAmountSpent) * 100
+                  }
                   angle={startingAngles[index]}
                   strokeWidth={strokeWidth}
-                  color={item.hexColor}
+                  color={
+                    totalAmountSpent === 0 ? placeholderColor : item.hexColor
+                  }
                   totalAmountSpent={totalAmountSpent}
                 />
-              ))
-            )}
-          </Svg>
+              ))}
+            </Svg>
+          ) : (
+            <SafeAreaView style={{ marginVertical: 40 }}>
+              <Text style={{ fontStyle: "italic" }}>
+                No Transaction Data Available
+              </Text>
+            </SafeAreaView>
+          )}
         </SafeAreaView>
       );
     },
@@ -163,7 +163,6 @@ const OneDonut = ({
   circum,
   percentage,
   angle,
-  placeholder,
   totalAmountSpent,
 }: {
   color: string;
@@ -173,7 +172,6 @@ const OneDonut = ({
   circum: number;
   percentage: number;
   angle: number;
-  placeholder?: boolean;
   totalAmountSpent: number;
 }) => {
   const { currencyObj } = useUserData();
@@ -224,7 +222,7 @@ const OneDonut = ({
         {formatAmount(totalAmountSpent, currencyObj)}
       </SvgText>
 
-      {!placeholder && percentage > 2 && (
+      {percentage > 2 && (
         <>
           {/* Background Rectangle with Rounded Borders */}
           <Rect
@@ -257,21 +255,6 @@ const OneDonut = ({
             >
               %
             </SvgText>
-          </SvgText>
-        </>
-      )}
-
-      {placeholder && (
-        <>
-          {/* Placeholder text */}
-          <SvgText
-            x={center}
-            y={center + 4}
-            fontSize="16"
-            fill={textColor}
-            textAnchor="middle"
-          >
-            0.0%
           </SvgText>
         </>
       )}
