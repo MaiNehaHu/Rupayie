@@ -25,6 +25,7 @@ type RootStackParamList = {
   recurrings: undefined;
   trash: undefined;
   people: undefined;
+  settings: undefined;
 };
 
 const Slider = ({
@@ -148,13 +149,24 @@ const Slider = ({
             <TouchableOpacity
               onPress={() => {
                 closeModal();
-                // navigation.navigate("categories");
+                navigation.navigate("settings");
               }}
               activeOpacity={0.5}
               style={styles.button}
             >
               <FontAwesome6 name="gear" color={textColor} size={18} />
               <Text style={styles.text}>Settings</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => {
+                closeModal();
+              }}
+              activeOpacity={0.5}
+              style={[styles.button, { borderBottomWidth: 0.3 }]}
+            >
+              <FontAwesome6 name="gift" color={textColor} size={18} />
+              <Text style={styles.text}>Review Us!</Text>
             </TouchableOpacity>
           </ScrollView>
         </RNAnimated.View>
@@ -198,7 +210,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    borderBottomWidth: 0.6,
+    borderBottomWidth: 0.5,
     borderBottomColor: "#666666",
   },
   flex_row_start: {

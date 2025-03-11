@@ -150,6 +150,10 @@ function RootLayoutNav() {
                                       name="typeDonut"
                                       options={{ title: "Your Transactions" }}
                                     />
+                                    <Stack.Screen
+                                      name="settings"
+                                      options={{ title: "Settings" }}
+                                    />
                                   </Stack>
                                 </FilterByDateProvider>
                               </BudgetProvider>
