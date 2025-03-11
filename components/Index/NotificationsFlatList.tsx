@@ -62,7 +62,7 @@ const NotificationsFlatList = () => {
 
       return () => clearInterval(interval);
     }
-  }, [notificationsToDisplay]);
+  }, [notificationsToDisplay, loadingUserDetails]);
 
   const handleCirclePress = (index: number) => {
     setActiveCircle(index);

@@ -239,7 +239,8 @@ const ReadTrash = ({
                       styles.inputField,
                       {
                         backgroundColor: inputBg,
-                        marginBottom: 12,
+                        marginBottom: deletedAt ? 12 : 0,
+                        marginTop: 12,
                       },
                     ]}
                   >
