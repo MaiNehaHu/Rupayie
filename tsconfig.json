@@ -38,6 +38,7 @@
     "app/trash.tsx",
     "app/categoryTransactions.tsx",
     "app/typeDonut.tsx",
-    "app/settings.tsx"
+    "app/settings.tsx",
+    "app/biometric.tsx"
   ]
 }

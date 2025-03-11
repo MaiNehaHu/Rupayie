@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { View } from "@/components/Themed";
 import { useColorScheme } from "@/components/useColorScheme";
+import FingerprintAuth from "../biometric";
 
 // TabBarIcon Component
 function TabBarIcon(props: {
@@ -17,7 +18,9 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
   const bgColor = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
 
-  return (
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  return !isAuthenticated ? (
     <View style={{ flex: 1, backgroundColor: bgColor }}>
       <Tabs
         screenOptions={{
@@ -70,5 +73,7 @@ export default function TabLayout() {
         />
       </Tabs>
     </View>
+  ) : (
+    <FingerprintAuth onAuthSuccess={() => setIsAuthenticated(true)} />
   );
 }

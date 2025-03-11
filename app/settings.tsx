@@ -10,11 +10,17 @@ const settings = () => {
   const colorScheme = useColorScheme();
   const bgColor = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
   const oppBgColor = colorScheme === "dark" ? "#000" : "#FFF";
-  const { trashTransactions, fetchUserDetails, autoCleanTrash } = useUserData();
-  const { emptyTrash, isTrashCleaning, autoCleanTrashAfterWeek } = useTrash();
+  const {
+    fetchUserDetails,
+    autoCleanTrash,
+    biometricFlag,
+    handleBiometricToggle,
+  } = useUserData();
+  const { autoCleanTrashAfterWeek } = useTrash();
 
   const [toggleDeleteOlderthan7days, setToggleDeleteOlderthan7days] =
     useState(autoCleanTrash);
+  const [biometricOnStatus, setBiometricOnStatus] = useState(biometricFlag);
 
   async function handleSwitchAutoDeleteOlderThanWeek(flag: boolean) {
     setToggleDeleteOlderthan7days(flag);
@@ -22,11 +28,16 @@ const settings = () => {
     await fetchUserDetails();
   }
 
+  async function handleBiometricToggleSwitch(flag: boolean) {
+    setBiometricOnStatus(flag);
+    await handleBiometricToggle(flag);
+    await fetchUserDetails();
+  }
+
   return (
     <ScrollView style={{ flex: 1, backgroundColor: bgColor }}>
-      <SafeAreaView
-        style={[{ backgroundColor: oppBgColor, padding: 15, marginBottom: 15 }]}
-      >
+      {/*  Trash */}
+      <SafeAreaView style={[styles.container, { backgroundColor: oppBgColor }]}>
         <Text style={styles.title}>Trash</Text>
         <View style={[styles.flex_row_btw, { flex: 1 }]}>
           <Text style={{ width: "85%" }}>
@@ -39,21 +50,18 @@ const settings = () => {
           />
         </View>
       </SafeAreaView>
-      {/* <SafeAreaView
-        style={[
-          styles.flex_row_btw,
-          { backgroundColor: oppBgColor, padding: 15, marginBottom: 15 },
-        ]}
-      >
-        <Text style={{ width: "85%" }}>
-          Automatically delete the trash transactions that have been in Trash
-          for more tha 7 days
-        </Text>
-        <ToggleSwitch
-          isOn={toggleDeleteOlderthan7days}
-          setIsOn={handleSwitchAutoDeleteOlderThanWeek}
-        />
-      </SafeAreaView> */}
+
+      {/* Biometric */}
+      <SafeAreaView style={[styles.container, { backgroundColor: oppBgColor }]}>
+        <Text style={styles.title}>Security</Text>
+        <View style={[styles.flex_row_btw, { flex: 1 }]}>
+          <Text style={{ width: "85%" }}>Secure Lock</Text>
+          <ToggleSwitch
+            isOn={biometricOnStatus}
+            setIsOn={handleBiometricToggleSwitch}
+          />
+        </View>
+      </SafeAreaView>
     </ScrollView>
   );
 };
@@ -64,7 +72,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: 500,
-    marginBottom: 5,
+    marginBottom: 15,
     color: "#4588DF",
   },
   flex_row_btw: {
@@ -73,5 +81,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+  },
+  container: {
+    padding: 15,
+    marginBottom: 15,
+    paddingBottom: 20,
   },
 });

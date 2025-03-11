@@ -21,6 +21,7 @@ export const UserDetailsProvider = ({ children }) => {
     thousandSeparator: ",",
   });
   const [autoCleanTrash, setAutoCleanTrash] = useState(false);
+  const [biometricFlag, setBiometricFlag] = useState(false);
 
   const [loadingUserDetails, setLoadingUserDetails] = useState(false);
   const [savingUserName, setSavingUserName] = useState(false);
@@ -81,6 +82,7 @@ export const UserDetailsProvider = ({ children }) => {
       setBudgetList(data.budgets);
       setCurrencyObj(data.settings.currency);
       setAutoCleanTrash(data.settings.autoCleanTrash);
+      setBiometricFlag(data.biometric);
 
       console.log("Fetched User Details");
     } catch (error) {
@@ -118,6 +120,31 @@ export const UserDetailsProvider = ({ children }) => {
     }
   }
 
+  async function handleBiometricToggle(biometricFlag) {
+    try {
+      const response = await fetch(
+        `${Server_API}/users/Ru-dfrhm8399izhum`,
+        {
+          method: "PUT",
+          body: JSON.stringify({ biometric: biometricFlag }),
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to Toggled Biometric");
+      }
+
+      const data = await response.json();
+
+      console.log("Sucessfully Toggled Biometric to: ", data.settings.autoCleanTrash)
+    } catch (error) {
+      console.log("Error Turning Switching Biometric:", error);
+      throw new Error("Error Turning Switching Biometric");
+    }
+  }
+
   return (
     <UserContext.Provider
       value={{
@@ -136,7 +163,9 @@ export const UserDetailsProvider = ({ children }) => {
         peopleList,
         budgetList,
         currencyObj,
-        autoCleanTrash
+        autoCleanTrash,
+        biometricFlag,
+        handleBiometricToggle
       }}
     >
       {children}
