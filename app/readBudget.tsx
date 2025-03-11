@@ -58,7 +58,7 @@ const ReadBudget = () => {
   return (
     <ScrollView style={[styles.container, { backgroundColor: bgColor }]}>
       {/* Budget details */}
-      <Budgets showMonthBudgetFlag={type === "month" ? true : false} />
+      <Budgets showMonthBudgetFlag={type == "month" ? true : false} />
 
       {includedCount > 0 && (
         <>

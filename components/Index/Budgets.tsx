@@ -48,7 +48,7 @@ export default function Budgets({
   showMonthBudgetFlag,
 }: {
   clickable?: boolean;
-  showMonthBudgetFlag: boolean;
+  showMonthBudgetFlag?: boolean;
 }) {
   const { budgetList, currencyObj, loadingUserDetails } = useUserData();
 
@@ -66,7 +66,9 @@ export default function Budgets({
 
   const [showMonthlyBudget, setShowMonthlyBudget] =
     useState(showMonthBudgetFlag);
-  const [showBudget, setShowBudget] = useState<Budget>(monthlyBudget);
+  const [showBudget, setShowBudget] = useState<Budget>(
+    showMonthBudgetFlag ? monthlyBudget : yearlyBudget
+  );
 
   function showMonthBudget() {
     setShowMonthlyBudget(true);
@@ -100,12 +102,22 @@ export default function Budgets({
   }
 
   useEffect(() => {
-    if (!showMonthBudgetFlag) {
-      setShowMonthlyBudget(false);
-      setShowBudget(yearlyBudget);
+    if (clickable) {
+      if (monthlyBudget) {
+        setShowMonthlyBudget(true);
+        setShowBudget(monthlyBudget);
+      } else if (yearlyBudget) {
+        setShowMonthlyBudget(false);
+        setShowBudget(yearlyBudget);
+      }
     } else {
-      setShowMonthlyBudget(true);
-      setShowBudget(monthlyBudget);
+      if (showMonthBudgetFlag) {
+        setShowMonthlyBudget(true);
+        setShowBudget(monthlyBudget);
+      } else {
+        setShowMonthlyBudget(false);
+        setShowBudget(yearlyBudget);
+      }
     }
   }, [showMonthBudgetFlag, loadingUserDetails]);
 
@@ -300,40 +312,46 @@ export default function Budgets({
         )
       )}
 
-      {loadingUserDetails && (
-        <>
-          <SafeAreaView
-            style={[styles.flex_row_btw, { marginBottom: 15, marginTop: 5 }]}
-          >
-            <View
-              style={{
-                width: 120,
-                height: 25,
-                backgroundColor: placeholderColor,
-                borderRadius: 5,
-              }}
-            />
-            <View
-              style={{
-                width: 140,
-                height: 25,
-                backgroundColor: placeholderColor,
-                borderRadius: 5,
-              }}
-            />
-          </SafeAreaView>
+      {loadingUserDetails && !monthlyBudget && !yearlyBudget ? (
+        <View
+          style={[styles.smallSkelton, { backgroundColor: placeholderColor }]}
+        />
+      ) : (
+        loadingUserDetails && (
+          <>
+            <SafeAreaView
+              style={[styles.flex_row_btw, { marginBottom: 20, marginTop: 5 }]}
+            >
+              <View
+                style={{
+                  width: 120,
+                  height: 25,
+                  backgroundColor: placeholderColor,
+                  borderRadius: 5,
+                }}
+              />
+              <View
+                style={{
+                  width: 140,
+                  height: 25,
+                  backgroundColor: placeholderColor,
+                  borderRadius: 5,
+                }}
+              />
+            </SafeAreaView>
 
-          <SafeAreaView style={{ marginBottom: 30 }}>
-            <View
-              style={{
-                height: 220,
-                width: "100%",
-                borderRadius: 10,
-                backgroundColor: placeholderColor,
-              }}
-            />
-          </SafeAreaView>
-        </>
+            <SafeAreaView style={{ marginBottom: 30 }}>
+              <View
+                style={{
+                  height: 220,
+                  width: "100%",
+                  borderRadius: 10,
+                  backgroundColor: placeholderColor,
+                }}
+              />
+            </SafeAreaView>
+          </>
+        )
       )}
     </>
   );
@@ -411,5 +429,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
     fontWeight: 500,
+  },
+  smallSkelton: {
+    width: "100%",
+    height: 100,
+    borderRadius: 15,
+    marginBottom: 30,
+    marginTop: 10,
   },
 });

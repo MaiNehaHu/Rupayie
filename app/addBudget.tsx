@@ -183,49 +183,6 @@ const AddBudget = () => {
     }
   }, [categoriesList]);
 
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () =>
-        !firstPage && (
-          <SafeAreaView style={styles.flex_row}>
-            <Text style={styles.nextText}>Save</Text>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              onPress={handleSaveBudget}
-              style={styles.doneButton}
-              disabled={budgetProcessing || leftBudget < 0}
-            >
-              {budgetProcessing ? (
-                <ActivityIndicator size="small" color={"#FFF"} />
-              ) : (
-                <FontAwesome6
-                  name="save"
-                  color={"#FFF"}
-                  style={styles.doneText}
-                />
-              )}
-            </TouchableOpacity>
-          </SafeAreaView>
-        ),
-      headerLeft: () => (
-        <SafeAreaView style={styles.flex_row}>
-          <TouchableOpacity
-            activeOpacity={0.5}
-            onPress={
-              !firstPage ? handleGoBack : () => navigation.navigate("(tabs)")
-            }
-            disabled={budgetProcessing}
-            style={{ marginRight: !firstPage ? 10 : 20 }}
-          >
-            <Ionicons name="arrow-back" color={textColor} size={24} />
-          </TouchableOpacity>
-          {!firstPage && <Text style={styles.nextText}>Back</Text>}
-        </SafeAreaView>
-      ),
-      title: firstPage ? "Add Budget" : "",
-    });
-  }, [navigation, firstPage, budgetProcessing]);
-
   return (
     <ScrollView style={{ flex: 1, backgroundColor: bgColor }}>
       {firstPage ? (
@@ -267,14 +224,39 @@ const AddBudget = () => {
         </SafeAreaView>
       ) : (
         <SafeAreaView style={styles.container}>
-          <Text style={[styles.title, { marginTop: 15 }]}>
-            Set Category-wise Limits{" "}
-            <Text style={{ color: "#8a8a8a" }}>(Optional)</Text>
-          </Text>
-          <Text style={{ color: "#8a8a8a" }}>
-            You can set limits for each category that you included in your
-            budget, if you want.
-          </Text>
+          <SafeAreaView style={[styles.flex_row, { alignItems: "flex-start" }]}>
+            {/* Text */}
+            <SafeAreaView style={{ flex: 1 }}>
+              <Text style={styles.title}>
+                Set Category-wise Limits{" "}
+                <Text style={{ color: "#8a8a8a" }}>(Optional)</Text>
+              </Text>
+              <Text style={{ color: "#8a8a8a" }}>
+                You can set limits for each category that you included in your
+                budget, if you want.
+              </Text>
+            </SafeAreaView>
+
+            {/* Save button */}
+            <SafeAreaView style={styles.flex_row}>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={handleSaveBudget}
+                style={styles.saveButton}
+                disabled={budgetProcessing || leftBudget < 0}
+              >
+                {budgetProcessing ? (
+                  <ActivityIndicator size="small" color={"#FFF"} />
+                ) : (
+                  <FontAwesome6
+                    name="save"
+                    color={"#FFF"}
+                    style={{ fontSize: 24, fontWeight: 500 }}
+                  />
+                )}
+              </TouchableOpacity>
+            </SafeAreaView>
+          </SafeAreaView>
 
           <TotalBudget totalBudget={totalBudget} leftBudget={leftBudget} />
 
@@ -327,6 +309,16 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     flexDirection: "row",
+  },
+  saveButton: {
+    borderRadius: 30,
+    backgroundColor: "#4FB92D",
+    alignSelf: "flex-end",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    height: 50,
+    width: 50,
   },
   doneButton: {
     borderRadius: 30,

@@ -92,7 +92,7 @@ const RecentTransFlatList = () => {
   ) : (
     loadingUserDetails && (
       <>
-        <SafeAreaView style={[styles.flex_row_btw, { marginBottom: 15 }]}>
+        <SafeAreaView style={[styles.flex_row_btw, { marginBottom: 20 }]}>
           <View
             style={{
               width: 170,

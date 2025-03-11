@@ -1,4 +1,10 @@
-import { Image, ScrollView, StyleSheet, RefreshControl, Button } from "react-native";
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  RefreshControl,
+  Button,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { useColorScheme } from "@/components/useColorScheme";
 
@@ -94,7 +100,7 @@ export default function TabOne() {
 
           <RecentTransFlatList />
 
-          <Budgets showMonthBudgetFlag={true} clickable />
+          <Budgets clickable />
         </ScrollView>
       </View>
     </View>

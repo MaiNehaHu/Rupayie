@@ -77,7 +77,8 @@ interface Transaction {
 }
 
 const EditBudget = () => {
-  const { saveEditedBudget, deleteBudget, budgetProcessing } = useBudget();
+  const { saveEditedBudget, deleteBudget, budgetProcessing, budgetDeleting } =
+    useBudget();
   const { fetchUserDetails, transactionsList } = useUserData();
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
@@ -274,8 +275,9 @@ const EditBudget = () => {
               style={[styles.doneButton, { backgroundColor: "red" }]}
               activeOpacity={0.5}
               onPress={handleBudgetDelete}
+              disabled={budgetDeleting}
             >
-              {budgetProcessing ? (
+              {budgetDeleting ? (
                 <ActivityIndicator size="small" color={"#FFF"} />
               ) : (
                 <FontAwesome6 name="trash" size={18} color={textColor} />
@@ -288,6 +290,7 @@ const EditBudget = () => {
             <TouchableOpacity
               activeOpacity={0.5}
               onPress={handleNextClick}
+              disabled={budgetDeleting}
               style={[styles.nextButton, { backgroundColor: "#4FB92D" }]}
             >
               <Text style={[styles.nextText, { color: "#FFF" }]}>Next</Text>
