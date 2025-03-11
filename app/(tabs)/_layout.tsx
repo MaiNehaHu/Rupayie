@@ -20,7 +20,7 @@ export default function TabLayout() {
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  return !isAuthenticated ? (
+  return isAuthenticated ? ( // !important to change in production
     <View style={{ flex: 1, backgroundColor: bgColor }}>
       <Tabs
         screenOptions={{
