@@ -1,18 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { View, TouchableOpacity, Animated, StyleSheet } from "react-native";
-// import LinearGradient from "react-native-linear-gradient";
 import { LinearGradient } from 'expo-linear-gradient';
 
 const ToggleSwitch = ({ isOn, setIsOn }: { isOn: boolean, setIsOn: (isOn: boolean) => void; }) => {
-    const translateX = new Animated.Value(isOn ? 20 : -5);
+    const translateX = useRef(new Animated.Value(isOn ? 20 : -5)).current;
 
-    const toggleSwitch = () => {
-        setIsOn(!isOn);
+    useEffect(() => {
         Animated.timing(translateX, {
-            toValue: isOn ? -5 : 20,
+            toValue: isOn ? 20 : -5,
             duration: 200,
             useNativeDriver: true,
         }).start();
+    }, [isOn]);
+
+    const toggleSwitch = () => {
+        setIsOn(!isOn);
     };
 
     return (

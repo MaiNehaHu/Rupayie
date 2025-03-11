@@ -1,25 +1,21 @@
-import { SafeAreaView, ScrollView, StyleSheet } from "react-native";
-import React, { useState } from "react";
+import { AppState, SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import React, { useEffect, useState, useRef } from "react";
 import { useColorScheme } from "@/components/useColorScheme";
 import ToggleSwitch from "@/components/ToggleSwitch";
 import { useUserData } from "@/context/user";
 import { useTrash } from "@/context/trash";
 import { Text, View } from "@/components/Themed";
+import * as LocalAuthentication from "expo-local-authentication";
 
-const settings = () => {
+const Settings = () => {
   const colorScheme = useColorScheme();
   const bgColor = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
   const oppBgColor = colorScheme === "dark" ? "#000" : "#FFF";
-  const {
-    fetchUserDetails,
-    autoCleanTrash,
-    biometricFlag,
-    handleBiometricToggle,
-  } = useUserData();
+  const { fetchUserDetails, autoCleanTrash, biometricFlag, handleBiometricToggle } = useUserData();
   const { autoCleanTrashAfterWeek } = useTrash();
 
-  const [toggleDeleteOlderthan7days, setToggleDeleteOlderthan7days] =
-    useState(autoCleanTrash);
+  const [toggleDeleteOlderthan7days, setToggleDeleteOlderthan7days] = useState(autoCleanTrash);
+  const biometricRef = useRef(biometricFlag);
   const [biometricOnStatus, setBiometricOnStatus] = useState(biometricFlag);
 
   async function handleSwitchAutoDeleteOlderThanWeek(flag: boolean) {
@@ -29,20 +25,44 @@ const settings = () => {
   }
 
   async function handleBiometricToggleSwitch(flag: boolean) {
-    setBiometricOnStatus(flag);
-    await handleBiometricToggle(flag);
-    await fetchUserDetails();
+    const result = await LocalAuthentication.authenticateAsync({
+      promptMessage: "Authenticate to change security settings",
+      fallbackLabel: "Use Passcode",
+    });
+
+    if (result.success) {
+      biometricRef.current = flag;
+      setBiometricOnStatus(flag);
+      await handleBiometricToggle(flag);
+      await fetchUserDetails();
+    } else {
+      setBiometricOnStatus(biometricRef.current);
+    }
   }
+
+  useEffect(() => {
+    biometricRef.current = biometricFlag;
+    setBiometricOnStatus(biometricFlag);
+  }, [biometricFlag]);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener("change", async (nextAppState) => {
+      if (nextAppState === "active") {
+        await fetchUserDetails();
+        setBiometricOnStatus(biometricRef.current);
+      }
+    });
+
+    return () => subscription.remove();
+  }, []);
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: bgColor }}>
-      {/*  Trash */}
       <SafeAreaView style={[styles.container, { backgroundColor: oppBgColor }]}>
         <Text style={styles.title}>Trash</Text>
         <View style={[styles.flex_row_btw, { flex: 1 }]}>
           <Text style={{ width: "85%" }}>
-            Automatically delete the trash transactions that have been in Trash
-            for more tha 7 days
+            Automatically delete the trash transactions that have been in Trash for more than 7 days
           </Text>
           <ToggleSwitch
             isOn={toggleDeleteOlderthan7days}
@@ -51,7 +71,6 @@ const settings = () => {
         </View>
       </SafeAreaView>
 
-      {/* Biometric */}
       <SafeAreaView style={[styles.container, { backgroundColor: oppBgColor }]}>
         <Text style={styles.title}>Security</Text>
         <View style={[styles.flex_row_btw, { flex: 1 }]}>
@@ -66,18 +85,17 @@ const settings = () => {
   );
 };
 
-export default settings;
+export default Settings;
 
 const styles = StyleSheet.create({
   title: {
     fontSize: 16,
-    fontWeight: 500,
+    fontWeight: "500",
     marginBottom: 15,
     color: "#4588DF",
   },
   flex_row_btw: {
     width: "100%",
-    display: "flex",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",

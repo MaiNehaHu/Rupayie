@@ -120,7 +120,7 @@ export const UserDetailsProvider = ({ children }) => {
     }
   }
 
-  async function handleBiometricToggle(biometricFlag) {
+  async function handleBiometricToggle(biometricFlag) {    
     try {
       const response = await fetch(
         `${Server_API}/users/Ru-dfrhm8399izhum`,
