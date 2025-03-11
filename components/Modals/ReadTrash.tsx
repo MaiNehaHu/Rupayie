@@ -200,7 +200,7 @@ const ReadTrash = ({
                     styles.smallBox,
                     {
                       backgroundColor: inputBg,
-                      marginBottom: !showActionButtons ? 0 : 12,
+                      marginBottom: note ? 12 : !showActionButtons ? 0 : 12,
                     },
                   ]}
                 >
@@ -240,7 +240,7 @@ const ReadTrash = ({
                       {
                         backgroundColor: inputBg,
                         marginBottom: deletedAt ? 12 : 0,
-                        marginTop: 12,
+                        marginTop: people || category ? 0 : 12,
                       },
                     ]}
                   >

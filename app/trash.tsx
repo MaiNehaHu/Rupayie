@@ -162,10 +162,10 @@ const trash = () => {
           }}
         >
           {trashTransactions.length > 0 ? (
-            trashTransactions.map((trans: Transaction) => {
+            trashTransactions.map((trans: Transaction, index: number) => {
               return (
                 <TouchableOpacity
-                  key={trans._id}
+                  key={index}
                   activeOpacity={0.7}
                   onPress={() => handleOpenModal(trans)}
                 >
