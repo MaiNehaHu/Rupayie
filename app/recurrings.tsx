@@ -46,12 +46,10 @@ interface Recurring {
 }
 
 const Recurrings = () => {
-  const navigation = useNavigation();
   const { recurringTransactions } = useUserData();
 
   const colorScheme = useColorScheme();
   const recurringBg = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
-  const textColor = colorScheme === "dark" ? "#fff" : "#000";
 
   const slideAddModalAnim = useRef(new Animated.Value(200)).current; // Start position off-screen
   const slideEditModalAnim = useRef(new Animated.Value(200)).current; // Start position off-screen
@@ -174,7 +172,7 @@ const Recurrings = () => {
                 <TouchableOpacity
                   activeOpacity={0.8}
                   onPress={() => handleOpenEditRecurring(recurring)}
-                  key={_id.toString()}
+                  key={_id}
                 >
                   <RecurringTransCard
                     key={_id}

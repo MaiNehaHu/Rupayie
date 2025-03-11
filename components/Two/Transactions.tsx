@@ -105,7 +105,7 @@ const Transactions = () => {
         {!loadingUserDetails ? (
           <SafeAreaView style={styles.transactionContainer}>
             {transactions?.length > 0 ? (
-              transactions.map((transaction: Transaction) => {
+              transactions.map((transaction: Transaction, index: number) => {
                 const {
                   _id,
                   amount,
@@ -122,7 +122,7 @@ const Transactions = () => {
                   <TouchableOpacity
                     activeOpacity={0.8}
                     onPress={() => handleTransView(transaction)}
-                    key={_id.toString()}
+                    key={index}
                   >
                     <TransactionCard
                       _id={_id}

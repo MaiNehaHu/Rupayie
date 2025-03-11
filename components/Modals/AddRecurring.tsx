@@ -81,8 +81,6 @@ const AddRecurring = ({
     date.getHours() <= 12 ? "AM" : "PM"
   }`;
 
-  
-
   const constWhen: When = {
     everyDay: time,
     everyWeek: "Monday",
@@ -179,6 +177,7 @@ const AddRecurring = ({
           count,
           interval,
           when,
+          pushedCount: 0,
         },
         amount,
         note,
@@ -189,6 +188,7 @@ const AddRecurring = ({
         ...(clickedCategory === "Borrowed" || clickedCategory === "Lend"
           ? { people }
           : {}),
+        pushedIntoTransactions: false,
       };
 
       await addNewRecurringTransaction(values);

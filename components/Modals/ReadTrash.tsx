@@ -239,8 +239,7 @@ const ReadTrash = ({
                       styles.inputField,
                       {
                         backgroundColor: inputBg,
-                        marginTop: note ? 12 : 0,
-                        marginBottom: 0,
+                        marginBottom: 12,
                       },
                     ]}
                   >
@@ -254,7 +253,6 @@ const ReadTrash = ({
                       styles.inputField,
                       {
                         backgroundColor: inputBg,
-                        marginTop: !showActionButtons ? 0 : 12,
                         marginBottom: 0,
                       },
                     ]}

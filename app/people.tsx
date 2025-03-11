@@ -186,6 +186,7 @@ const PersonCard = (person: Person) => {
 
   const colorScheme = useColorScheme();
   const textColor = colorScheme === "dark" ? "#fff" : "#000";
+  const oppTextColor = colorScheme === "dark" ? "#000" : "#FFF";
 
   return (
     <View style={styles.personCard}>
@@ -216,13 +217,13 @@ const PersonCard = (person: Person) => {
       {/* Relation */}
       <SafeAreaView
         style={[
-          { backgroundColor: "#4588DF80" },
+          { backgroundColor: "#4588DF" },
           styles.flex_row,
           styles.cardBottom,
         ]}
       >
-        <FontAwesome6 name="handshake-simple" color={textColor} size={14} />
-        <Text numberOfLines={1} style={styles.smallText}>
+        <FontAwesome6 name="handshake-simple" color={oppTextColor} size={14} />
+        <Text numberOfLines={1} style={[styles.smallText, { color: oppTextColor }]}>
           {relation}
         </Text>
       </SafeAreaView>
@@ -279,6 +280,7 @@ const styles = StyleSheet.create({
   },
   smallText: {
     fontSize: 12,
+    fontWeight: 500,
   },
   addText: {
     fontWeight: 500,
