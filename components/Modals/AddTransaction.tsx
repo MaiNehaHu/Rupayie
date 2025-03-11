@@ -7,7 +7,7 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { Text, View } from "@/components/Themed";
@@ -65,7 +65,7 @@ const AddTransaction = ({
   const [note, setNote] = useState<string>("");
   const [date, setDate] = useState(new Date());
   const [category, setCategory] = useState<Category>(filteredCategories[0]);
-  const [person, setPerson] = useState<Person>(peopleList[0]);
+  const [person, setPerson] = useState<Person>(peopleList[0]);  
   const [status, setStatus] = useState("In Progress");
   // const [imageURL, setImageURL] = useState(null);
   // const [localImage, setLocalImage] = useState(null);
@@ -176,6 +176,7 @@ const AddTransaction = ({
 
   useEffect(() => {
     setCategory(filteredCategories[0]);
+    setPerson(peopleList[0])
   }, [clickedTransCategory, loadingCategories]);
 
   useEffect(() => {

@@ -28,7 +28,7 @@ const PersonPicker = ({
 }: {
   person: Person;
   setPerson: any;
-  peopleList: any[];
+  peopleList: Person[];
 }) => {
   const colorScheme = useColorScheme();
   const inputBg = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
@@ -119,7 +119,7 @@ const PersonPicker = ({
           ]}
         >
           <Ionicons name="person" color={textColor} size={14} />
-          <Text numberOfLines={1}>{person?.name} : {person?.relation}</Text>
+          <Text numberOfLines={1}>{person.name} : {person.relation}</Text>
         </TouchableOpacity>
       ) : (
         <TouchableOpacity
