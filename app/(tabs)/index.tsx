@@ -42,8 +42,8 @@ export default function TabOne() {
     try {
       console.log("Fetching on Reload");
 
-      await fetchUserDetails();
       await fetchAnalytics();
+      await fetchUserDetails();
     } catch (error) {
       console.error("Error Refreshing: ", error);
     } finally {
