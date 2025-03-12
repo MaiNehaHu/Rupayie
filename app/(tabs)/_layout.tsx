@@ -17,32 +17,28 @@ function TabBarIcon(props: {
 
 // TabLayout Component
 export default function TabLayout() {
-  const { biometricFlag, loadingUserDetails, userDetails, fetchUserDetails } =
-    useUserData();
+  const { biometricFlag, userDetails, fetchUserDetails } = useUserData();
   const { analytics, fetchAnalytics } = useAnalytics();
 
   const colorScheme = useColorScheme();
   const bgColor = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
 
-  const [isAuthenticated, setIsAuthenticated] = useState(biometricFlag);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     if (!userDetails) fetchUserDetails();
     if (!analytics.totalAmount) fetchAnalytics();
   }, []);
 
-  useEffect(() => {
-    setIsAuthenticated(biometricFlag);
-  }, [loadingUserDetails]);
-
-  return isAuthenticated ? ( // !important to change in production
+  return biometricFlag && !isAuthenticated ? ( // If biometric is required but not yet authenticated
+    <FingerprintAuth onAuthSuccess={() => setIsAuthenticated(true)} />
+  ) : (
     <View style={{ flex: 1, backgroundColor: bgColor }}>
       <Tabs
         screenOptions={{
           headerShown: false,
           tabBarStyle: {
             height: 60,
-            // position: "absolute",
             bottom: 10,
             borderRadius: 20,
             marginHorizontal: 10,
@@ -57,7 +53,7 @@ export default function TabLayout() {
           name="index"
           options={{
             title: "Home",
-            tabBarIcon: ({ color, focused }) => (
+            tabBarIcon: ({ focused }) => (
               <TabBarIcon name="home" color={focused ? "#4FB92D" : "#4588DF"} />
             ),
           }}
@@ -66,11 +62,8 @@ export default function TabLayout() {
           name="two"
           options={{
             title: "Transactions",
-            tabBarIcon: ({ color, focused }) => (
-              <TabBarIcon
-                name="receipt"
-                color={focused ? "#4FB92D" : "#4588DF"}
-              />
+            tabBarIcon: ({ focused }) => (
+              <TabBarIcon name="receipt" color={focused ? "#4FB92D" : "#4588DF"} />
             ),
           }}
         />
@@ -78,17 +71,12 @@ export default function TabLayout() {
           name="three"
           options={{
             title: "Graphs",
-            tabBarIcon: ({ color, focused }) => (
-              <TabBarIcon
-                name="pie-chart"
-                color={focused ? "#4FB92D" : "#4588DF"}
-              />
+            tabBarIcon: ({ focused }) => (
+              <TabBarIcon name="pie-chart" color={focused ? "#4FB92D" : "#4588DF"} />
             ),
           }}
         />
       </Tabs>
     </View>
-  ) : (
-    <FingerprintAuth onAuthSuccess={() => setIsAuthenticated(true)} />
   );
 }
