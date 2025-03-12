@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, Button, Alert, StyleSheet, Image } from "react-native";
 import * as LocalAuthentication from "expo-local-authentication";
 import { useColorScheme } from "@/components/useColorScheme";
+import { StatusBar } from "expo-status-bar";
 
 const Logo = require("@/assets/pages/RupayieLogo.png");
 
@@ -49,6 +50,8 @@ const FingerprintAuth = ({ onAuthSuccess }: { onAuthSuccess: () => void }) => {
 
   return (
     <View style={[styles.container, { backgroundColor: bgColor }]}>
+      <StatusBar backgroundColor={"transparent"} />
+
       {isBiometricAvailable ? (
         <>
           <Image

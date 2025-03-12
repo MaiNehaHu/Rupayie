@@ -6,6 +6,8 @@ import { useColorScheme } from "@/components/useColorScheme";
 import FingerprintAuth from "../biometric";
 import { useUserData } from "@/context/user";
 import { useAnalytics } from "@/context/analytics";
+import { useLogin } from "@/context/login";
+import Login from "../login";
 
 // TabBarIcon Component
 function TabBarIcon(props: {
@@ -20,6 +22,8 @@ export default function TabLayout() {
   const { biometricFlag, userDetails, fetchUserDetails } = useUserData();
   const { analytics, fetchAnalytics } = useAnalytics();
 
+  const { loggedIn } = useLogin();
+
   const colorScheme = useColorScheme();
   const bgColor = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
 
@@ -30,7 +34,9 @@ export default function TabLayout() {
     if (!analytics.totalAmount) fetchAnalytics();
   }, []);
 
-  return biometricFlag && !isAuthenticated ? ( // If biometric is required but not yet authenticated
+  return !loggedIn ? (
+    <Login />
+  ) : biometricFlag && !isAuthenticated ? ( // If biometric is required but not yet authenticated
     <FingerprintAuth onAuthSuccess={() => setIsAuthenticated(true)} />
   ) : (
     <View style={{ flex: 1, backgroundColor: bgColor }}>
@@ -63,7 +69,10 @@ export default function TabLayout() {
           options={{
             title: "Transactions",
             tabBarIcon: ({ focused }) => (
-              <TabBarIcon name="receipt" color={focused ? "#4FB92D" : "#4588DF"} />
+              <TabBarIcon
+                name="receipt"
+                color={focused ? "#4FB92D" : "#4588DF"}
+              />
             ),
           }}
         />
@@ -72,7 +81,10 @@ export default function TabLayout() {
           options={{
             title: "Graphs",
             tabBarIcon: ({ focused }) => (
-              <TabBarIcon name="pie-chart" color={focused ? "#4FB92D" : "#4588DF"} />
+              <TabBarIcon
+                name="pie-chart"
+                color={focused ? "#4FB92D" : "#4588DF"}
+              />
             ),
           }}
         />
