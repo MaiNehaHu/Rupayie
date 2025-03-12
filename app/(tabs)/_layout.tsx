@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { View } from "@/components/Themed";
 import { useColorScheme } from "@/components/useColorScheme";
 import FingerprintAuth from "../biometric";
+import { useUserData } from "@/context/user";
+import { useAnalytics } from "@/context/analytics";
 
 // TabBarIcon Component
 function TabBarIcon(props: {
@@ -15,10 +17,23 @@ function TabBarIcon(props: {
 
 // TabLayout Component
 export default function TabLayout() {
+  const { biometricFlag, loadingUserDetails, userDetails, fetchUserDetails } =
+    useUserData();
+  const { analytics, fetchAnalytics } = useAnalytics();
+
   const colorScheme = useColorScheme();
   const bgColor = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(biometricFlag);
+
+  useEffect(() => {
+    if (!userDetails) fetchUserDetails();
+    if (!analytics.totalAmount) fetchAnalytics();
+  }, []);
+
+  useEffect(() => {
+    setIsAuthenticated(biometricFlag);
+  }, [loadingUserDetails]);
 
   return isAuthenticated ? ( // !important to change in production
     <View style={{ flex: 1, backgroundColor: bgColor }}>

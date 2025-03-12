@@ -25,16 +25,11 @@ const GradientImage = require("@/assets/pages/gradientBg.png");
 
 export default function TabOne() {
   const colorScheme = useColorScheme();
-  const { analytics, fetchAnalytics } = useAnalytics();
-  const { userDetails, fetchUserDetails } = useUserData();
+  const { fetchAnalytics } = useAnalytics();
+  const { fetchUserDetails } = useUserData();
 
   const [sliderVisible, setSliderVisible] = useState(false);
   const [refresh, setRefresh] = useState(false);
-
-  useEffect(() => {
-    if (!analytics.totalAmount) fetchAnalytics();
-    if (!userDetails) fetchUserDetails();
-  }, []);
 
   async function refreshPage() {
     setRefresh(true);

@@ -2,29 +2,14 @@ import React, { useState, useEffect } from "react";
 import { View, Text, Button, Alert, StyleSheet, Image } from "react-native";
 import * as LocalAuthentication from "expo-local-authentication";
 import { useColorScheme } from "@/components/useColorScheme";
-import { useUserData } from "@/context/user";
-import { useAnalytics } from "@/context/analytics";
 
 const Logo = require("@/assets/pages/RupayieLogo.png");
 
 const FingerprintAuth = ({ onAuthSuccess }: { onAuthSuccess: () => void }) => {
-  const { biometricFlag, loadingUserDetails, userDetails, fetchUserDetails } =
-    useUserData();
-  const { analytics, fetchAnalytics } = useAnalytics();
   const colorScheme = useColorScheme();
   const bgColor = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
 
-  const [isBiometricAvailable, setIsBiometricAvailable] =
-    useState(biometricFlag);
-
-  useEffect(() => {
-    if (!userDetails) fetchUserDetails();
-    if (!analytics.totalAmount) fetchAnalytics();
-  }, []);
-
-  useEffect(() => {
-    setIsBiometricAvailable(biometricFlag);
-  }, [loadingUserDetails]);
+  const [isBiometricAvailable, setIsBiometricAvailable] = useState(false);
 
   useEffect(() => {
     checkBiometricSupport();

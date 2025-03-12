@@ -27,16 +27,11 @@ import TypesSquares from "@/components/Three/TypesSquares";
 
 export default function TabThreeScreen() {
   const colorScheme = useColorScheme();
-  const { analytics, fetchAnalytics } = useAnalytics();
-  const { userDetails, fetchUserDetails } = useUserData();
+  const { fetchAnalytics } = useAnalytics();
+  const { fetchUserDetails } = useUserData();
 
   const [refresh, setRefresh] = useState(false);
   const [sliderVisible, setSliderVisible] = useState(false);
-
-  useEffect(() => {
-    if (!analytics.totalAmount) fetchAnalytics();
-    if (!userDetails) fetchUserDetails();
-  }, []);
 
   async function refreshPage() {
     setRefresh(true);
