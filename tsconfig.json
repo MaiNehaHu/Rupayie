@@ -20,7 +20,7 @@
     "components/Two/AddButton.tsx",
     "components/Pickers/CategoryPicker.tsx",
     "components/Pickers/DateAndTimePicker.tsx",
-    "components/Two/Filter.tsx",
+    "components/Filter.tsx",
     "components/Pickers/ImagePicker.tsx",
     "components/Two/SelectCategory.tsx",
     "components/Two/StatusBar.tsx",

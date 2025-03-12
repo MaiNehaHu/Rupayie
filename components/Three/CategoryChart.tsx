@@ -177,6 +177,7 @@ const OneDonut = ({
   const { currencyObj } = useUserData();
   const colorScheme = useColorScheme();
   const textColor = colorScheme === "dark" ? "#fff" : "#000";
+  const percentBgColor = colorScheme === "dark" ? "#00000080" : "#ffffff70";
 
   const strokeDashoffset = circum * (1 - percentage / 100);
   const angleForText = angle + (percentage / 100) * 180;
@@ -222,7 +223,7 @@ const OneDonut = ({
         {formatAmount(totalAmountSpent, currencyObj)}
       </SvgText>
 
-      {percentage > 2 && (
+      {percentage > 5 && (
         <>
           {/* Background Rectangle with Rounded Borders */}
           <Rect
@@ -232,7 +233,7 @@ const OneDonut = ({
             height={textHeight}
             rx={borderRadius}
             ry={borderRadius}
-            fill={percentage == 0 ? "#00000000" : "#00000080"}
+            fill={percentBgColor}
           />
 
           {/* Percentage Text */}

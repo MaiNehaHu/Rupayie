@@ -38,6 +38,7 @@ const TypesSquares = () => {
 
   const colorScheme = useColorScheme();
   const bgColor = colorScheme === "dark" ? "#2A2C38" : "#FFF";
+  const oppColor = colorScheme === "dark" ? "#000" : "#FFF";
 
   const filteredTransactions = useMemo(() => {
     return transactionsList?.filter((txn: Transaction) => {
@@ -79,9 +80,12 @@ const TypesSquares = () => {
     <SafeAreaView style={styles.conatiner}>
       {!loadingUserDetails
         ? typeSpending.map((type) => (
-            <View
-              style={[styles.card, { backgroundColor: bgColor }]}
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => handleShowCategory(type.type)}
               key={type.color}
+              disabled={type.total == 0}
+              style={[styles.card, { backgroundColor: bgColor }]}
             >
               <Text style={styles.title}>{type.type}</Text>
 
@@ -89,9 +93,7 @@ const TypesSquares = () => {
                 {formatAmount(type.total, currencyObj)}
               </Text>
 
-              <TouchableOpacity
-                activeOpacity={0.6}
-                onPress={() => handleShowCategory(type.type)}
+              <SafeAreaView
                 style={[
                   styles.viewMore,
                   {
@@ -99,13 +101,12 @@ const TypesSquares = () => {
                       type.total == 0 ? `${type.color}90` : type.color,
                   },
                 ]}
-                disabled={type.total == 0}
               >
-                <Text style={{ fontWeight: 500, color: "#000" }}>
+                <Text style={{ fontWeight: 500, color: oppColor }}>
                   View More
                 </Text>
-              </TouchableOpacity>
-            </View>
+              </SafeAreaView>
+            </TouchableOpacity>
           ))
         : [...Array(4)].map((_, index) => (
             <View

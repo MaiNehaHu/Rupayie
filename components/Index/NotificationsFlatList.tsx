@@ -116,7 +116,7 @@ const NotificationsFlatList = () => {
   const renderSkeleton = () => (
     <View
       style={{
-        height: 92,
+        height: 80,
         width: screenWidth,
         borderRadius: 10,
         backgroundColor: placeholderColor,

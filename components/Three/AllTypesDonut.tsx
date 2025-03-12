@@ -145,6 +145,7 @@ const OneDonut: React.FC<OneDonutProps> = ({
 
   const colorScheme = useColorScheme();
   const textColor = colorScheme === "dark" ? "#fff" : "#000";
+  const percentBgColor = colorScheme === "dark" ? "#00000080" : "#ffffff70";
 
   const strokeDashoffset = circum * (1 - percentage / 100);
   const angleForText = angle + (percentage / 100) * 180;
@@ -189,7 +190,7 @@ const OneDonut: React.FC<OneDonutProps> = ({
         </SvgText>
       )}
 
-      {!loadingUserDetails && percentage > 2 && (
+      {!loadingUserDetails && percentage > 5 && (
         <>
           <Rect
             x={textX - textWidth / 2 + 5}
@@ -198,7 +199,7 @@ const OneDonut: React.FC<OneDonutProps> = ({
             height={textHeight}
             rx={borderRadius}
             ry={borderRadius}
-            fill={"#00000080"}
+            fill={percentBgColor}
           />
 
           <SvgText

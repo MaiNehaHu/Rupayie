@@ -181,6 +181,7 @@ const OneDonut = ({
 }) => {
   const colorScheme = useColorScheme();
   const textColor = colorScheme === "dark" ? "#fff" : "#000";
+  const percentBgColor = colorScheme === "dark" ? "#00000080" : "#ffffff70";
 
   // Calculate the position for text (along the perimeter)
   const angleForText = angle + (percentage / 100) * 180;
@@ -213,7 +214,7 @@ const OneDonut = ({
         strokeLinecap="butt"
       />
 
-      {!loadingUserDetails && percentage > 2 && (
+      {!loadingUserDetails && percentage > 5 && (
         <>
           <Rect
             x={textX - textWidth / 2}
@@ -222,7 +223,7 @@ const OneDonut = ({
             height={textHeight}
             rx={borderRadius}
             ry={borderRadius}
-            fill={"#00000050"}
+            fill={percentBgColor}
           />
 
           <SvgText

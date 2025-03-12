@@ -1,14 +1,5 @@
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  RefreshControl,
-  Button,
-  Animated,
-  Easing,
-  TouchableWithoutFeedback,
-} from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import { ScrollView, StyleSheet, RefreshControl } from "react-native";
+import React, { useState } from "react";
 import { useColorScheme } from "@/components/useColorScheme";
 
 import { Text, View } from "@/components/Themed";
@@ -18,7 +9,7 @@ import { useAnalytics } from "@/context/analytics";
 import { StatusBar } from "expo-status-bar";
 import { useUserData } from "@/context/user";
 import Slider from "../slider";
-import Filter from "@/components/Two/Filter";
+import Filter from "@/components/Filter";
 import AllTypesDonut from "@/components/Three/AllTypesDonut";
 import TypesIndicator from "@/components/Three/TypesIndicators";
 import TypesSquares from "@/components/Three/TypesSquares";

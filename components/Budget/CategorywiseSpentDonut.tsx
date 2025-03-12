@@ -123,6 +123,7 @@ const OneDonut = ({
 
   const colorScheme = useColorScheme();
   const textColor = colorScheme === "dark" ? "#fff" : "#000";
+  const percentBgColor = colorScheme === "dark" ? "#00000080" : "#ffffff70";
 
   const strokeDashoffset = circum * (1 - percentage / 100);
   const angleForText = angle + (percentage / 100) * 180;
@@ -157,16 +158,6 @@ const OneDonut = ({
         strokeLinecap="butt"
       />
 
-      <Rect
-        x={textX - textWidth / 2 + 2}
-        y={textY - textHeight / 2}
-        width={textWidth}
-        height={textHeight}
-        rx={borderRadius}
-        ry={borderRadius}
-        fill={percentage == 0 ? "#00000000" : "#00000080"}
-      />
-
       <SvgText
         x={center}
         y={center + 2}
@@ -178,27 +169,39 @@ const OneDonut = ({
         {formatAmount(totalAmountSpent, currencyObj)}
       </SvgText>
 
-      {!placeholder && percentage > 2 && (
-        <SvgText
-          x={textX}
-          y={textY + 5}
-          fontWeight="bold"
-          fontSize="10"
-          fill={textColor}
-          textAnchor="middle"
-        >
-          {percentage == 100 ? percentage : percentage.toFixed(1)}
+      {!placeholder && percentage > 5 && (
+        <>
+          <Rect
+            x={textX - textWidth / 2 + 2}
+            y={textY - textHeight / 2}
+            width={textWidth}
+            height={textHeight}
+            rx={borderRadius}
+            ry={borderRadius}
+            fill={percentBgColor}
+          />
+
           <SvgText
-            x={textX + 16}
-            y={textY + 6}
-            fontSize="12"
+            x={textX}
+            y={textY + 5}
+            fontWeight="bold"
+            fontSize="10"
             fill={textColor}
             textAnchor="middle"
-            fontWeight="bold"
           >
-            %
+            {percentage == 100 ? percentage : percentage.toFixed(1)}
+            <SvgText
+              x={textX + 16}
+              y={textY + 6}
+              fontSize="12"
+              fill={textColor}
+              textAnchor="middle"
+              fontWeight="bold"
+            >
+              %
+            </SvgText>
           </SvgText>
-        </SvgText>
+        </>
       )}
 
       {placeholder && (

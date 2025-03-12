@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useColorScheme } from "@/components/useColorScheme";
-import { Text, View } from "../Themed";
+import { Text, View } from "./Themed";
 import { Ionicons } from "@expo/vector-icons";
 import { useTransactionFilter } from "@/context/filterTransByDate";
 import { useUserData } from "@/context/user";
@@ -88,7 +88,7 @@ const Filter = ({ tabTwoFlag }: { tabTwoFlag: boolean }) => {
               {
                 borderBottomWidth: 2.5,
                 borderBottomColor:
-                  item.title === selectedOption.title ? "#4FB92D" : btnBg,
+                  item.title === selectedOption.title ? "#4FB92D" : "transparent",
               },
             ]}
             onPress={() => handleOptionSelect(item, index)}

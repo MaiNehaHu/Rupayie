@@ -15,7 +15,7 @@ import SelectCategory from "@/components/Two/SelectCategory";
 import { ScrollView } from "react-native";
 import { useEffect, useRef, useState } from "react";
 import { useAnalytics } from "@/context/analytics";
-import Filter from "@/components/Two/Filter";
+import Filter from "@/components/Filter";
 import Transactions from "@/components/Two/Transactions";
 import AddTransactionButton from "@/components/Two/AddButton";
 import AddTransaction from "@/components/Modals/AddTransaction";

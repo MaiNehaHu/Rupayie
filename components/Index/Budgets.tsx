@@ -320,7 +320,7 @@ export default function Budgets({
         loadingUserDetails && (
           <>
             <SafeAreaView
-              style={[styles.flex_row_btw, { marginBottom: 20, marginTop: 5 }]}
+              style={[styles.flex_row_btw, { marginBottom: 15, }]}
             >
               <View
                 style={{

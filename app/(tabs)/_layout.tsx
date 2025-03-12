@@ -34,9 +34,10 @@ export default function TabLayout() {
     if (!analytics.totalAmount) fetchAnalytics();
   }, []);
 
-  return !loggedIn ? (
-    <Login />
-  ) : biometricFlag && !isAuthenticated ? ( // If biometric is required but not yet authenticated
+  // !loggedIn ? (
+  //   <Login />
+  // ) :
+  return biometricFlag && !isAuthenticated ? ( // If biometric is required but not yet authenticated
     <FingerprintAuth onAuthSuccess={() => setIsAuthenticated(true)} />
   ) : (
     <View style={{ flex: 1, backgroundColor: bgColor }}>
