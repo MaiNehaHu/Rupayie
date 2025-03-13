@@ -42,7 +42,7 @@ const AddCategory = ({
   setCategory: (category: Category) => void;
   clickedCategory: string;
 }) => {
-  const { categoriesList, fetchUserDetails, loadingUserDetails } = useUserData();
+  const { categoriesList, fetchUserDetails } = useUserData();
   const { fetchAnalytics } = useAnalytics();
   const { addNewCategory, loadingCategories } = useCategory();
   const colorScheme = useColorScheme();
@@ -149,7 +149,7 @@ const AddCategory = ({
         <Pressable
           style={styles.modalContainer}
           onPress={closeTheModal}
-          disabled={loadingCategories || loadingUserDetails}
+          disabled={loadingCategories}
         >
           <Pressable
             onPress={(e) => e.stopPropagation()}
@@ -166,7 +166,7 @@ const AddCategory = ({
                     Add {clickedCategory} Category
                   </Text>
 
-                  {loadingCategories || loadingUserDetails ? (
+                  {loadingCategories ? (
                     <View style={styles.doneButton}>
                       <ActivityIndicator size="small" color={"#FFF"} />
                     </View>

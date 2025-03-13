@@ -18,6 +18,7 @@ import { useUserData } from "@/context/user";
 import { Easing } from "react-native";
 import ReadTransaction from "@/components/Modals/ReadTransaction";
 import { useTransactionFilter } from "@/context/filterTransByDate";
+import { useTransactions } from "@/context/transactions";
 
 interface Transaction {
   _id: string;
@@ -47,6 +48,8 @@ const Transactions = () => {
   const { clickedTransCategory } = useTransactionsCategory();
   const { transactionsList, loadingUserDetails } = useUserData();
   const { transactionsFilter } = useTransactionFilter();
+  const { processing } = useTransactions();
+
   const [transactions, setTransactions] =
     useState<Transaction[]>(transactionsList);
   const [clickedTransaction, setClickedTransaction] = useState<Transaction>();
@@ -102,7 +105,7 @@ const Transactions = () => {
   return (
     <>
       <View style={styles.container}>
-        {!loadingUserDetails ? (
+        {!loadingUserDetails || !processing ? (
           <SafeAreaView style={styles.transactionContainer}>
             {transactions?.length > 0 ? (
               transactions.map((transaction: Transaction, index: number) => {
@@ -150,7 +153,7 @@ const Transactions = () => {
               </Text>
             )}
           </SafeAreaView>
-        ) : (
+        ) : loadingUserDetails || processing(
           Array.from({ length: 5 }).map((_, index) => (
             <View
               key={index}
@@ -221,7 +224,7 @@ export const TransactionCard = ({
       >
         {/* Note */}
         {clickedTransCategory === "Borrowed" ||
-        clickedTransCategory === "Lend" ? (
+          clickedTransCategory === "Lend" ? (
           <SafeAreaView
             style={{
               width: "60%",

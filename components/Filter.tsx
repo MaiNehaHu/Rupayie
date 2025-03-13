@@ -19,8 +19,13 @@ interface Option {
 
 const getMonthRange = (monthsAgo: number) => {
   const now = new Date();
+
+  // Start Date (first day of target month)
   const start = new Date(now.getFullYear(), now.getMonth() - monthsAgo, 1);
-  const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+  // End Date (last day of target month)
+  const end = new Date(start.getFullYear(), start.getMonth() + 1, 0);
+
   return { from: start, to: end };
 };
 
@@ -33,11 +38,11 @@ const Filter = ({ tabTwoFlag }: { tabTwoFlag: boolean }) => {
     useTransactionFilter();
 
   const buttonsName: Option[] = [
-    { title: "All Time", from: new Date(2000, 0, 1), to: new Date() },
+    { title: "All Time", from: new Date(1999, 11, 31), to: new Date() },
     { title: "This Month", ...getMonthRange(0) },
     { title: "Last Month", ...getMonthRange(1) },
-    { title: "Last 3 Months", ...getMonthRange(3) },
-    { title: "Last 6 Months", ...getMonthRange(6) },
+    { title: "Last 3 Months", from: getMonthRange(2).from, to: getMonthRange(0).to },
+    { title: "Last 6 Months", from: getMonthRange(5).from, to: getMonthRange(0).to },
   ];
 
   const [selectedOption, setSelectedOption] = useState<Option>(buttonsName[0]);

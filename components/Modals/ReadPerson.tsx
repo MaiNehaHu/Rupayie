@@ -36,7 +36,7 @@ const ReadPerson = ({
   clickedPerson: Person;
 }) => {
   const colorScheme = useColorScheme();
-  const { fetchUserDetails, loadingUserDetails } = useUserData();
+  const { fetchUserDetails } = useUserData();
   const { saveEditedPerson, deletePerson, savingPerson, deletingPerson } =
     usePeople();
 
@@ -140,7 +140,7 @@ const ReadPerson = ({
         <Pressable
           style={styles.modalContainer}
           onPress={handleCloseModal}
-          disabled={savingPerson || deletingPerson || savingPerson}
+          disabled={savingPerson || deletingPerson}
         >
           <Pressable
             onPress={(e) => e.stopPropagation()}
@@ -154,7 +154,7 @@ const ReadPerson = ({
                 <SafeAreaView
                   style={[styles.flex_row_start_btw, { marginBottom: 15 }]}
                 >
-                  {deletingPerson || loadingUserDetails ? (
+                  {deletingPerson ? (
                     <View
                       style={[styles.doneButton, { backgroundColor: "red" }]}
                     >
@@ -164,7 +164,7 @@ const ReadPerson = ({
                     <TouchableOpacity
                       onPress={handleDeletePerson}
                       activeOpacity={0.5}
-                      disabled={savingPerson || deletingPerson || loadingUserDetails}
+                      disabled={savingPerson || deletingPerson}
                       style={[styles.doneButton, { backgroundColor: "red" }]}
                     >
                       <FontAwesome6
@@ -179,7 +179,7 @@ const ReadPerson = ({
                     {clickedPerson.name}
                   </Text>
 
-                  {savingPerson || loadingUserDetails ? (
+                  {savingPerson ? (
                     <View
                       style={[
                         styles.doneButton,
@@ -192,7 +192,7 @@ const ReadPerson = ({
                     <TouchableOpacity
                       onPress={handleSavingPerson}
                       activeOpacity={0.5}
-                      disabled={savingPerson || deletingPerson || loadingUserDetails}
+                      disabled={savingPerson || deletingPerson}
                       style={[
                         styles.doneButton,
                         { backgroundColor: "#4FB92D" },

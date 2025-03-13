@@ -20,13 +20,65 @@ import { useAnalytics } from "@/context/analytics";
 import { StatusBar } from "expo-status-bar";
 import { useUserData } from "@/context/user";
 import Slider from "../slider";
+import moment from "moment";
+import { useBudget } from "@/context/budget";
 
 const GradientImage = require("@/assets/pages/gradientBg.png");
+
+interface IncludedCategory {
+  budget: number;
+  spent: number;
+  included: boolean;
+  _id: string;
+  name: string;
+  hexColor: string;
+  sign: string;
+  type: string;
+}
+
+interface Budget {
+  type: string;
+  period: {
+    monthAndYear?: {
+      month: string;
+      year: number;
+    };
+    year?: number;
+  };
+  totalBudget: number;
+  totalSpent: number;
+  _id: string;
+  categories: IncludedCategory[];
+}
+
+interface Transaction {
+  _id: string;
+  amount: number;
+  category: {
+    name: string;
+    hexColor: string;
+    sign: string;
+    type: string;
+    _id: string;
+  };
+  note: string;
+  pushedIntoTransactions: boolean;
+  status: string;
+  people: {
+    name: string;
+    relation: string;
+    contact: number;
+    _id: string;
+  };
+  createdAt: Date;
+  image: string;
+}
 
 export default function TabOne() {
   const colorScheme = useColorScheme();
   const { fetchAnalytics } = useAnalytics();
-  const { fetchUserDetails } = useUserData();
+  const { fetchUserDetails, loadingUserDetails, transactionsList, budgetList } = useUserData();
+  const { saveEditedBudget } = useBudget()
 
   const [sliderVisible, setSliderVisible] = useState(false);
   const [refresh, setRefresh] = useState(false);
@@ -51,6 +103,91 @@ export default function TabOne() {
   }
   function hideSlider() {
     setSliderVisible(false);
+  }
+
+  useEffect(() => {
+    if (!loadingUserDetails) updateBudgets();
+  }, [transactionsList]);
+
+  async function updateBudgets() {
+    try {
+      const budgetMonth = moment().format('MMMM');
+      const budgetYear = moment().format('YYYY');
+
+      // Find matching monthly and yearly budgets
+      const monthlyBudget: Budget = budgetList.find(
+        (budget: Budget) =>
+          budget.type === "month" &&
+          budget.period.monthAndYear?.month === budgetMonth &&
+          budget.period.monthAndYear?.year.toString() === budgetYear
+      );
+
+      const yearlyBudget: Budget = budgetList.find(
+        (budget: Budget) =>
+          budget.type === "year" && budget.period.year?.toString() === budgetYear
+      );
+
+      if (!monthlyBudget && !yearlyBudget) {
+        console.log("No budgets found for this period.");
+        return;
+      }
+
+      // Function to update spent amounts in a given budget
+      const updateBudgetSpent = (budget: Budget) => {
+        let totalSpent = 0;
+
+        budget.categories = budget.categories.map((category) => {
+          if (!category.included) {
+            return { ...category, budget: 0, spent: 0 }; // Reset for excluded categories
+          }
+
+          const categorySpent = transactionsList
+            .filter((trans: Transaction) => {
+              const transactionDate = moment(trans.createdAt);
+              const transactionMonth = transactionDate.format('MMMM');
+              const transactionYear = transactionDate.format('YYYY');
+
+              return (
+                trans.category._id === category._id &&
+                ((budget.type === "month" &&
+                  transactionMonth === budgetMonth &&
+                  transactionYear === budgetYear) ||
+                  (budget.type === "year" && transactionYear === budgetYear))
+              );
+            })
+            .reduce((sum: number, trans: Transaction) => sum + trans.amount, 0);
+
+          totalSpent += categorySpent; // Accumulate total spent
+
+          return { ...category, spent: categorySpent };
+        });
+
+        return totalSpent;
+      };
+
+      let totalSpentMonthly = monthlyBudget ? updateBudgetSpent(monthlyBudget) : 0;
+      let totalSpentYearly = yearlyBudget ? updateBudgetSpent(yearlyBudget) : 0;
+
+      const monthBudgetValues = {
+        totalSpent: totalSpentMonthly,
+        categories: monthlyBudget?.categories,
+      };
+      const yearBudgetValues = {
+        totalSpent: totalSpentYearly,
+        categories: yearlyBudget?.categories,
+      };
+
+      if (monthlyBudget) await saveEditedBudget(monthlyBudget._id, monthBudgetValues)
+      if (yearlyBudget) await saveEditedBudget(yearlyBudget._id, yearBudgetValues)
+      console.log(
+        "Sucessfully Saved Budget:",
+        `${monthlyBudget ? "Month Spent of " + `${totalSpentMonthly}`
+          : yearlyBudget ? " and Year Spent of " + `${totalSpentYearly}`
+            : ""}`
+      );
+    } catch (error) {
+      console.error("Error updating budgets:", error);
+    }
   }
 
   return (

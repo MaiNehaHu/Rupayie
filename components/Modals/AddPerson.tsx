@@ -30,7 +30,7 @@ const AddPerson = ({
   setPerson: (value: any) => void;
 }) => {
   const colorScheme = useColorScheme();
-  const { fetchUserDetails, loadingUserDetails } = useUserData();
+  const { fetchUserDetails } = useUserData();
   const { addPerson, savingPerson } = usePeople();
 
   const inputBg = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
@@ -108,7 +108,7 @@ const AddPerson = ({
       <Modal visible={visible} transparent animationType="fade">
         <Pressable
           style={styles.modalContainer}
-          disabled={savingPerson || loadingUserDetails}
+          disabled={savingPerson}
           onPress={closeTheModal}
         >
           <Pressable
@@ -124,7 +124,7 @@ const AddPerson = ({
                 >
                   <Text style={styles.title}>Add Person</Text>
 
-                  {savingPerson || loadingUserDetails ? (
+                  {savingPerson ? (
                     <View style={styles.doneButton}>
                       <ActivityIndicator size="small" color={"#FFF"} />
                     </View>

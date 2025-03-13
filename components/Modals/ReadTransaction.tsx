@@ -220,9 +220,9 @@ const ReadTransaction = ({
   async function handleDelete() {
     try {
       await deleteTransaction(transaction._id);
+      await reFetchBoth();
 
       closeModal();
-      await reFetchBoth();
       // setImageURI(null);
     } catch (error) {
       closeModal();
