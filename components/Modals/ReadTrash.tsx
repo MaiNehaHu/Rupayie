@@ -58,7 +58,7 @@ const ReadTrash = ({
   transaction: Transaction;
   showActionButtons?: boolean;
 }) => {
-  const { fetchUserDetails, currencyObj } = useUserData();
+  const { fetchUserDetails, currencyObj, loadingUserDetails } = useUserData();
   const { fetchAnalytics } = useAnalytics();
   const {
     isTransDeleting,
@@ -118,7 +118,7 @@ const ReadTrash = ({
         <Pressable
           style={styles.modalContainer}
           onPress={handleCloseModal}
-          disabled={isTransDeleting || isReverting}
+          disabled={isTransDeleting || isReverting || loadingUserDetails}
         >
           <Pressable
             onPress={(e) => e.stopPropagation()}
@@ -132,7 +132,7 @@ const ReadTrash = ({
                   <SafeAreaView
                     style={[styles.flex_row_start_btw, { marginBottom: 15 }]}
                   >
-                    {isTransDeleting ? (
+                    {isTransDeleting || loadingUserDetails ? (
                       <View
                         style={[styles.doneButton, { backgroundColor: "red" }]}
                       >
@@ -142,7 +142,7 @@ const ReadTrash = ({
                       <TouchableOpacity
                         onPress={handleDelete}
                         activeOpacity={0.5}
-                        disabled={isReverting || isTransDeleting}
+                        disabled={isReverting || loadingUserDetails || isTransDeleting}
                         style={[styles.doneButton, { backgroundColor: "red" }]}
                       >
                         <FontAwesome6
@@ -155,7 +155,7 @@ const ReadTrash = ({
 
                     <Text style={styles.title}>Your {category.name}</Text>
 
-                    {isReverting ? (
+                    {isReverting || loadingUserDetails ? (
                       <View
                         style={[
                           styles.doneButton,
@@ -168,7 +168,7 @@ const ReadTrash = ({
                       <TouchableOpacity
                         onPress={handleRevert}
                         activeOpacity={0.5}
-                        disabled={isReverting || isTransDeleting}
+                        disabled={isReverting || loadingUserDetails || isTransDeleting}
                         style={[
                           styles.doneButton,
                           { backgroundColor: "#4FB92D" },
