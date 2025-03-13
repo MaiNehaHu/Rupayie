@@ -148,7 +148,7 @@ const People = () => {
       </ScrollView>
 
       <SafeAreaView
-        style={{ position: "absolute", bottom: 40, right: 20, zIndex: 10 }}
+        style={{ position: "absolute", bottom: 20, right: 20, zIndex: 10 }}
       >
         <TouchableOpacity
           activeOpacity={0.8}
