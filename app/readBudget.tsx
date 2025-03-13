@@ -82,7 +82,7 @@ const ReadBudget = () => {
               }: IncludedCategory = category;
 
               return (
-                included && (
+                included && budget > 0 && (
                   <View key={_id} style={styles.cat_box}>
                     <SafeAreaView style={styles.flex_row_btw}>
                       <View>
