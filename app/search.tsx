@@ -176,7 +176,7 @@ const Search = () => {
       </SafeAreaView>
 
       <ScrollView style={{ marginTop: 10 }}>
-        {searchResultList.length > 0 ? (
+        {searchResultList?.length > 0 ? (
           searchResultList.map((txn: Transaction) => (
             <TouchableOpacity
               key={txn._id}
