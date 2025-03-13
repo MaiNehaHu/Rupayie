@@ -66,7 +66,7 @@ const ReadTransaction = ({
 }) => {
   const colorScheme = useColorScheme();
   const { fetchAnalytics } = useAnalytics();
-  const { categoriesList, peopleList, fetchUserDetails } = useUserData();
+  const { categoriesList, peopleList, fetchUserDetails, loadingUserDetails } = useUserData();
   const { clickedTransCategory } = useTransactionsCategory();
   const {
     deleteTransaction,
@@ -100,10 +100,10 @@ const ReadTransaction = ({
     clickedTransCategory === "Spent"
       ? "Expense"
       : clickedTransCategory === "Earned"
-      ? "Earning"
-      : clickedTransCategory === "Borrowed"
-      ? "Loan"
-      : "Lending";
+        ? "Earning"
+        : clickedTransCategory === "Borrowed"
+          ? "Loan"
+          : "Lending";
 
   const textColor = colorScheme === "dark" ? "#FFF" : "#000";
   const placeholderColor = colorScheme === "dark" ? "#c2c2c2" : "#4d4d4d";
@@ -155,7 +155,7 @@ const ReadTransaction = ({
       note === transaction.note &&
       status === transaction.status &&
       new Date(date).toISOString() ===
-        new Date(transaction.createdAt).toISOString() &&
+      new Date(transaction.createdAt).toISOString() &&
       JSON.stringify(people) === JSON.stringify(transaction.people) &&
       JSON.stringify(category) === JSON.stringify(transaction.category)
       // && imageURI === transaction.image
@@ -194,7 +194,7 @@ const ReadTransaction = ({
         status,
         // image: uploadedImg || "",
         ...(clickedTransCategory === "Borrowed" ||
-        clickedTransCategory === "Lend"
+          clickedTransCategory === "Lend"
           ? { people: people }
           : {}),
         pushedIntoTransactions: transaction?.pushedIntoTransactions,
@@ -253,7 +253,7 @@ const ReadTransaction = ({
           style={styles.modalContainer}
           onPress={closeModal}
           disabled={
-            processing || processingDelete
+            processing || processingDelete || loadingUserDetails
             // || imageUploading
           }
         >
@@ -269,7 +269,7 @@ const ReadTransaction = ({
                 <SafeAreaView
                   style={[styles.flex_row_start_btw, { marginBottom: 15 }]}
                 >
-                  {processingDelete ? (
+                  {processingDelete || loadingUserDetails ? (
                     <View
                       style={[styles.doneButton, { backgroundColor: "red" }]}
                     >
@@ -280,7 +280,7 @@ const ReadTransaction = ({
                       onPress={handleDelete}
                       activeOpacity={0.5}
                       disabled={
-                        processing || processingDelete
+                        processing || processingDelete || loadingUserDetails
                         //  || imageUploading
                       }
                       style={[styles.doneButton, { backgroundColor: "red" }]}
@@ -295,7 +295,7 @@ const ReadTransaction = ({
 
                   <Text style={styles.title}>Your {categoryName}</Text>
 
-                  {processing ? (
+                  {processing || loadingUserDetails ? (
                     // || imageUploading
                     <View
                       style={[
@@ -309,7 +309,7 @@ const ReadTransaction = ({
                     <TouchableOpacity
                       onPress={handleSave}
                       activeOpacity={0.5}
-                      disabled={processing || processingDelete}
+                      disabled={processing || processingDelete || loadingUserDetails}
                       style={[
                         styles.doneButton,
                         { backgroundColor: "#4FB92D", },
@@ -354,19 +354,19 @@ const ReadTransaction = ({
 
                 {(clickedTransCategory === "Borrowed" ||
                   clickedTransCategory === "Lend") && (
-                  <>
-                    <PersonPicker
-                      person={people}
-                      setPerson={setPeople}
-                      peopleList={peopleList}
-                    />
+                    <>
+                      <PersonPicker
+                        person={people}
+                        setPerson={setPeople}
+                        peopleList={peopleList}
+                      />
 
-                    {/* Status */}
-                    {/* <SafeAreaView>
+                      {/* Status */}
+                      {/* <SafeAreaView>
                       <StatusBar textColor={textColor} />
                     </SafeAreaView> */}
-                  </>
-                )}
+                    </>
+                  )}
 
                 {/* Note */}
                 <SafeAreaView style={styles.flex_row_btw}>

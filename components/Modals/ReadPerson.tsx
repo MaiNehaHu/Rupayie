@@ -36,7 +36,7 @@ const ReadPerson = ({
   clickedPerson: Person;
 }) => {
   const colorScheme = useColorScheme();
-  const { fetchUserDetails } = useUserData();
+  const { fetchUserDetails, loadingUserDetails } = useUserData();
   const { saveEditedPerson, deletePerson, savingPerson, deletingPerson } =
     usePeople();
 
@@ -137,7 +137,11 @@ const ReadPerson = ({
   return (
     <ScrollView style={{ flex: 1, position: "absolute" }}>
       <Modal visible={visible} transparent animationType="fade">
-        <Pressable style={styles.modalContainer} onPress={handleCloseModal}>
+        <Pressable
+          style={styles.modalContainer}
+          onPress={handleCloseModal}
+          disabled={savingPerson || deletingPerson || savingPerson}
+        >
           <Pressable
             onPress={(e) => e.stopPropagation()}
             style={styles.modalContent}
@@ -150,7 +154,7 @@ const ReadPerson = ({
                 <SafeAreaView
                   style={[styles.flex_row_start_btw, { marginBottom: 15 }]}
                 >
-                  {deletingPerson ? (
+                  {deletingPerson || loadingUserDetails ? (
                     <View
                       style={[styles.doneButton, { backgroundColor: "red" }]}
                     >
@@ -160,7 +164,7 @@ const ReadPerson = ({
                     <TouchableOpacity
                       onPress={handleDeletePerson}
                       activeOpacity={0.5}
-                      disabled={savingPerson || deletingPerson}
+                      disabled={savingPerson || deletingPerson || loadingUserDetails}
                       style={[styles.doneButton, { backgroundColor: "red" }]}
                     >
                       <FontAwesome6
@@ -175,7 +179,7 @@ const ReadPerson = ({
                     {clickedPerson.name}
                   </Text>
 
-                  {savingPerson ? (
+                  {savingPerson || loadingUserDetails ? (
                     <View
                       style={[
                         styles.doneButton,
@@ -188,7 +192,7 @@ const ReadPerson = ({
                     <TouchableOpacity
                       onPress={handleSavingPerson}
                       activeOpacity={0.5}
-                      disabled={savingPerson || deletingPerson}
+                      disabled={savingPerson || deletingPerson || loadingUserDetails}
                       style={[
                         styles.doneButton,
                         { backgroundColor: "#4FB92D" },

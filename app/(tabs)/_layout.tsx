@@ -30,8 +30,8 @@ export default function TabLayout() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    if (!userDetails) fetchUserDetails();
     if (!analytics.totalAmount) fetchAnalytics();
+    if (!userDetails) fetchUserDetails();
   }, []);
 
   // !loggedIn ? (

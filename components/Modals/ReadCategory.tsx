@@ -39,7 +39,7 @@ const ReadCategory = ({
   slideModalAnim: any;
   category: Category;
 }) => {
-  const { categoriesList, fetchUserDetails } = useUserData();
+  const { categoriesList, fetchUserDetails, loadingUserDetails } = useUserData();
   const { fetchAnalytics } = useAnalytics();
   const {
     saveEditedCategory,
@@ -174,7 +174,7 @@ const ReadCategory = ({
         <Pressable
           style={styles.modalContainer}
           onPress={closeTheModal}
-          disabled={loadingCategories || loadingCategoryDelete}
+          disabled={loadingCategories || loadingUserDetails || loadingCategoryDelete}
         >
           <Pressable
             onPress={(e) => e.stopPropagation()}
@@ -197,7 +197,7 @@ const ReadCategory = ({
                     <TouchableOpacity
                       onPress={handleDelete}
                       activeOpacity={0.5}
-                      disabled={loadingCategories || loadingCategoryDelete}
+                      disabled={loadingCategories || loadingUserDetails || loadingCategoryDelete}
                       style={[styles.doneButton, { backgroundColor: "red" }]}
                     >
                       <FontAwesome6
@@ -210,7 +210,7 @@ const ReadCategory = ({
 
                   <Text style={styles.title}>Edit {category.name}</Text>
 
-                  {loadingCategories ? (
+                  {loadingCategories || loadingUserDetails ? (
                     <View style={styles.doneButton}>
                       <ActivityIndicator size="small" color={"#FFF"} />
                     </View>
@@ -218,7 +218,7 @@ const ReadCategory = ({
                     <TouchableOpacity
                       activeOpacity={0.5}
                       onPress={handleSave}
-                      disabled={loadingCategoryDelete || loadingCategories}
+                      disabled={loadingCategoryDelete || loadingCategories || loadingUserDetails}
                       style={styles.doneButton}
                     >
                       <FontAwesome6

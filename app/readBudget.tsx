@@ -1,8 +1,8 @@
 import { SafeAreaView, ScrollView, StyleSheet } from "react-native";
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { Text, View } from "@/components/Themed";
 import { useColorScheme } from "@/components/useColorScheme";
-import { useLocalSearchParams } from "expo-router";
+import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import Budgets from "@/components/Index/Budgets";
 import { formatAmount } from "@/utils/formatAmount";
 import { useUserData } from "@/context/user";
@@ -36,15 +36,17 @@ interface Budget {
 }
 
 const ReadBudget = () => {
-  const { currencyObj } = useUserData();
+  const { currencyObj, budgetList } = useUserData();
   const route = useLocalSearchParams();
   const clickedBudget =
     typeof route.clickedBudget === "string"
       ? JSON.parse(route.clickedBudget)
       : route.clickedBudget;
 
+  const [updatedBudget, setUpdatedBudget] = useState<Budget>(clickedBudget);
+
   const { categories, _id, period, type, totalSpent, totalBudget }: Budget =
-    clickedBudget;
+    updatedBudget;
 
   const colorScheme = useColorScheme();
   const bgColor = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
@@ -53,6 +55,22 @@ const ReadBudget = () => {
     (count: number, category: IncludedCategory) =>
       count + (category.included ? 1 : 0),
     0
+  );
+
+  const filteredCategories = categories
+    .filter((cat: IncludedCategory) => cat.included && cat.budget > 0)
+
+  // To update the budget details after coming back from editBudget
+  useFocusEffect(
+    useCallback(() => {
+      if (clickedBudget) {
+        const parsedBudget = clickedBudget;
+        const latestBudget = budgetList.find(
+          (budget: Budget) => budget._id === parsedBudget._id
+        );
+        setUpdatedBudget(latestBudget || parsedBudget);
+      }
+    }, [budgetList, route.params])
   );
 
   return (
@@ -69,90 +87,91 @@ const ReadBudget = () => {
           </SafeAreaView>
 
           <SafeAreaView
-            style={{ marginVertical: 15, display: "flex", gap: 10 }}
+            style={{
+              gap: 10,
+              display: "flex",
+              marginVertical: filteredCategories.length > 0 ? 15 : 8,
+            }}
           >
-            {categories.map((category: IncludedCategory) => {
+            {filteredCategories.map((category: IncludedCategory) => {
               const {
                 name,
                 _id,
                 hexColor,
-                included,
                 spent,
                 budget,
               }: IncludedCategory = category;
 
               return (
-                included && budget > 0 && (
-                  <View key={_id} style={styles.cat_box}>
-                    <SafeAreaView style={styles.flex_row_btw}>
-                      <View>
-                        <View style={styles.flex_row}>
-                          <View
-                            style={[
-                              styles.catCircle,
-                              { backgroundColor: hexColor },
-                            ]}
-                          />
-                          <Text style={{ fontSize: 16 }}>{name}</Text>
-                        </View>
-                        <SafeAreaView style={[styles.flex_row, { gap: 2 }]}>
-                          <Text>Budget: </Text>
-                          <Text style={{ color: "#8a8a8a", marginTop: 5 }}>
-                            {formatAmount(budget, currencyObj)}
-                          </Text>
-                        </SafeAreaView>
-                      </View>
-
-                      <View>
-                        <Text style={{ fontSize: 16, textAlign: "right" }}>
-                          {formatAmount(spent, currencyObj)}
-                        </Text>
-                        <Text
-                          style={{
-                            color: "#8a8a8a",
-                            marginTop: 5,
-                            textAlign: "right",
-                          }}
-                        >
-                          Spent
-                        </Text>
-                      </View>
-                    </SafeAreaView>
-
-                    {budget < spent ? (
-                      <View style={[styles.flex_row, { marginTop: 10 }]}>
-                        <Ionicons
-                          name="alert-circle-sharp"
-                          color={"red"}
-                          size={16}
+                <View key={_id} style={styles.cat_box}>
+                  <SafeAreaView style={styles.flex_row_btw}>
+                    <View>
+                      <View style={styles.flex_row}>
+                        <View
+                          style={[
+                            styles.catCircle,
+                            { backgroundColor: hexColor },
+                          ]}
                         />
-                        <SafeAreaView style={[styles.flex_row, { gap: 4 }]}>
-                          <Text style={{ fontSize: 12 }}>
-                            You've crossed your limit by
-                          </Text>
-                          <Text style={{ color: "red" }}>
-                            {formatAmount(spent - budget, currencyObj)}
-                          </Text>
-                        </SafeAreaView>
+                        <Text style={{ fontSize: 16 }}>{name}</Text>
                       </View>
-                    ) : (
-                      <View style={[styles.flex_row, { marginTop: 10 }]}>
-                        <Ionicons
-                          name="checkmark-done"
-                          color={"#4FB92D"}
-                          size={16}
-                        />
-                        <SafeAreaView style={[styles.flex_row, { gap: 4 }]}>
-                          <Text style={{ fontSize: 12 }}>You are </Text>
-                          <Text style={{ color: "#4FB92D" }}>
-                            {formatAmount(budget - spent, currencyObj)}
-                          </Text>
-                          <Text> under your limit</Text>
-                        </SafeAreaView>
-                      </View>
-                    )}
-                  </View>
-                )
+                      <SafeAreaView style={[styles.flex_row, { gap: 2 }]}>
+                        <Text>Budget: </Text>
+                        <Text style={{ color: "#8a8a8a", marginTop: 5 }}>
+                          {formatAmount(budget, currencyObj)}
+                        </Text>
+                      </SafeAreaView>
+                    </View>
+
+                    <View>
+                      <Text style={{ fontSize: 16, textAlign: "right" }}>
+                        {formatAmount(spent, currencyObj)}
+                      </Text>
+                      <Text
+                        style={{
+                          color: "#8a8a8a",
+                          marginTop: 5,
+                          textAlign: "right",
+                        }}
+                      >
+                        Spent
+                      </Text>
+                    </View>
+                  </SafeAreaView>
+
+                  {budget < spent ? (
+                    <View style={[styles.flex_row, { marginTop: 10 }]}>
+                      <Ionicons
+                        name="alert-circle-sharp"
+                        color={"red"}
+                        size={16}
+                      />
+                      <SafeAreaView style={[styles.flex_row, { gap: 4 }]}>
+                        <Text style={{ fontSize: 12 }}>
+                          You've crossed your limit by
+                        </Text>
+                        <Text style={{ color: "red" }}>
+                          {formatAmount(spent - budget, currencyObj)}
+                        </Text>
+                      </SafeAreaView>
+                    </View>
+                  ) : (
+                    <View style={[styles.flex_row, { marginTop: 10 }]}>
+                      <Ionicons
+                        name="checkmark-done"
+                        color={"#4FB92D"}
+                        size={16}
+                      />
+                      <SafeAreaView style={[styles.flex_row, { gap: 4 }]}>
+                        <Text style={{ fontSize: 12 }}>You are </Text>
+                        <Text style={{ color: "#4FB92D" }}>
+                          {formatAmount(budget - spent, currencyObj)}
+                        </Text>
+                        <Text> under your limit</Text>
+                      </SafeAreaView>
+                    </View>
+                  )}
+                </View>
               );
             })}
           </SafeAreaView>

@@ -66,7 +66,7 @@ const AddRecurring = ({
   clickedCategory: string;
 }) => {
   const { fetchAnalytics } = useAnalytics();
-  const { fetchUserDetails, categoriesList, peopleList } = useUserData();
+  const { fetchUserDetails, categoriesList, peopleList, loadingUserDetails } = useUserData();
   const { addNewRecurringTransaction, loadingRecurring } =
     useRecurringTransactions();
   // const { deleteImage, uploadImage, imageUploading } = useTransactionImage();
@@ -224,7 +224,7 @@ const AddRecurring = ({
           style={styles.modalContainer}
           onPress={closeTheModal}
           disabled={
-            loadingRecurring
+            loadingRecurring || loadingUserDetails
             // || imageUploading
           }
         >
@@ -241,7 +241,7 @@ const AddRecurring = ({
                 >
                   <Text style={styles.title}>Add {categoryName} Recurring</Text>
 
-                  {loadingRecurring ? (
+                  {loadingRecurring || loadingUserDetails ? (
                     // || imageUploading
                     <View style={styles.doneButton}>
                       <ActivityIndicator size="small" color={"#FFF"} />

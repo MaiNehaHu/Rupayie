@@ -26,7 +26,6 @@ const getMonthRange = (monthsAgo: number) => {
 
 const Filter = ({ tabTwoFlag }: { tabTwoFlag: boolean }) => {
   const colorScheme = useColorScheme();
-  const btnBg = colorScheme === "dark" ? "#1a1a1a" : "#c9c9c9";
   const textColor = colorScheme === "dark" ? "#FFF" : "#000";
 
   const { loadingUserDetails } = useUserData();

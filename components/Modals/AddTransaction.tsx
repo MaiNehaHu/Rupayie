@@ -51,7 +51,7 @@ const AddTransaction = ({
   handleCloseModal: any;
 }) => {
   const colorScheme = useColorScheme();
-  const { categoriesList, peopleList, fetchUserDetails } = useUserData();
+  const { categoriesList, peopleList, fetchUserDetails, loadingUserDetails } = useUserData();
   const { fetchAnalytics } = useAnalytics();
   const { loadingCategories } = useCategory();
   const { clickedTransCategory } = useTransactionsCategory();
@@ -65,7 +65,7 @@ const AddTransaction = ({
   const [note, setNote] = useState<string>("");
   const [date, setDate] = useState(new Date());
   const [category, setCategory] = useState<Category>(filteredCategories[0]);
-  const [person, setPerson] = useState<Person>(peopleList[0]);  
+  const [person, setPerson] = useState<Person>(peopleList[0]);
   const [status, setStatus] = useState("In Progress");
   // const [imageURL, setImageURL] = useState(null);
   // const [localImage, setLocalImage] = useState(null);
@@ -77,10 +77,10 @@ const AddTransaction = ({
     clickedTransCategory === "Spent"
       ? "Expense"
       : clickedTransCategory === "Earned"
-      ? "Earning"
-      : clickedTransCategory === "Borrowed"
-      ? "Loan"
-      : "Lending";
+        ? "Earning"
+        : clickedTransCategory === "Borrowed"
+          ? "Loan"
+          : "Lending";
 
   const textColor = colorScheme === "dark" ? "#FFF" : "#000";
   const placeholderColor = colorScheme === "dark" ? "#c2c2c2" : "#4d4d4d";
@@ -151,7 +151,7 @@ const AddTransaction = ({
         status,
         // image: !updatedImage ? "" : updatedImage,
         ...(clickedTransCategory === "Borrowed" ||
-        clickedTransCategory === "Lend"
+          clickedTransCategory === "Lend"
           ? { people: person }
           : {}),
       };
@@ -189,7 +189,7 @@ const AddTransaction = ({
         <Pressable
           style={styles.modalContainer}
           onPress={closeModal}
-          disabled={processing}
+          disabled={processing || loadingUserDetails}
         >
           <Pressable
             onPress={(e) => e.stopPropagation()}
@@ -205,7 +205,7 @@ const AddTransaction = ({
                 >
                   <Text style={styles.title}>Add Your {categoryName}</Text>
 
-                  {processing ? (
+                  {processing || loadingUserDetails ? (
                     <View style={styles.doneButton}>
                       <ActivityIndicator size="small" color={"#FFF"} />
                     </View>
@@ -254,12 +254,12 @@ const AddTransaction = ({
 
                 {(clickedTransCategory === "Borrowed" ||
                   clickedTransCategory === "Lend") && (
-                  <PersonPicker
-                    person={person}
-                    setPerson={setPerson}
-                    peopleList={peopleList}
-                  />
-                )}
+                    <PersonPicker
+                      person={person}
+                      setPerson={setPerson}
+                      peopleList={peopleList}
+                    />
+                  )}
 
                 {/* Note */}
                 <SafeAreaView style={styles.flex_row_center_btw}>

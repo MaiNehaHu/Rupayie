@@ -30,7 +30,7 @@ const AddPerson = ({
   setPerson: (value: any) => void;
 }) => {
   const colorScheme = useColorScheme();
-  const { fetchUserDetails } = useUserData();
+  const { fetchUserDetails, loadingUserDetails } = useUserData();
   const { addPerson, savingPerson } = usePeople();
 
   const inputBg = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
@@ -106,7 +106,11 @@ const AddPerson = ({
   return (
     <ScrollView style={{ flex: 1, position: "absolute" }}>
       <Modal visible={visible} transparent animationType="fade">
-        <Pressable style={styles.modalContainer} onPress={closeTheModal}>
+        <Pressable
+          style={styles.modalContainer}
+          disabled={savingPerson || loadingUserDetails}
+          onPress={closeTheModal}
+        >
           <Pressable
             onPress={(e) => e.stopPropagation()}
             style={styles.modalContent}
@@ -120,7 +124,7 @@ const AddPerson = ({
                 >
                   <Text style={styles.title}>Add Person</Text>
 
-                  {savingPerson ? (
+                  {savingPerson || loadingUserDetails ? (
                     <View style={styles.doneButton}>
                       <ActivityIndicator size="small" color={"#FFF"} />
                     </View>

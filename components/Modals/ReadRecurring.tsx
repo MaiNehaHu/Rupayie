@@ -84,7 +84,7 @@ const ReadRecurring = ({
   recurringTrans: Recurring;
 }) => {
   const { fetchAnalytics } = useAnalytics();
-  const { fetchUserDetails, categoriesList, peopleList } = useUserData();
+  const { fetchUserDetails, categoriesList, peopleList, loadingUserDetails } = useUserData();
   const {
     saveEditedRecurringTransaction,
     deleteRecurringTransaction,
@@ -98,9 +98,8 @@ const ReadRecurring = ({
   const date = new Date();
   const hourIn12 = date.getHours() % 12 || 12; // Converts 0 to 12 for midnight
 
-  const time = `${paddingZero(hourIn12)}:${paddingZero(date.getMinutes())} ${
-    date.getHours() <= 12 ? "AM" : "PM"
-  }`;
+  const time = `${paddingZero(hourIn12)}:${paddingZero(date.getMinutes())} ${date.getHours() <= 12 ? "AM" : "PM"
+    }`;
 
   const constWhen: When = {
     everyDay: recurringTrans.recuring.when.everyDay
@@ -276,7 +275,7 @@ const ReadRecurring = ({
         <Pressable
           style={styles.modalContainer}
           onPress={closeTheModal}
-          disabled={loadingRecurring || loadingRecurringDelete}
+          disabled={loadingRecurring || loadingRecurringDelete || loadingUserDetails}
         >
           <Pressable
             onPress={(e) => e.stopPropagation()}
@@ -289,7 +288,7 @@ const ReadRecurring = ({
                 <SafeAreaView
                   style={[styles.flex_row_start_btw, { marginBottom: 15 }]}
                 >
-                  {loadingRecurringDelete ? (
+                  {loadingRecurringDelete || loadingUserDetails ? (
                     <View
                       style={[styles.doneButton, { backgroundColor: "red" }]}
                     >
@@ -299,7 +298,7 @@ const ReadRecurring = ({
                     <TouchableOpacity
                       onPress={handleDelete}
                       activeOpacity={0.5}
-                      disabled={loadingRecurring || loadingRecurringDelete}
+                      disabled={loadingRecurring || loadingRecurringDelete || loadingUserDetails}
                       style={[styles.doneButton, { backgroundColor: "red" }]}
                     >
                       <FontAwesome6
@@ -320,7 +319,7 @@ const ReadRecurring = ({
                     <TouchableOpacity
                       activeOpacity={0.5}
                       onPress={handleSave}
-                      disabled={loadingRecurring || loadingRecurringDelete}
+                      disabled={loadingRecurring || loadingRecurringDelete || loadingUserDetails}
                       style={styles.doneButton}
                     >
                       <FontAwesome6
@@ -359,19 +358,19 @@ const ReadRecurring = ({
 
                 {(clickedCategory === "Borrowed" ||
                   clickedCategory === "Lend") && (
-                  <>
-                    <PersonPicker
-                      person={people}
-                      setPerson={setPeople}
-                      peopleList={peopleList}
-                    />
+                    <>
+                      <PersonPicker
+                        person={people}
+                        setPerson={setPeople}
+                        peopleList={peopleList}
+                      />
 
-                    {/* Status */}
-                    {/* <SafeAreaView>
+                      {/* Status */}
+                      {/* <SafeAreaView>
                       <StatusBar textColor={textColor} />
                     </SafeAreaView> */}
-                  </>
-                )}
+                    </>
+                  )}
 
                 {/* Recurrin when */}
                 <WhenPicker
