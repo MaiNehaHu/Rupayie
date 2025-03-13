@@ -53,13 +53,13 @@ const PeriodPicker = ({
         Budget for {type === "month" ? "Month" : "Year"}
       </Text>
 
-      <TouchableOpacity
+      <SafeAreaView
         style={[
           styles.flex_row,
           styles.inputField,
           { backgroundColor: bgColor },
         ]}
-        activeOpacity={0.7}
+        // activeOpacity={0.7}
       >
         <Ionicons name="calendar" color={"#4FB92D"} size={20} />
         <Text>
@@ -71,7 +71,7 @@ const PeriodPicker = ({
             ? `${defaultDate?.year}`
             : ``}
         </Text>
-      </TouchableOpacity>
+      </SafeAreaView>
     </View>
   );
 };

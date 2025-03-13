@@ -19,13 +19,8 @@ import IncludeCategories from "@/components/Budget/IncludeCategories";
 import TotalBudget from "@/components/Budget/TotalBudget";
 import SetCategoryLimit from "@/components/Budget/SetCategoryLimit";
 import { useUserData } from "@/context/user";
-import { StackNavigationProp } from "@react-navigation/stack";
 import { useBudget } from "@/context/budget";
-import { FontAwesome6, Ionicons } from "@expo/vector-icons";
-
-type RootStackParamList = {
-  "(tabs)": undefined;
-};
+import { FontAwesome6 } from "@expo/vector-icons";
 
 interface IncludedCategory {
   budget: number;
@@ -80,7 +75,7 @@ const EditBudget = () => {
   const { saveEditedBudget, deleteBudget, budgetProcessing, budgetDeleting } =
     useBudget();
   const { fetchUserDetails, transactionsList } = useUserData();
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const navigation = useNavigation();
 
   const route = useLocalSearchParams();
   const clickedBudget =
@@ -175,7 +170,7 @@ const EditBudget = () => {
   async function handleSaveBudget() {
     try {
       if (noChangesDone()) {
-        navigation.navigate("(tabs)");
+        navigation.goBack();
       } else {
         const values = {
           type,
@@ -187,10 +182,10 @@ const EditBudget = () => {
 
         await saveEditedBudget(_id, values);
         await fetchUserDetails();
-        navigation.navigate("(tabs)");
+        navigation.goBack();
       }
     } catch (error) {
-      navigation.navigate("(tabs)");
+      navigation.goBack();
       Alert.alert("Failed", "Failed to Save");
     }
   }
@@ -210,7 +205,7 @@ const EditBudget = () => {
             try {
               await deleteBudget(_id);
               await fetchUserDetails();
-              navigation.navigate("(tabs)");
+              navigation.goBack();
             } catch (error) {
               console.log(error);
               Alert.alert("Failed", "Failed to Delete");

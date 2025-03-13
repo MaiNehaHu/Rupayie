@@ -1,12 +1,8 @@
 import {
   ActivityIndicator,
-  BackHandler,
-  Dimensions,
-  Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
@@ -18,15 +14,10 @@ import Amount from "@/components/Budget/Amount";
 import IncludeCategories from "@/components/Budget/IncludeCategories";
 import { useUserData } from "@/context/user";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { StackNavigationProp } from "@react-navigation/stack";
 import { useBudget } from "@/context/budget";
 import TotalBudget from "@/components/Budget/TotalBudget";
 import SetCategoryLimit from "@/components/Budget/SetCategoryLimit";
-import { FontAwesome6, Ionicons } from "@expo/vector-icons";
-
-type RootStackParamList = {
-  "(tabs)": undefined;
-};
+import { FontAwesome6 } from "@expo/vector-icons";
 
 interface IncludedCategory {
   budget: number;
@@ -76,11 +67,10 @@ const AddBudget = () => {
 
   const route = useLocalSearchParams();
   const { addBudgetFor } = route;
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const navigation = useNavigation();
 
   const colorScheme = useColorScheme();
   const bgColor = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
-  const textColor = colorScheme === "dark" ? "#FFF" : "#000";
 
   const [firstPage, setFirstPage] = useState(true);
 
@@ -146,10 +136,6 @@ const AddBudget = () => {
     setFirstPage(false);
   }
 
-  function handleGoBack() {
-    setFirstPage(true);
-  }
-
   async function handleSaveBudget() {
     const values = {
       type,
@@ -160,7 +146,7 @@ const AddBudget = () => {
     };
 
     await addNewBudget(values);
-    navigation.navigate("(tabs)");
+    navigation.goBack();
     await fetchUserDetails();
   }
 
