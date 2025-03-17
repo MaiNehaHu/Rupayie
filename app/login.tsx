@@ -1,33 +1,149 @@
 import {
+  Alert,
+  Animated,
   Dimensions,
+  Easing,
   Image,
+  Keyboard,
   SafeAreaView,
   ScrollView,
   StyleSheet,
+  TextInput,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Text, View } from "@/components/Themed";
 import { useNavigation } from "expo-router";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useColorScheme } from "@/components/useColorScheme";
 import { StatusBar } from "expo-status-bar";
+import { FontAwesome6 } from "@expo/vector-icons";
+import { supabase } from '@/utils/supabaseClient';
+
 const Logo = require("@/assets/pages/loginLogo.png");
 
-type RootStackParamList = {
-  "(tabs)": undefined;
-};
+// type RootStackParamList = {
+//   "(tabs)": undefined;
+// };
 
 const Login = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  // const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const colorScheme = useColorScheme();
+  const bgColor = colorScheme === "dark" ? "#000" : "#EDEDED";
   const textColor = colorScheme === "dark" ? "#fff" : "#000";
   const oppColor = colorScheme === "light" ? "#fff" : "#000";
-  const placeholderColor = colorScheme === "dark" ? "#c2c2c2" : "#4d4d4d";
-  const bgColor = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
+
+  const [emailID, setEmailID] = useState<string>("");
+  const [otp, setOtp] = useState<string>("");
+
+  const [resendTimer, setResendTimer] = useState<number>(0);
+  const [error, setError] = useState<string>("");
+  const [messageText, setMessageText] = useState<string>("");
+  const [sendLoading, setSendLoading] = useState<boolean>(false);
+  const [verifyLoading, setVerifyLoading] = useState<boolean>(false);
+
+  const [currentScreen, setCurrentScreen] = useState<"welcome" | "login" | "signup">("welcome");
+
+  const sendOtp = async () => {
+    // Regular expression to validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (emailID.trim() === "") {
+      setError("Please enter an email address!");
+      return;
+    }
+    if (!emailRegex.test(emailID)) {
+      setError("Please enter a valid email address!");
+      return;
+    }
+
+    setSendLoading(true);
+    const result = await sendEmailOtp(emailID);
+    setSendLoading(false);
+
+    if (result.success) {
+      setMessageText("OTP Sent Successfully");
+    } else {
+      setError(`Error Sending OTP!`)
+    }
+  };
+
+  const sendEmailOtp = async (email: string) => {
+    const { error } = await supabase.auth.signInWithOtp({ email });
+
+    if (error) {
+      console.log("OTP Error:", error.message);
+      return { success: false, message: error.message };
+    }
+
+    return { success: true, message: "OTP sent to email successfully!" };
+  };
+
+
+  const verifyUserOtp = async (inputOTP: number) => {
+    setOtp(inputOTP.toString());
+
+    if (!emailID.trim()) {
+      setError("Please Enter Email!");
+      return;
+    }
+    if (!inputOTP) {
+      setError("Please Enter OTP!");
+      return;
+    }
+
+    setVerifyLoading(true);
+    const result = await verifyEmailOtp(emailID, inputOTP.toString());
+    setVerifyLoading(false);
+
+    if (result.success) {
+      setMessageText("OTP Verified Successfully!");
+      startResendTimer();
+    } else {
+      setError(`${result.message}`);
+    }
+  };
+
+  const verifyEmailOtp = async (email: string, inputOTP: string) => {
+    const { data, error } = await supabase.auth.verifyOtp({
+      email,
+      token: inputOTP,
+      type: "email",
+    });
+
+    if (error) {
+      return { success: false, message: "Invalid OTP. Try again." };
+    }
+
+    return { success: true, message: "Logged in successfully!", user: data };
+  };
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (resendTimer > 0) {
+      interval = setInterval(() => {
+        setResendTimer((prev) => (prev > 0 ? prev - 1 : 0));
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [resendTimer]);
+
+  const startResendTimer = () => {
+    setResendTimer(60);
+  };
 
   function handleLogin() {
-    navigation.navigate("(tabs)");
+    setCurrentScreen("login");
+  }
+
+  function handleSignup() {
+    setCurrentScreen("signup");
+  }
+
+  function handleBack() {
+    setCurrentScreen("welcome");
+    setEmailID("");
+    setOtp("");
   }
 
   const screenWidth = Dimensions.get("window").width;
@@ -40,59 +156,295 @@ const Login = () => {
           source={Logo}
           style={{
             width: screenWidth,
-            minHeight: "40%",
-            maxHeight: "45%",
+            height: "40%",
             objectFit: "cover",
           }}
         />
 
         <SafeAreaView
-          style={{
-            padding: 25,
-            minHeight: "55%",
-            display: "flex",
-            justifyContent: "center",
-          }}
+          style={[styles.bottomContainer, { borderBottomWidth: 0 }]}
         >
-          <Text style={styles.header}>Welcome!</Text>
-          <Text style={{ fontSize: 16 }}>
-            Take control of your finances—track, plan, and grow. Your money,
-            your rules.
-          </Text>
-
-          <SafeAreaView style={[styles.flex_row_btw, { marginTop: "15%" }]}>
-            <TouchableOpacity
-              style={[styles.button, { backgroundColor: textColor }]}
-              onPress={handleLogin}
-              activeOpacity={0.7}
-            >
-              <Text style={[styles.buttonText, { color: oppColor }]}>
-                LogIn
+          {currentScreen === "welcome" && (
+            <>
+              <Text style={styles.header}>Welcome!</Text>
+              <Text style={{ fontSize: 16 }}>
+                Take control of your finances—track, plan, and grow. Your money, your rules.
               </Text>
-            </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={handleLogin}
-              style={[
-                styles.button,
-                {
-                  backgroundColor: bgColor,
-                  borderColor: textColor,
-                  borderWidth: 2,
-                },
-              ]}
-              activeOpacity={0.7}
-            >
-              <Text style={[styles.buttonText, { color: textColor }]}>
-                SignUp
-              </Text>
-            </TouchableOpacity>
-          </SafeAreaView>
+              <SafeAreaView style={[styles.flex_row_btw, { marginTop: "15%" }]}>
+                <TouchableOpacity
+                  style={[styles.button, { backgroundColor: textColor }]}
+                  onPress={handleLogin}
+                  activeOpacity={0.7}
+                >
+                  <Text style={[styles.buttonText, { color: oppColor }]}>
+                    Log In
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={handleSignup}
+                  style={[
+                    styles.button,
+                    {
+                      backgroundColor: bgColor,
+                      borderColor: textColor,
+                      borderWidth: 2,
+                    },
+                  ]}
+                  activeOpacity={0.7}
+                >
+                  <Text style={[styles.buttonText, { color: textColor }]}>
+                    Sign Up
+                  </Text>
+                </TouchableOpacity>
+              </SafeAreaView>
+            </>
+          )}
+
+          {(currentScreen === "signup" ||
+            currentScreen === "login") && (
+              <>
+                <BackButton handleBack={handleBack} />
+
+                <Messages
+                  error={error}
+                  messageText={messageText}
+                  setError={setError}
+                  setMessageText={setMessageText}
+                />
+
+                <Text style={styles.headerTitle}>{currentScreen === "login" ? "Log In" : "Sing Up"}</Text>
+
+                {/* Email Input */}
+                <EmailInput
+                  emailID={emailID}
+                  setEmailID={setEmailID}
+                  resendTimer={resendTimer}
+                  sendLoading={sendLoading}
+                  verifyLoading={verifyLoading}
+                  sendOtp={sendOtp}
+                />
+
+                {/* OTP Input */}
+                <OTPInput length={6} onComplete={verifyUserOtp} />
+
+                <SafeAreaView style={[styles.flex_center, { marginTop: 20 }]}>
+                  <TouchableOpacity
+                    onPress={() => verifyUserOtp(Number(otp))}
+                    disabled={verifyLoading || sendLoading}
+                    activeOpacity={0.5}
+                    style={[styles.otpButton, { backgroundColor: textColor }]}
+                  >
+                    <Text style={{ color: oppColor, fontWeight: "500" }}>{verifyLoading ? "Verifing..." : "Verify OTP"}</Text>
+                  </TouchableOpacity>
+                </SafeAreaView>
+              </>
+            )}
         </SafeAreaView>
       </SafeAreaView>
     </ScrollView>
   );
 };
+
+const BackButton = ({ handleBack }: { handleBack: () => void; }) => {
+  const colorScheme = useColorScheme();
+  const textColor = colorScheme === "dark" ? "#fff" : "#000";
+  const oppColor = colorScheme === "light" ? "#fff" : "#000";
+
+  return (
+    <TouchableOpacity
+      activeOpacity={0.8}
+      onPress={handleBack}
+      style={[styles.backButton, { backgroundColor: oppColor }]}
+    >
+      <FontAwesome6 name="arrow-left" size={18} color={textColor} />
+    </TouchableOpacity>
+  )
+}
+
+const EmailInput = (
+  { emailID,
+    setEmailID,
+    sendLoading,
+    verifyLoading,
+    resendTimer,
+    sendOtp
+  }: {
+    emailID: string;
+    setEmailID: (value: string) => void;
+    sendLoading: boolean;
+    verifyLoading: boolean;
+    resendTimer: number;
+    sendOtp: () => void;
+  }) => {
+  const colorScheme = useColorScheme();
+  const textColor = colorScheme === "dark" ? "#fff" : "#000";
+  const oppColor = colorScheme === "light" ? "#fff" : "#000";
+  const placeholderColor = colorScheme === "dark" ? "#c2c2c2" : "#4d4d4d";
+
+  return (
+    <View style={[styles.inputContainer, { backgroundColor: oppColor }]}>
+      <TextInput
+        style={[styles.inputField, { backgroundColor: oppColor, color: textColor }]}
+        value={emailID}
+        onChangeText={(text) => setEmailID(text)}
+        keyboardType="default"
+        placeholder="yourname@gmail.com"
+        placeholderTextColor={placeholderColor}
+        numberOfLines={1}
+      />
+
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={sendOtp}
+        disabled={sendLoading || verifyLoading || resendTimer > 0}
+        style={[styles.otpButton, { backgroundColor: textColor }]}
+      >
+        <Text style={{ color: oppColor, fontWeight: "500" }}>
+          {sendLoading ? "Sending..." : resendTimer > 0 ? `Resend in ${resendTimer}s` : "Send OTP"}
+        </Text>
+      </TouchableOpacity>
+    </View>
+  )
+}
+
+const OTPInput = ({ length = 6, onComplete }: { length: number, onComplete: any }) => {
+  const colorScheme = useColorScheme();
+  const bgColor = colorScheme === "dark" ? "#000" : "#fff";
+  const textColor = colorScheme === "dark" ? "#fff" : "#000";
+  const placeholderColor = colorScheme === "dark" ? "#c2c2c2" : "#4d4d4d";
+
+  const [otp, setOtp] = useState(new Array(length).fill(""));
+  const inputs = useRef<TextInput[]>([]);
+
+  const handleChange = (text: string, index: number) => {
+    if (/^\d$/.test(text)) {
+      const newOtp = [...otp];
+      newOtp[index] = text;
+      setOtp(newOtp);
+
+      if (index < length - 1) {
+        inputs.current[index + 1].focus();
+      } else {
+        onComplete && onComplete(newOtp.join(""));
+      }
+    }
+  };
+
+  const handleKeyPress = (e: any, index: number) => {
+    if (e.nativeEvent.key === "Backspace") {
+      const newOtp = [...otp];
+
+      // Clear current input
+      newOtp[index] = "";
+      setOtp(newOtp);
+
+      // Move focus to the previous input
+      if (index > 0) {
+        inputs.current[index - 1].focus();
+      }
+    }
+  };
+
+  return (
+    <>
+      <SafeAreaView style={OTPInputStyles.container}>
+        {otp.map((_, index) => (
+          <TextInput
+            key={index}
+            ref={(ref) => { if (ref) (inputs.current[index] = ref) }}
+            style={[OTPInputStyles.input, { borderColor: "#888", backgroundColor: bgColor, color: textColor }]}
+            keyboardType="numeric"
+            maxLength={1}
+            value={otp[index]}
+            onChangeText={(text) => handleChange(text, index)}
+            onKeyPress={(e) => handleKeyPress(e, index)}
+            // autoFocus={index === 0}
+            placeholder="9"
+            placeholderTextColor={placeholderColor}
+          />
+        ))}
+      </SafeAreaView>
+    </>
+  );
+};
+
+const AnimatedNotification = ({ message, type, onHide }: { message: string; type: "success" | "error"; onHide: () => void }) => {
+  const translateY = useRef(new Animated.Value(50)).current; // Start 50px below
+  const opacity = useRef(new Animated.Value(0.5)).current; // Start with low opacity
+
+  useEffect(() => {
+    // Slide up & fade in
+    Animated.timing(translateY, {
+      toValue: 0, // Move slightly up
+      duration: 300,
+      easing: Easing.out(Easing.ease),
+      useNativeDriver: true,
+    }).start();
+
+    Animated.timing(opacity, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+
+    // Auto-hide after 3 seconds
+    const timer = setTimeout(() => {
+      Animated.timing(opacity, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start(() => onHide());
+      // Hide component after animation ends
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <Animated.View
+      style={[
+        styles.notificationContainer,
+        {
+          transform: [{ translateY }],
+          opacity,
+        },
+      ]}
+    >
+      <SafeAreaView style={[styles.notification, { backgroundColor: type === "success" ? "green" : "red", }]}>
+        <Text style={styles.notificationText} numberOfLines={1} ellipsizeMode="tail">
+          {message}
+        </Text>
+      </SafeAreaView>
+    </Animated.View>
+  );
+};
+
+const Messages = (
+  { error,
+    messageText,
+    setError,
+    setMessageText
+  }: {
+    error: string;
+    messageText: string;
+    setError: (value: string) => void;
+    setMessageText: (value: string) => void;
+  }) => {
+
+  return (
+    <>
+      {error &&
+        <AnimatedNotification message={error} type="error" onHide={() => setError("")} />
+      }
+
+      {messageText &&
+        <AnimatedNotification message={messageText} type="success" onHide={() => setMessageText("")} />
+      }
+    </>
+  )
+}
 
 export default Login;
 
@@ -101,13 +453,12 @@ const styles = StyleSheet.create({
     flex: 1,
     minHeight: "100%",
     display: "flex",
-    // alignItems: "center",
     justifyContent: "space-between",
   },
   header: {
     fontSize: 24,
-    fontWeight: 500,
     textAlign: "left",
+    fontWeight: "500",
     marginBottom: 10,
   },
   flex_row_btw: {
@@ -125,7 +476,103 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
-    fontWeight: 500,
+    fontWeight: "500",
     textAlign: "center",
+  },
+  headerTitle: {
+    fontSize: 20,
+    marginBottom: 40,
+    fontWeight: "600",
+    textAlign: "center",
+  },
+  inputContainer: {
+    padding: 5,
+    borderWidth: 1,
+    borderRadius: 10,
+    marginVertical: 10,
+    borderColor: "#888",
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  inputField: {
+    flex: 1,
+    paddingHorizontal: 15,
+    fontSize: 16,
+  },
+  otpButton: {
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 7,
+    marginLeft: 10,
+  },
+  errorText: {
+    color: "red",
+    fontSize: 14,
+    marginTop: 5,
+    textAlign: "center",
+  },
+  backButton: {
+    top: 20,
+    left: 20,
+    position: "absolute",
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderRadius: 30,
+  },
+  bottomContainer: {
+    padding: 25,
+    height: "60%",
+    display: "flex",
+    justifyContent: "center",
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+  },
+  notificationContainer: {
+    alignSelf: "center",
+    position: "absolute",
+    zIndex: 10,
+    left: 20,
+    right: 20,
+    bottom: 50, // Start from bottom
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  notification: {
+    padding: 5,
+    paddingHorizontal: 15,
+    borderRadius: 10,
+  },
+  notificationText: {
+    textAlign: "center",
+    fontSize: 14,
+    fontWeight: 500,
+    paddingHorizontal: 10,
+    color: "#FFF"
+  },
+  flex_center: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
+
+const OTPInputStyles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 10,
+    marginVertical: 20,
+  },
+  input: {
+    // width: 40,
+    // height: 40,
+    textAlign: "center",
+    fontWeight: 500,
+    fontSize: 14,
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: 15,
   },
 });
