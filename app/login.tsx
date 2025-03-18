@@ -602,6 +602,7 @@ const OTPInputStyles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 15,
+    paddingVertical: 12,
   },
 });
 

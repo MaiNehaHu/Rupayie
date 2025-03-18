@@ -25,7 +25,7 @@ export const UserDetailsProvider = ({ children }) => {
   const [autoCleanTrash, setAutoCleanTrash] = useState(false);
   const [biometricFlag, setBiometricFlag] = useState(false);
 
-  const [loadingUserDetails, setLoadingUserDetails] = useState(true);
+  const [loadingUserDetails, setLoadingUserDetails] = useState(false);
   const [savingUserName, setSavingUserName] = useState(false);
   const [savingUserProfile, setSavingUserProfile] = useState(false);
 
