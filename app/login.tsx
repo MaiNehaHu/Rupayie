@@ -39,6 +39,7 @@ const Login = () => {
   const bgColor = colorScheme === "dark" ? "#000" : "#EDEDED";
   const textColor = colorScheme === "dark" ? "#fff" : "#000";
   const oppColor = colorScheme === "light" ? "#fff" : "#000";
+  const loadingBg = colorScheme === "light" ? "#fff" : "#1C1C1C";
 
   const [emailID, setEmailID] = useState<string>("");
   const [otp, setOtp] = useState<string>("");
@@ -264,7 +265,7 @@ const Login = () => {
           visible={loginingIn}
         >
           <SafeAreaView style={ModalStyles.container}>
-            <SafeAreaView style={[styles.otpButton, ModalStyles.flex_row, { backgroundColor: bgColor, }]}>
+            <SafeAreaView style={[styles.otpButton, ModalStyles.flex_row, { backgroundColor: loadingBg, }]}>
               <ActivityIndicator color={textColor} size="small" />
               <Text style={{ fontWeight: 500 }}>Redirecting...</Text>
             </SafeAreaView>
@@ -278,7 +279,7 @@ const Login = () => {
 const BackButton = ({ handleBack }: { handleBack: () => void; }) => {
   const colorScheme = useColorScheme();
   const textColor = colorScheme === "dark" ? "#fff" : "#000";
-  const oppColor = colorScheme === "light" ? "#fff" : "#000";
+  const oppColor = colorScheme === "light" ? "#fff" : "#1C1C1C";
 
   return (
     <TouchableOpacity
@@ -602,7 +603,7 @@ const OTPInputStyles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 15,
-    paddingVertical: 12,
+    paddingVertical: 10,
   },
 });
 

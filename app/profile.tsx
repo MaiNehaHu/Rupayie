@@ -98,33 +98,54 @@ const profile = () => {
     setShowUserNameSaveBtn(userName === userDetails?.name ? false : true);
   }, [userName]);
 
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity
-          style={[
-            styles.flex_row,
-            styles.logoutButton,
-            { backgroundColor: textColor },
-          ]}
-          activeOpacity={0.7}
-          onPress={handleLogout}
-        >
-          <Text style={{ color: oppColor }} >Logout</Text>
-
-          <FontAwesome6
-            size={16}
-            color={oppColor}
-            name="arrow-right-from-bracket"
-          />
-        </TouchableOpacity>
-      ),
-    });
-  }, [navigation]);
-
   return (
     <ScrollView style={{ flex: 1 }}>
       <View style={[styles.container, { backgroundColor: bgColor }]}>
+        <SafeAreaView style={styles.flex_row_btw}>
+          {/* Edit Avatar */}
+          <TouchableOpacity
+            style={[
+              styles.flex_row,
+              styles.logoutButton,
+              { backgroundColor: !showProfilePicker ? textColor : "#4FB92D", alignSelf: "flex-end" },
+            ]}
+            onPress={!showProfilePicker ? handlePenClick : handleSaveProfile}
+            activeOpacity={0.7}
+            disabled={savingUserProfile}
+          >
+            <Text style={{ color: showProfilePicker ? textColor : oppColor, fontWeight: 500 }} >
+              {showProfilePicker ? "Save" : savingUserProfile ? "Saving..." : "Edit Avatar"}
+            </Text>
+            {!savingUserProfile ? (
+              <FontAwesome6
+                size={16}
+                color={showProfilePicker ? textColor : oppColor}
+                name={!showProfilePicker ? "pen" : "check"}
+              />) : (
+              <ActivityIndicator size="small" color={showProfilePicker ? textColor : oppColor} />
+            )}
+          </TouchableOpacity>
+
+          {/* Logout */}
+          <TouchableOpacity
+            style={[
+              styles.flex_row,
+              styles.logoutButton,
+              { backgroundColor: textColor, alignSelf: "flex-end" },
+            ]}
+            activeOpacity={0.7}
+            onPress={handleLogout}
+          >
+            <Text style={{ color: oppColor, fontWeight: 500 }} >Logout</Text>
+
+            <FontAwesome6
+              size={16}
+              color={oppColor}
+              name="arrow-right-from-bracket"
+            />
+          </TouchableOpacity>
+        </SafeAreaView>
+
         <SafeAreaView style={[styles.center, { marginVertical: 20 }]}>
           <SafeAreaView style={{ width: 200, height: 200 }}>
             {userProfile ? (
@@ -147,27 +168,6 @@ const profile = () => {
                 />
               </View>
             )}
-
-            {/* Edit Button */}
-            <TouchableOpacity
-              onPress={!showProfilePicker ? handlePenClick : handleSaveProfile}
-              activeOpacity={0.7}
-              disabled={savingUserProfile}
-              style={[
-                styles.pen,
-                { backgroundColor: !showProfilePicker ? textColor : "#4FB92D" },
-              ]}
-            >
-              {!savingUserProfile ? (
-                <FontAwesome6
-                  name={!showProfilePicker ? "pen" : "check"}
-                  size={20}
-                  color={oppColor}
-                />
-              ) : (
-                <ActivityIndicator size="small" color={oppColor} />
-              )}
-            </TouchableOpacity>
           </SafeAreaView>
         </SafeAreaView>
 
@@ -215,7 +215,7 @@ const profile = () => {
           </SafeAreaView>
         )}
       </View>
-    </ScrollView>
+    </ScrollView >
   );
 };
 
@@ -237,6 +237,11 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
+  },
+  flex_row_btw: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   pen: {
     position: "absolute",
