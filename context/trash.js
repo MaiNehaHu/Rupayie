@@ -1,3 +1,5 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const { useContext, createContext, useState } = require("react");
 
 const Server_API = "https://expense-trackerr-server.vercel.app/api";
@@ -11,11 +13,13 @@ export const TranshProvider = ({ children }) => {
   const [autoDeleteStatus, setAutoDeleteStatus] = useState(false);
 
   async function deleteTranshTrans(transactionId) {
+    const storedUserId = await AsyncStorage.getItem("loggedUserId");
+
     try {
       setIsTransDeleting(true);
 
       const response = await fetch(
-        `${Server_API}/trash/Ru-dfrhm8399izhum/${transactionId}`,
+        `${Server_API}/trash/${storedUserId}/${transactionId}`,
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
@@ -37,10 +41,12 @@ export const TranshProvider = ({ children }) => {
   }
 
   async function emptyTrash() {
+    const storedUserId = await AsyncStorage.getItem("loggedUserId");
+
     try {
       setIsTrashCleaning(true);
       const response = await fetch(
-        `${Server_API}/empty-trash/Ru-dfrhm8399izhum`,
+        `${Server_API}/empty-trash/${storedUserId}`,
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
@@ -62,11 +68,13 @@ export const TranshProvider = ({ children }) => {
   }
 
   async function revertTrashTransaction(transactionId) {
+    const storedUserId = await AsyncStorage.getItem("loggedUserId");
+
     try {
       setIsReverting(true);
 
       const response = await fetch(
-        `${Server_API}/trash/revert/Ru-dfrhm8399izhum/${transactionId}`,
+        `${Server_API}/trash/revert/${storedUserId}/${transactionId}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -88,9 +96,11 @@ export const TranshProvider = ({ children }) => {
   }
 
   async function autoCleanTrashAfterWeek(autoCleanFlag) {
+    const storedUserId = await AsyncStorage.getItem("loggedUserId");
+
     try {
       const response = await fetch(
-        `${Server_API}/users/Ru-dfrhm8399izhum`,
+        `${Server_API}/users/${storedUserId}`,
         {
           method: "PUT",
           body: JSON.stringify({ settings: { autoCleanTrash: autoCleanFlag } }),

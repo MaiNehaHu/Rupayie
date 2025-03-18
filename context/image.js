@@ -19,7 +19,7 @@ export const TransactionImageProvider = ({ children }) => {
       // Step 1: Delete Existing Image if it Exists
       if (existingImageURL) {
         const deleteResponse = await fetch(
-          `${Server_API}/transaction-image/Ru-dfrhm8399izhum/${transactionId}/?imageURL=${existingImageURL}`,
+          `${Server_API}/transaction-image/${storedUserId}/${transactionId}/?imageURL=${existingImageURL}`,
           {
             method: "DELETE",
             headers: { "Content-Type": "application/json" },
@@ -46,7 +46,7 @@ export const TransactionImageProvider = ({ children }) => {
       });
 
       const uploadResponse = await fetch(
-        `${Server_API}/transaction-image/Ru-dfrhm8399izhum/${transactionId}`,
+        `${Server_API}/transaction-image/${storedUserId}/${transactionId}`,
         {
           method: "POST",
           body: formData,
@@ -81,7 +81,7 @@ export const TransactionImageProvider = ({ children }) => {
 
       // Step 1: Delete Existing Image if it Exists
       const deleteResponse = await fetch(
-        `${Server_API}/transaction-image/Ru-dfrhm8399izhum/${transactionId}/?imageURL=${imageURI}`,
+        `${Server_API}/transaction-image/${storedUserId}/${transactionId}/?imageURL=${imageURI}`,
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },

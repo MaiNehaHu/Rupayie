@@ -1,3 +1,5 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const { useContext, useState } = require("react");
 const { createContext } = require("react");
 
@@ -10,10 +12,12 @@ export const BudgetProvider = ({ children }) => {
   const [budgetDeleting, setBudgetDeleting] = useState(false);
 
   async function addNewBudget(values) {
+    const storedUserId = await AsyncStorage.getItem("loggedUserId");
+
     try {
       setBudgetProcessing(true);
 
-      const response = await fetch(`${Server_API}/budgets/Ru-dfrhm8399izhum`, {
+      const response = await fetch(`${Server_API}/budgets/${storedUserId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
@@ -34,10 +38,12 @@ export const BudgetProvider = ({ children }) => {
   }
 
   async function saveEditedBudget(budgetId, values) {
+    const storedUserId = await AsyncStorage.getItem("loggedUserId");    
+
     try {
       setBudgetProcessing(true);
 
-      const response = await fetch(`${Server_API}/budgets/Ru-dfrhm8399izhum/${budgetId}`, {
+      const response = await fetch(`${Server_API}/budgets/${storedUserId}/${budgetId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
@@ -58,10 +64,12 @@ export const BudgetProvider = ({ children }) => {
   }
 
   async function deleteBudget(budgetId) {
+    const storedUserId = await AsyncStorage.getItem("loggedUserId");
+
     try {
       setBudgetDeleting(true);
 
-      const response = await fetch(`${Server_API}/budgets/Ru-dfrhm8399izhum/${budgetId}`, {
+      const response = await fetch(`${Server_API}/budgets/${storedUserId}/${budgetId}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       });

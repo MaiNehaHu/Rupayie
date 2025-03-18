@@ -1,3 +1,5 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const { useContext, createContext, useState } = require("react");
 
 const Server_API = "https://expense-trackerr-server.vercel.app/api";
@@ -13,8 +15,10 @@ export const AnalyticsProvider = ({ children }) => {
   const [loadingAnalytics, setLoadingAnalytics] = useState(true);
 
   const fetchAnalytics = async () => {
+    const storedUserId = await AsyncStorage.getItem("loggedUserId");
+
     try {
-      const response = await fetch(`${Server_API}/analytics/Ru-dfrhm8399izhum`);
+      const response = await fetch(`${Server_API}/analytics/${storedUserId}`);
 
       if (!response.ok) {
         const errorData = await response.json();

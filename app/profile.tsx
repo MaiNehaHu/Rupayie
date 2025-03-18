@@ -16,6 +16,7 @@ import { useProfile } from "@/context/profilePhoto";
 import { useUserData } from "@/context/user";
 import { useNavigation } from "expo-router";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { useLogin } from "@/context/login";
 
 type RootStackParamList = {
   login: undefined;
@@ -30,6 +31,7 @@ const profile = () => {
     savingUserProfile,
   } = useUserData();
   const { setProfilePhoto } = useProfile();
+  const { setLoggedIn, setLoggedUserId } = useLogin()
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const colorScheme = useColorScheme();
@@ -70,7 +72,9 @@ const profile = () => {
   }
 
   async function handleLogout() {
-    navigation.navigate("login");
+    navigation.replace("login");
+    setLoggedIn(false);
+    setLoggedUserId("");
   }
 
   useEffect(() => {
@@ -89,16 +93,16 @@ const profile = () => {
           style={[
             styles.flex_row,
             styles.logoutButton,
-            { backgroundColor: oppColor },
+            { backgroundColor: textColor },
           ]}
           activeOpacity={0.7}
           onPress={handleLogout}
         >
-          <Text>Logout</Text>
+          <Text style={{ color: oppColor }} >Logout</Text>
 
           <FontAwesome6
             size={16}
-            color={textColor}
+            color={oppColor}
             name="arrow-right-from-bracket"
           />
         </TouchableOpacity>
@@ -263,6 +267,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     paddingVertical: 10,
     paddingHorizontal: 15,
-    borderRadius: 10,
+    borderRadius: 15,
   },
 });

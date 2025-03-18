@@ -1,3 +1,5 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const { createContext, useState, useContext } = require("react");
 
 const Server_API = "https://expense-trackerr-server.vercel.app/api";
@@ -9,11 +11,13 @@ export const RecurringTransProvider = ({ children }) => {
   const [loadingRecurringDelete, setLoadingRecurringDelete] = useState(false);
 
   async function addNewRecurringTransaction(values) {
+    const storedUserId = await AsyncStorage.getItem("loggedUserId");
+
     try {
       setLoadingRecurring(true);
 
       const response = await fetch(
-        `${Server_API}/recuring-transactions/Ru-dfrhm8399izhum`,
+        `${Server_API}/recuring-transactions/${storedUserId}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -36,11 +40,13 @@ export const RecurringTransProvider = ({ children }) => {
   }
 
   async function saveEditedRecurringTransaction(transactionId, values) {
+    const storedUserId = await AsyncStorage.getItem("loggedUserId");
+
     try {
       setLoadingRecurring(true);
 
       const response = await fetch(
-        `${Server_API}/recuring-transactions/Ru-dfrhm8399izhum/${transactionId}`,
+        `${Server_API}/recuring-transactions/${storedUserId}/${transactionId}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -63,11 +69,13 @@ export const RecurringTransProvider = ({ children }) => {
   }
 
   async function deleteRecurringTransaction(transactionId) {
+    const storedUserId = await AsyncStorage.getItem("loggedUserId");
+
     try {
       setLoadingRecurringDelete(true);
 
       const response = await fetch(
-        `${Server_API}/recuring-transactions/Ru-dfrhm8399izhum/${transactionId}`,
+        `${Server_API}/recuring-transactions/${storedUserId}/${transactionId}`,
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },

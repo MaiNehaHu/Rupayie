@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext, useState, useContext } from "react";
 
 const Server_API = "https://expense-trackerr-server.vercel.app/api";
@@ -9,10 +10,12 @@ export const SearchProvider = ({ children }) => {
   const [searchResult, setSearchResult] = useState([]);
 
   async function searchForKeyWord(keyWord) {
+    const storedUserId = await AsyncStorage.getItem("loggedUserId");
+
     try {
       setIsSearching(true);
       const response = await fetch(
-        `${Server_API}/search/Ru-dfrhm8399izhum/${keyWord}`
+        `${Server_API}/search/${storedUserId}/${keyWord}`
       );
 
       if (!response.ok) {

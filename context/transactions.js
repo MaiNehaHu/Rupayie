@@ -1,3 +1,5 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const { useContext, createContext, useState } = require("react");
 
 const Server_API = "https://expense-trackerr-server.vercel.app/api";
@@ -9,11 +11,13 @@ export const TransactionsProvider = ({ children }) => {
     const [processingDelete, setProcessingDelete] = useState(false)
 
     async function addNewTransaction(values) {
+        const storedUserId = await AsyncStorage.getItem("loggedUserId");
+
         try {
             setProcessing(true)
 
             const response = await fetch(
-                `${Server_API}/transactions/Ru-dfrhm8399izhum`,
+                `${Server_API}/transactions/${storedUserId}`,
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -36,11 +40,13 @@ export const TransactionsProvider = ({ children }) => {
     }
 
     async function saveEditedTransaction(transactionId, values) {
+        const storedUserId = await AsyncStorage.getItem("loggedUserId");
+
         try {
             setProcessing(true)
 
             const response = await fetch(
-                `${Server_API}/transactions/Ru-dfrhm8399izhum/${transactionId}`,
+                `${Server_API}/transactions/${storedUserId}/${transactionId}`,
                 {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
@@ -63,11 +69,13 @@ export const TransactionsProvider = ({ children }) => {
     }
 
     async function deleteTransaction(transactionId) {
+        const storedUserId = await AsyncStorage.getItem("loggedUserId");
+
         try {
             setProcessingDelete(true)
 
             const response = await fetch(
-                `${Server_API}/transactions/Ru-dfrhm8399izhum/${transactionId}`,
+                `${Server_API}/transactions/${storedUserId}/${transactionId}`,
                 {
                     method: "DELETE",
                     headers: { "Content-Type": "application/json" },

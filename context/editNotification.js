@@ -1,3 +1,5 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const { useContext, useState } = require("react");
 const { createContext } = require("react");
 
@@ -7,9 +9,11 @@ const EditNotificationContext = createContext();
 
 export const EditNotificationProvider = ({ children }) => {
   async function setNotificationRead(transactionId, values) {
+    const storedUserId = await AsyncStorage.getItem("loggedUserId");
+
     try {
       const response = await fetch(
-        `${Server_API}/notifications/Ru-dfrhm8399izhum/${transactionId}`,
+        `${Server_API}/notifications/${storedUserId}/${transactionId}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

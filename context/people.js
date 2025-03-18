@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useContext } from "react";
 import { useState } from "react";
 
@@ -12,9 +13,11 @@ export const PeopleProvider = ({ children }) => {
   const [deletingPerson, setDeletingPerson] = useState(false);
 
   async function addPerson(values) {
+    const storedUserId = await AsyncStorage.getItem("loggedUserId");
+
     try {
       setSavingPerson(true);
-      const response = await fetch(`${Server_API}/people/Ru-dfrhm8399izhum`, {
+      const response = await fetch(`${Server_API}/people/${storedUserId}`, {
         method: "POST",
         body: JSON.stringify(values),
         headers: { "Content-Type": "application/json" },
@@ -39,11 +42,13 @@ export const PeopleProvider = ({ children }) => {
   }
 
   async function saveEditedPerson(personId, values) {
+    const storedUserId = await AsyncStorage.getItem("loggedUserId");
+
     try {
       setSavingPerson(true);
 
       const response = await fetch(
-        `${Server_API}/people/Ru-dfrhm8399izhum/${personId}`,
+        `${Server_API}/people/${storedUserId}/${personId}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -66,11 +71,13 @@ export const PeopleProvider = ({ children }) => {
   }
 
   async function deletePerson(personId) {
+    const storedUserId = await AsyncStorage.getItem("loggedUserId");
+
     try {
       setDeletingPerson(true);
 
       const response = await fetch(
-        `${Server_API}/people/Ru-dfrhm8399izhum/${personId}`,
+        `${Server_API}/people/${storedUserId}/${personId}`,
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },

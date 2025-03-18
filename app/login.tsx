@@ -1,10 +1,12 @@
 import {
+  ActivityIndicator,
   Alert,
   Animated,
   Dimensions,
   Easing,
   Image,
   Keyboard,
+  Modal,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -19,15 +21,20 @@ import { useColorScheme } from "@/components/useColorScheme";
 import { StatusBar } from "expo-status-bar";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { supabase } from '@/utils/supabaseClient';
+import { useLogin } from "@/context/login";
+import { useAuth } from "@/context/auth";
 
 const Logo = require("@/assets/pages/loginLogo.png");
 
-// type RootStackParamList = {
-//   "(tabs)": undefined;
-// };
+type RootStackParamList = {
+  "(tabs)": undefined;
+};
 
 const Login = () => {
-  // const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const { setLoggedIn, setLoggedUserId } = useLogin();
+  const { authenticatedUser, authenticating } = useAuth()
+
   const colorScheme = useColorScheme();
   const bgColor = colorScheme === "dark" ? "#000" : "#EDEDED";
   const textColor = colorScheme === "dark" ? "#fff" : "#000";
@@ -41,8 +48,9 @@ const Login = () => {
   const [messageText, setMessageText] = useState<string>("");
   const [sendLoading, setSendLoading] = useState<boolean>(false);
   const [verifyLoading, setVerifyLoading] = useState<boolean>(false);
+  const [loginingIn, setLoginingIn] = useState<boolean>(false);
 
-  const [currentScreen, setCurrentScreen] = useState<"welcome" | "login" | "signup">("welcome");
+  const [currentScreen, setCurrentScreen] = useState<"welcome" | "login">("welcome");
 
   const sendOtp = async () => {
     // Regular expression to validate email format
@@ -63,6 +71,7 @@ const Login = () => {
 
     if (result.success) {
       setMessageText("OTP Sent Successfully");
+      startResendTimer();
     } else {
       setError(`Error Sending OTP!`)
     }
@@ -72,13 +81,12 @@ const Login = () => {
     const { error } = await supabase.auth.signInWithOtp({ email });
 
     if (error) {
-      console.log("OTP Error:", error.message);
+      setError(error.message);
       return { success: false, message: error.message };
     }
 
     return { success: true, message: "OTP sent to email successfully!" };
   };
-
 
   const verifyUserOtp = async (inputOTP: number) => {
     setOtp(inputOTP.toString());
@@ -98,7 +106,7 @@ const Login = () => {
 
     if (result.success) {
       setMessageText("OTP Verified Successfully!");
-      startResendTimer();
+      redirectUserToHome();
     } else {
       setError(`${result.message}`);
     }
@@ -118,6 +126,31 @@ const Login = () => {
     return { success: true, message: "Logged in successfully!", user: data };
   };
 
+  async function redirectUserToHome() {
+    try {
+      setLoginingIn(true);
+
+      // Call API
+      const result = await authenticatedUser(emailID);
+
+      // Set User Logged In
+      setLoggedIn(true);
+      setLoggedUserId(result.userId);
+
+      // Set loading to false
+      setLoginingIn(false);
+
+      // Show sucess message
+      setMessageText(result.message);
+
+      // Redirect to home 
+      navigation.replace("(tabs)");
+    } catch (error) {
+      setLoginingIn(false);
+      console.log("Error Redirecting to Home: ", error);
+    }
+  }
+
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (resendTimer > 0) {
@@ -134,10 +167,6 @@ const Login = () => {
 
   function handleLogin() {
     setCurrentScreen("login");
-  }
-
-  function handleSignup() {
-    setCurrentScreen("signup");
   }
 
   function handleBack() {
@@ -161,88 +190,85 @@ const Login = () => {
           }}
         />
 
-        <SafeAreaView
-          style={[styles.bottomContainer, { borderBottomWidth: 0 }]}
-        >
-          {currentScreen === "welcome" && (
-            <>
+        {currentScreen === "welcome" && (
+          <SafeAreaView
+            style={[styles.bottomContainer,
+            { justifyContent: "space-evenly" }
+            ]}
+          >
+            <SafeAreaView>
               <Text style={styles.header}>Welcome!</Text>
               <Text style={{ fontSize: 16 }}>
                 Take control of your finances—track, plan, and grow. Your money, your rules.
               </Text>
+            </SafeAreaView>
 
-              <SafeAreaView style={[styles.flex_row_btw, { marginTop: "15%" }]}>
-                <TouchableOpacity
-                  style={[styles.button, { backgroundColor: textColor }]}
-                  onPress={handleLogin}
-                  activeOpacity={0.7}
-                >
-                  <Text style={[styles.buttonText, { color: oppColor }]}>
-                    Log In
-                  </Text>
-                </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: textColor }]}
+              onPress={handleLogin}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.buttonText, { color: oppColor }]}>
+                Let's Get Started
+              </Text>
+            </TouchableOpacity>
+          </SafeAreaView>
+        )}
 
-                <TouchableOpacity
-                  onPress={handleSignup}
-                  style={[
-                    styles.button,
-                    {
-                      backgroundColor: bgColor,
-                      borderColor: textColor,
-                      borderWidth: 2,
-                    },
-                  ]}
-                  activeOpacity={0.7}
-                >
-                  <Text style={[styles.buttonText, { color: textColor }]}>
-                    Sign Up
-                  </Text>
-                </TouchableOpacity>
-              </SafeAreaView>
-            </>
-          )}
+        {currentScreen === "login" && (
+          <SafeAreaView
+            style={[styles.bottomContainer, { borderBottomWidth: 0 }]}
+          >
+            <BackButton handleBack={handleBack} />
 
-          {(currentScreen === "signup" ||
-            currentScreen === "login") && (
-              <>
-                <BackButton handleBack={handleBack} />
+            <Messages
+              error={error}
+              messageText={messageText}
+              setError={setError}
+              setMessageText={setMessageText}
+            />
 
-                <Messages
-                  error={error}
-                  messageText={messageText}
-                  setError={setError}
-                  setMessageText={setMessageText}
-                />
+            <Text style={styles.headerTitle}>Welcome! Let's Get Started</Text>
 
-                <Text style={styles.headerTitle}>{currentScreen === "login" ? "Log In" : "Sing Up"}</Text>
+            {/* Email Input */}
+            <EmailInput
+              emailID={emailID}
+              setEmailID={setEmailID}
+              resendTimer={resendTimer}
+              sendLoading={sendLoading}
+              verifyLoading={verifyLoading}
+              sendOtp={sendOtp}
+            />
 
-                {/* Email Input */}
-                <EmailInput
-                  emailID={emailID}
-                  setEmailID={setEmailID}
-                  resendTimer={resendTimer}
-                  sendLoading={sendLoading}
-                  verifyLoading={verifyLoading}
-                  sendOtp={sendOtp}
-                />
+            {/* OTP Input */}
+            <OTPInput length={6} onComplete={verifyUserOtp} />
 
-                {/* OTP Input */}
-                <OTPInput length={6} onComplete={verifyUserOtp} />
-
-                <SafeAreaView style={[styles.flex_center, { marginTop: 20 }]}>
-                  <TouchableOpacity
-                    onPress={() => verifyUserOtp(Number(otp))}
-                    disabled={verifyLoading || sendLoading}
-                    activeOpacity={0.5}
-                    style={[styles.otpButton, { backgroundColor: textColor }]}
-                  >
-                    <Text style={{ color: oppColor, fontWeight: "500" }}>{verifyLoading ? "Verifing..." : "Verify OTP"}</Text>
-                  </TouchableOpacity>
-                </SafeAreaView>
-              </>
-            )}
-        </SafeAreaView>
+            <SafeAreaView style={[styles.flex_center, { marginTop: 20 }]}>
+              <TouchableOpacity
+                onPress={() => verifyUserOtp(Number(otp))}
+                disabled={verifyLoading || sendLoading}
+                activeOpacity={0.5}
+                style={[styles.otpButton, { backgroundColor: textColor }]}
+              >
+                <Text style={{ color: oppColor, fontWeight: "500" }}>{verifyLoading ? "Verifing..." : "Verify OTP"}</Text>
+              </TouchableOpacity>
+            </SafeAreaView>
+          </SafeAreaView>
+        )}
       </SafeAreaView>
+
+      <Modal
+        animationType="none"
+        transparent={true}
+        visible={loginingIn || authenticating}
+      >
+        <SafeAreaView style={ModalStyles.container}>
+          <SafeAreaView style={[styles.otpButton, ModalStyles.flex_row, { backgroundColor: bgColor, }]}>
+            <ActivityIndicator color={textColor} size="small" />
+            <Text style={{ fontWeight: 500 }}>Redirecting...</Text>
+          </SafeAreaView>
+        </SafeAreaView>
+      </Modal>
     </ScrollView>
   );
 };
@@ -469,7 +495,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   button: {
-    width: "48%",
+    width: "100%",
     borderRadius: 30,
     paddingHorizontal: 20,
     paddingVertical: 10,
@@ -576,3 +602,21 @@ const OTPInputStyles = StyleSheet.create({
     paddingHorizontal: 15,
   },
 });
+
+const ModalStyles = StyleSheet.create({
+  container: {
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#00000050"
+  },
+  flex_row: {
+    gap: 10,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  }
+})

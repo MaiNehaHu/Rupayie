@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
 import { useContext } from "react";
 
@@ -12,11 +13,13 @@ export const CategoryProvider = ({ children }) => {
   const [loadingCategoryDelete, setLoadingCategoryDelete] = useState(false);
 
   async function addNewCategory(values) {
+    const storedUserId = await AsyncStorage.getItem("loggedUserId");
+
     try {
       setLoadingCategories(true);
 
       const response = await fetch(
-        `${Server_API}/categories/Ru-dfrhm8399izhum`,
+        `${Server_API}/categories/${storedUserId}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -42,11 +45,13 @@ export const CategoryProvider = ({ children }) => {
   }
 
   async function saveEditedCategory(categoryId, values) {
+    const storedUserId = await AsyncStorage.getItem("loggedUserId");
+
     try {
       setLoadingCategories(true);
 
       const response = await fetch(
-        `${Server_API}/categories/Ru-dfrhm8399izhum/${categoryId}`,
+        `${Server_API}/categories/${storedUserId}/${categoryId}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -69,11 +74,13 @@ export const CategoryProvider = ({ children }) => {
   }
 
   async function deleteCategory(categoryId) {
+    const storedUserId = await AsyncStorage.getItem("loggedUserId");
+
     try {
       setLoadingCategoryDelete(true);
 
       const response = await fetch(
-        `${Server_API}/categories/Ru-dfrhm8399izhum/${categoryId}`,
+        `${Server_API}/categories/${storedUserId}/${categoryId}`,
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },

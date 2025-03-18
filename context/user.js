@@ -1,3 +1,5 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const { useContext, createContext, useState } = require("react");
 
 const Server_API = "https://expense-trackerr-server.vercel.app/api";
@@ -28,10 +30,12 @@ export const UserDetailsProvider = ({ children }) => {
   const [savingUserProfile, setSavingUserProfile] = useState(false);
 
   const fetchUserDetails = async () => {
+    const storedUserId = await AsyncStorage.getItem("loggedUserId");
+
     try {
       setLoadingUserDetails(true);
 
-      const response = await fetch(`${Server_API}/users/Ru-dfrhm8399izhum`);
+      const response = await fetch(`${Server_API}/users/${storedUserId}`);
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -92,12 +96,14 @@ export const UserDetailsProvider = ({ children }) => {
   };
 
   const updateUserDetails = async (values, field) => {
+    const storedUserId = await AsyncStorage.getItem("loggedUserId");
+
     try {
       if (field === "name") setSavingUserName(true);
       else setSavingUserProfile(true);
 
       const response = await fetch(
-        `${Server_API}/users/Ru-dfrhm8399izhum/`,
+        `${Server_API}/users/${storedUserId}/`,
         {
           method: "PUT",
           body: JSON.stringify(values),
@@ -121,9 +127,11 @@ export const UserDetailsProvider = ({ children }) => {
   }
 
   async function handleBiometricToggle(biometricFlag) {    
+    const storedUserId = await AsyncStorage.getItem("loggedUserId");
+
     try {
       const response = await fetch(
-        `${Server_API}/users/Ru-dfrhm8399izhum`,
+        `${Server_API}/users/${storedUserId}`,
         {
           method: "PUT",
           body: JSON.stringify({ biometric: biometricFlag }),
