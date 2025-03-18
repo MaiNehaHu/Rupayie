@@ -257,18 +257,20 @@ const Login = () => {
         )}
       </SafeAreaView>
 
-      <Modal
-        animationType="none"
-        transparent={true}
-        visible={loginingIn || authenticating}
-      >
-        <SafeAreaView style={ModalStyles.container}>
-          <SafeAreaView style={[styles.otpButton, ModalStyles.flex_row, { backgroundColor: bgColor, }]}>
-            <ActivityIndicator color={textColor} size="small" />
-            <Text style={{ fontWeight: 500 }}>Redirecting...</Text>
+      {(loginingIn || authenticating) &&
+        <Modal
+          animationType="none"
+          transparent={true}
+          visible={loginingIn || authenticating}
+        >
+          <SafeAreaView style={ModalStyles.container}>
+            <SafeAreaView style={[styles.otpButton, ModalStyles.flex_row, { backgroundColor: bgColor, }]}>
+              <ActivityIndicator color={textColor} size="small" />
+              <Text style={{ fontWeight: 500 }}>Redirecting...</Text>
+            </SafeAreaView>
           </SafeAreaView>
-        </SafeAreaView>
-      </Modal>
+        </Modal>
+      }
     </ScrollView>
   );
 };

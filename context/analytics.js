@@ -40,7 +40,7 @@ export const AnalyticsProvider = ({ children }) => {
 
   return (
     <AnalyticsContext.Provider
-      value={{ analytics, loadingAnalytics, fetchAnalytics }}
+      value={{ analytics, setAnalytics, loadingAnalytics, fetchAnalytics }}
     >
       {children}
     </AnalyticsContext.Provider>

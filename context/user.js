@@ -157,6 +157,7 @@ export const UserDetailsProvider = ({ children }) => {
     <UserContext.Provider
       value={{
         userDetails,
+        setUserDetailsDetails,
         loadingUserDetails,
         savingUserName,
         savingUserProfile,

@@ -107,7 +107,7 @@ export default function TabOne() {
 
   useEffect(() => {
     if (!loadingUserDetails) updateBudgets();
-  }, [transactionsList]);
+  }, []);
 
   async function updateBudgets() {
     try {

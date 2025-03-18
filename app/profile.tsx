@@ -17,6 +17,7 @@ import { useUserData } from "@/context/user";
 import { useNavigation } from "expo-router";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useLogin } from "@/context/login";
+import { useAnalytics } from "@/context/analytics";
 
 type RootStackParamList = {
   login: undefined;
@@ -31,7 +32,9 @@ const profile = () => {
     savingUserProfile,
   } = useUserData();
   const { setProfilePhoto } = useProfile();
-  const { setLoggedIn, setLoggedUserId } = useLogin()
+  const { setLoggedIn, setLoggedUserId } = useLogin();
+  const { setUserDetailsDetails } = useUserData();
+  const { setAnalytics } = useAnalytics()
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const colorScheme = useColorScheme();
@@ -72,9 +75,18 @@ const profile = () => {
   }
 
   async function handleLogout() {
-    navigation.replace("login");
     setLoggedIn(false);
     setLoggedUserId("");
+
+    // Clear User Data
+    setUserDetailsDetails(null);
+    setAnalytics({
+      totalSpent: 0,
+      totalEarned: 0,
+      totalAmount: 0,
+    });
+
+    navigation.replace("login");
   }
 
   useEffect(() => {
