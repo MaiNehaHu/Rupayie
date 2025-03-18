@@ -209,7 +209,7 @@ const Login = () => {
               activeOpacity={0.7}
             >
               <Text style={[styles.buttonText, { color: oppColor }]}>
-                Let's Get Started
+                Let's Get Started 🤑
               </Text>
             </TouchableOpacity>
           </SafeAreaView>
@@ -257,11 +257,11 @@ const Login = () => {
         )}
       </SafeAreaView>
 
-      {(loginingIn || authenticating) &&
+      {loginingIn &&
         <Modal
           animationType="none"
           transparent={true}
-          visible={loginingIn || authenticating}
+          visible={loginingIn}
         >
           <SafeAreaView style={ModalStyles.container}>
             <SafeAreaView style={[styles.otpButton, ModalStyles.flex_row, { backgroundColor: bgColor, }]}>
