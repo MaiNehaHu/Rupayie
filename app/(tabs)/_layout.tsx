@@ -21,8 +21,8 @@ function TabBarIcon(props: {
 export default function TabLayout() {
   const { loggedIn, loggedUserId } = useLogin();
 
-  const { biometricFlag, userDetails, fetchUserDetails } = useUserData();
-  const { analytics, fetchAnalytics } = useAnalytics();
+  const { biometricFlag, fetchUserDetails } = useUserData();
+  const { fetchAnalytics } = useAnalytics();
 
   const colorScheme = useColorScheme();
   const bgColor = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
@@ -31,8 +31,8 @@ export default function TabLayout() {
 
   useEffect(() => {
     if (loggedIn && loggedUserId) {
-      if (!analytics.totalAmount) fetchAnalytics();
-      if (!userDetails) fetchUserDetails();
+      fetchAnalytics();
+      fetchUserDetails();
     }
   }, [loggedIn, loggedUserId]);
 

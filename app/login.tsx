@@ -23,6 +23,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { supabase } from '@/utils/supabaseClient';
 import { useLogin } from "@/context/login";
 import { useAuth } from "@/context/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Logo = require("@/assets/pages/loginLogo.png");
 
@@ -134,15 +135,19 @@ const Login = () => {
       // Call API
       const result = await authenticatedUser(emailID);
 
+      // Show sucess message
+      setMessageText(result.message);
+
       // Set User Logged In
       setLoggedIn(true);
       setLoggedUserId(result.userId);
 
+      // Store in Async
+      await AsyncStorage.setItem("loggedUserId", result.userId);
+      await AsyncStorage.setItem("loggedIn", "true");
+
       // Set loading to false
       setLoginingIn(false);
-
-      // Show sucess message
-      setMessageText(result.message);
 
       // Redirect to home 
       navigation.replace("(tabs)");

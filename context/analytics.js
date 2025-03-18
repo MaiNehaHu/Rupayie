@@ -1,5 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+// AsyncStorage.clear()
+
 const { useContext, createContext, useState } = require("react");
 
 const Server_API = "https://expense-trackerr-server.vercel.app/api";
