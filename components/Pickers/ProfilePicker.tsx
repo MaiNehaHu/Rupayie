@@ -40,41 +40,26 @@ const ProfilePicker = ({
 
       <SafeAreaView style={styles.flex}>
         {[
-          girl1,
-          boy1,
-          girl2,
-          boy2,
-          boy3,
-          girl8,
-          boy4,
-          boy5,
-          girl3,
-          boy6,
-          girl4,
-          girl6,
-          girl5,
-          boy7,
-          boy10,
-          girl7,
-        ].map((pf) => (
-          <TouchableOpacity
-            key={pf}
-            activeOpacity={0.7}
-            disabled={savingUserProfile || pf == currentImage}
-            onPressIn={() => setCurrentImage(pf)}
-          >
-            <Image
-              style={[
-                styles.image,
-                {
-                  borderColor: pf == currentImage ? "#4588DF" : "transparent",
-                  borderWidth: pf == currentImage ? 5 : 0,
-                },
-              ]}
-              source={pf}
-            />
-          </TouchableOpacity>
-        ))}
+          girl1, girl2, girl3, girl4, girl5, girl6, girl7, girl8, boy1, boy2, boy3, boy4, boy5, boy6, boy7, boy10,]
+          .map((pf) => (
+            <TouchableOpacity
+              key={pf}
+              activeOpacity={0.7}
+              disabled={savingUserProfile || pf == currentImage}
+              onPressIn={() => setCurrentImage(pf)}
+            >
+              <Image
+                style={[
+                  styles.image,
+                  {
+                    borderColor: pf == currentImage ? "#4588DF" : "transparent",
+                    borderWidth: pf == currentImage ? 5 : 0,
+                  },
+                ]}
+                source={pf}
+              />
+            </TouchableOpacity>
+          ))}
       </SafeAreaView>
     </SafeAreaView>
   );
