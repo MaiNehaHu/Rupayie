@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
   },
   animatedView: {
     width: "100%",
-    height: screenHeight * 0.8, // 80% of screen height
+    height: screenHeight * 0.6, // 80% of screen height
     padding: 20,
     borderTopRightRadius: 15,
     borderTopLeftRadius: 15,
