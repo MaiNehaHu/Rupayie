@@ -119,15 +119,22 @@ const RecentTransFlatList = () => {
             marginBottom: 20,
           }}
         >
-          {Array.from({ length: 3 }).map((_, index) => (
-            <View
-              key={index}
-              style={[
-                styles.cardSkeleton,
-                { backgroundColor: placeholderColor },
-              ]}
-            ></View>
-          ))}
+          <FlatList
+            data={Array.from({ length: 2 })}
+            keyExtractor={(_, index) => index.toString()}
+            horizontal
+            renderItem={() => (
+              <View
+                style={[
+                  styles.cardSkeleton,
+                  { backgroundColor: placeholderColor },
+                ]}
+              />
+            )}
+            scrollEnabled={false}
+            showsHorizontalScrollIndicator={false}
+            ItemSeparatorComponent={() => <SafeAreaView style={{ width: 10 }} />}
+          />
         </SafeAreaView>
       </>
     )
