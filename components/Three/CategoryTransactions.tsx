@@ -103,7 +103,7 @@ const DonutTransactions = () => {
                             <Text style={{ fontWeight: '500' }}>
                                 {totalAmountSpent > 0 ? Math.ceil((cat.spent / totalAmountSpent) * 100) : 0}%
                             </Text>
-                            <Text numberOfLines={1} style={{ width: "50%" }}>{cat.name}</Text>
+                            <Text numberOfLines={1} style={{ maxWidth: "50%" }}>{cat.name}</Text>
                         </View>
 
                         <SafeAreaView style={styles.flex_row}>
