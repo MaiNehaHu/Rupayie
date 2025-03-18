@@ -234,7 +234,7 @@ const Login = () => {
               setMessageText={setMessageText}
             />
 
-            <Text style={styles.headerTitle}>Welcome! Let's Get Started</Text>
+            <Text style={styles.headerTitle}>Welcome!</Text>
 
             {/* Email Input */}
             <EmailInput
