@@ -20,7 +20,6 @@ import formatDateTimeSimple from "@/utils/formatDateTimeSimple";
 import ReadRecurring from "@/components/Modals/ReadRecurring";
 import intervalName from "@/constants/intervalName";
 import moment from "moment";
-import { useNavigation } from "expo-router";
 
 interface Recurring {
   amount: number;
@@ -196,15 +195,30 @@ const Recurrings = () => {
               );
             })
         ) : (
-          <Text
-            style={{
-              marginTop: 20,
+          <>
+            <Text
+              style={{
+                marginVertical: 20,
+                textAlign: "center",
+                fontStyle: "italic",
+              }}
+            >
+              No Record
+            </Text>
+            <Text style={{
               textAlign: "center",
               fontStyle: "italic",
-            }}
-          >
-            No Record
-          </Text>
+              lineHeight: 22
+            }}>
+              Add by pressing on the
+              <Text style={{ color: "#4FB92D" }}>
+                {" green "}
+              </Text>
+              colored
+              {"\n"}
+              plus button on the right bottom.
+            </Text>
+          </>
         )}
       </ScrollView>
 
@@ -280,23 +294,23 @@ const RecurringTransCard = ({
     interval === intervalName.everyDay
       ? when.everyDay
       : interval === intervalName.everyWeek
-      ? moment().day(when.everyWeek).format("dddd")
-      : interval === intervalName.everyMonth
-      ? addDateSuffix(when.everyMonth)
-      : interval === intervalName.everyYear
-      ? `${when.everyYear.date} ${moment.months(when.everyYear.month)}`
-      : "No Time";
+        ? moment().day(when.everyWeek).format("dddd")
+        : interval === intervalName.everyMonth
+          ? addDateSuffix(when.everyMonth)
+          : interval === intervalName.everyYear
+            ? `${when.everyYear.date} ${moment.months(when.everyYear.month)}`
+            : "No Time";
 
   const middleText =
     interval === intervalName.everyDay
       ? "at"
       : interval === intervalName.everyWeek
-      ? "on"
-      : interval === intervalName.everyMonth
-      ? "on"
-      : interval === intervalName.everyYear
-      ? "on"
-      : "No Time";
+        ? "on"
+        : interval === intervalName.everyMonth
+          ? "on"
+          : interval === intervalName.everyYear
+            ? "on"
+            : "No Time";
 
   return (
     <View style={styles.transactionsCard}>

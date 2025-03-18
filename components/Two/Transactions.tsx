@@ -142,15 +142,32 @@ const Transactions = () => {
                 );
               })
             ) : (
-              <Text
-                style={{
-                  marginTop: 20,
+              <>
+                <Text
+                  style={{
+                    marginVertical: 20,
+                    textAlign: "center",
+                    fontStyle: "italic",
+                  }}
+                >
+                  No Record
+                </Text>
+                <Text style={{
                   textAlign: "center",
                   fontStyle: "italic",
-                }}
-              >
-                No Record
-              </Text>
+                  lineHeight: 22
+                }}>
+                  Add a new transaction by pressing
+                  {"\n"}
+                  on the
+                  <Text style={{ color: "#4FB92D" }}>
+                    {" green "}
+                  </Text>
+                  colored
+                  {"\n"}
+                  plus button on the right bottom.
+                </Text>
+              </>
             )}
           </SafeAreaView>
         ) : loadingUserDetails || processing(

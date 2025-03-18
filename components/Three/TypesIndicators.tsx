@@ -59,9 +59,7 @@ const TypesIndicator = () => {
           </SafeAreaView>
         ))
       ) : (
-        <Text style={{ fontStyle: "italic", fontSize: 12 }}>
-          No Transactions Found
-        </Text>
+        <></>
       )}
     </SafeAreaView>
   );

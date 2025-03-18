@@ -15,7 +15,6 @@ import { Ionicons } from "@expo/vector-icons";
 import AddCategory from "@/components/Modals/AddCategory";
 import { Animated } from "react-native";
 import ReadCategory from "@/components/Modals/ReadCategory";
-import { useNavigation } from "expo-router";
 
 interface Category {
   name: string;
@@ -27,11 +26,9 @@ interface Category {
 
 const Category = () => {
   const { categoriesList } = useUserData();
-  const navigation = useNavigation();
 
   const colorScheme = useColorScheme();
   const categoryBg = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
-  const textColor = colorScheme === "dark" ? "#fff" : "#000";
   const oppColor = colorScheme === "light" ? "#fff" : "#000";
   const slideAddModalAnim = useRef(new Animated.Value(200)).current; // Start position off-screen
   const slideEditModalAnim = useRef(new Animated.Value(200)).current; // Start position off-screen
@@ -42,6 +39,14 @@ const Category = () => {
   const [clickedCategory, setClickedCategory] = useState<Category>(
     categoriesList[0]
   );
+  const [filteredCategoryList, setFilteredCategoryList] = useState<Category[]>(categoriesList);
+
+  useEffect(() => {
+    setFilteredCategoryList(
+      categoriesList
+        ?.filter((cat: Category) => cat.type === catName)
+    )
+  }, [catName, categoriesList])
 
   function switchCategory(name: string) {
     setCatName(name);
@@ -120,9 +125,8 @@ const Category = () => {
       </View>
 
       <ScrollView style={{ marginTop: 10 }}>
-        {categoriesList.length > 0 ? (
-          categoriesList
-            .filter((cat: Category) => cat.type === catName)
+        {filteredCategoryList.length > 0 ? (
+          filteredCategoryList
             .map((category: Category) => (
               <TouchableOpacity
                 activeOpacity={0.8}
@@ -143,15 +147,30 @@ const Category = () => {
               </TouchableOpacity>
             ))
         ) : (
-          <Text
-            style={{
-              marginTop: 20,
+          <>
+            <Text
+              style={{
+                marginVertical: 20,
+                textAlign: "center",
+                fontStyle: "italic",
+              }}
+            >
+              No Record
+            </Text>
+            <Text style={{
               textAlign: "center",
               fontStyle: "italic",
-            }}
-          >
-            No Record
-          </Text>
+              lineHeight: 22
+            }}>
+              Add by pressing on the
+              <Text style={{ color: "#4FB92D" }}>
+                {" green "}
+              </Text>
+              colored
+              {"\n"}
+              plus button on the right bottom.
+            </Text>
+          </>
         )}
       </ScrollView>
 
@@ -173,7 +192,7 @@ const Category = () => {
           visible={showAddModal}
           slideModalAnim={slideAddModalAnim}
           handleCloseModal={handleCloseAddModal}
-          setCategory={() => {}}
+          setCategory={() => { }}
           clickedCategory={catName}
         />
       )}

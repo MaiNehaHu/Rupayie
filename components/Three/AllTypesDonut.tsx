@@ -110,9 +110,11 @@ const AllTypesDonut: React.FC = () => {
           ))}
         </Svg>
       ) : (
-        <SafeAreaView style={{ marginVertical: 40 }}>
-          <Text style={{ fontStyle: "italic" }}>
+        <SafeAreaView style={{ marginVertical: 80 }}>
+          <Text style={{ fontStyle: "italic", textAlign: "center", lineHeight: 22 }}>
             No Transaction Data Available
+            {"\n"}
+            Add a new transaction to visualize your records
           </Text>
         </SafeAreaView>
       )}
