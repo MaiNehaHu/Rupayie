@@ -18,6 +18,7 @@ import { useNavigation } from "expo-router";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useLogin } from "@/context/login";
 import { useAnalytics } from "@/context/analytics";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type RootStackParamList = {
   login: undefined;
@@ -85,6 +86,9 @@ const profile = () => {
       totalEarned: 0,
       totalAmount: 0,
     });
+
+    // clear async 
+    AsyncStorage.clear();
 
     navigation.replace("login");
   }
