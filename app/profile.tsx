@@ -88,9 +88,9 @@ const profile = () => {
     });
 
     // clear async 
-    AsyncStorage.clear();
+    await AsyncStorage.clear();
 
-    navigation.replace("login");
+    navigation.goBack();
   }
 
   useEffect(() => {
