@@ -1,17 +1,4 @@
 export default [
-    // Lightest colors (Pastels & Soft Shades)
-    "#fff5e1", // Soft Peach
-    "#ffe6cc", // Light Orange
-    "#ffdd99", // Pale Yellow
-    "#fff7b2", // Soft Butter Yellow
-    "#e8ffd1", // Light Lime Green
-    "#d4fcb1", // Soft Green
-    "#c2fbe1", // Light Teal
-    "#b8eaff", // Light Sky Blue
-    "#d4c2fc", // Lavender
-    "#ffc2e2", // Light Pink
-    "#ffd9e8", // Soft Rose  
-
     // Brighter colors (Vibrant & Neon Tones)
     "#ffaa00", // Bright Yellow-Orange
     "#ffe100", // Strong Yellow
@@ -68,4 +55,17 @@ export default [
     "#ff99cc", // Rose Pink
     "#c094ff", // Light Lilac
     "#aa80ff", // Pastel Purple
+
+    // Lightest colors (Pastels & Soft Shades)
+    "#fff5e1", // Soft Peach
+    "#ffe6cc", // Light Orange
+    "#ffdd99", // Pale Yellow
+    "#fff7b2", // Soft Butter Yellow
+    "#e8ffd1", // Light Lime Green
+    "#d4fcb1", // Soft Green
+    "#c2fbe1", // Light Teal
+    "#b8eaff", // Light Sky Blue
+    "#d4c2fc", // Lavender
+    "#ffc2e2", // Light Pink
+    "#ffd9e8", // Soft Rose  
 ];
