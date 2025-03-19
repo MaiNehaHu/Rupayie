@@ -175,12 +175,6 @@ const Login = () => {
     setCurrentScreen("login");
   }
 
-  function handleBack() {
-    setCurrentScreen("welcome");
-    setEmailID("");
-    setOtp("");
-  }
-
   const screenWidth = Dimensions.get("window").width;
 
   return (
@@ -225,16 +219,12 @@ const Login = () => {
           <SafeAreaView
             style={[styles.bottomContainer, { borderBottomWidth: 0 }]}
           >
-            <BackButton handleBack={handleBack} />
-
             <Messages
               error={error}
               messageText={messageText}
               setError={setError}
               setMessageText={setMessageText}
             />
-
-            <Text style={styles.headerTitle}>Welcome!</Text>
 
             {/* Email Input */}
             <EmailInput
@@ -281,22 +271,6 @@ const Login = () => {
   );
 };
 
-const BackButton = ({ handleBack }: { handleBack: () => void; }) => {
-  const colorScheme = useColorScheme();
-  const textColor = colorScheme === "dark" ? "#fff" : "#000";
-  const oppColor = colorScheme === "light" ? "#fff" : "#1C1C1C";
-
-  return (
-    <TouchableOpacity
-      activeOpacity={0.8}
-      onPress={handleBack}
-      style={[styles.backButton, { backgroundColor: oppColor }]}
-    >
-      <FontAwesome6 name="arrow-left" size={18} color={textColor} />
-    </TouchableOpacity>
-  )
-}
-
 const EmailInput = (
   { emailID,
     setEmailID,
@@ -315,7 +289,7 @@ const EmailInput = (
   const colorScheme = useColorScheme();
   const textColor = colorScheme === "dark" ? "#fff" : "#000";
   const oppColor = colorScheme === "light" ? "#fff" : "#000";
-  const placeholderColor = colorScheme === "dark" ? "#c2c2c2" : "#4d4d4d";
+  const placeholderColor = colorScheme === "dark" ? "#888888" : "#b8b8b8";
 
   return (
     <View style={[styles.inputContainer, { backgroundColor: oppColor }]}>
@@ -347,7 +321,7 @@ const OTPInput = ({ length = 6, onComplete }: { length: number, onComplete: any 
   const colorScheme = useColorScheme();
   const bgColor = colorScheme === "dark" ? "#000" : "#fff";
   const textColor = colorScheme === "dark" ? "#fff" : "#000";
-  const placeholderColor = colorScheme === "dark" ? "#c2c2c2" : "#4d4d4d";
+  const placeholderColor = colorScheme === "dark" ? "#888888" : "#b8b8b8";
 
   const [otp, setOtp] = useState(new Array(length).fill(""));
   const inputs = useRef<TextInput[]>([]);
@@ -478,7 +452,7 @@ const Messages = (
       }
     </>
   )
-}
+};
 
 export default Login;
 
@@ -513,12 +487,6 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     textAlign: "center",
   },
-  headerTitle: {
-    fontSize: 20,
-    marginBottom: 40,
-    fontWeight: "600",
-    textAlign: "center",
-  },
   inputContainer: {
     padding: 5,
     borderWidth: 1,
@@ -544,15 +512,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 5,
     textAlign: "center",
-  },
-  backButton: {
-    top: 20,
-    left: 20,
-    position: "absolute",
-    marginBottom: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderRadius: 30,
   },
   bottomContainer: {
     padding: 25,
@@ -628,4 +587,4 @@ const ModalStyles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   }
-})
+});

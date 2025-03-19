@@ -30,11 +30,13 @@ export default function TabLayout() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    if (loggedIn && loggedUserId) {
-      fetchAnalytics();
-      fetchUserDetails();
-    }
+    if (loggedIn && loggedUserId) fetchData();
   }, [loggedIn, loggedUserId]);
+
+  async function fetchData() {
+    await fetchAnalytics();
+    await fetchUserDetails();
+  }
 
   return !loggedIn ? (
     <Login />

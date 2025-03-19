@@ -210,6 +210,12 @@ const profile = () => {
           )}
         </SafeAreaView>
 
+        <SafeAreaView style={{ marginTop: 10 }}>
+          <View style={[styles.inputField, { backgroundColor: oppColor, alignSelf: "center", }]}>
+            <Text style={{ color: textColor, fontWeight: 600, textAlign: "center" }}>{userDetails?.email}</Text>
+          </View>
+        </SafeAreaView>
+
         {showProfilePicker && (
           <SafeAreaView style={{ padding: 30 }}>
             <ProfilePicker
@@ -288,6 +294,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     paddingVertical: 10,
     paddingHorizontal: 15,
-    borderRadius: 15,
+    borderRadius: 10,
   },
 });
