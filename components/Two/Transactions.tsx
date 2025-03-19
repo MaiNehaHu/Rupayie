@@ -105,7 +105,7 @@ const Transactions = () => {
   return (
     <>
       <View style={styles.container}>
-        {!loadingUserDetails && !processing ? (
+        {!loadingUserDetails ? (
           <SafeAreaView style={styles.transactionContainer}>
             {transactions?.length > 0 ? (
               transactions.map((transaction: Transaction, index: number) => {
@@ -170,7 +170,7 @@ const Transactions = () => {
               </>
             )}
           </SafeAreaView>
-        ) : (loadingUserDetails || processing) && (
+        ) : (
           Array.from({ length: 5 }).map((_, index) => (
             <View
               key={index}
