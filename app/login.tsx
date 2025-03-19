@@ -139,8 +139,8 @@ const Login = () => {
       setMessageText(result.message);
 
       // Set User Logged In
-      setLoggedIn(true);
-      setLoggedUserId(result.userId);
+      await setLoggedIn(true);
+      await setLoggedUserId(result.userId);
 
       // Store in Async
       await AsyncStorage.setItem("loggedUserId", result.userId);
@@ -150,7 +150,7 @@ const Login = () => {
       setLoginingIn(false);
 
       // Redirect to home 
-      navigation.replace("(tabs)");
+      // navigation.replace("(tabs)");
     } catch (error) {
       setLoginingIn(false);
       console.log("Error Redirecting to Home: ", error);
