@@ -91,7 +91,7 @@ const DateAndTimePicker = ({
 
       {showPicker && (
         <Modal visible={showPicker} transparent animationType="fade">
-          <Pressable style={styles.modalContainer}>
+          <Pressable style={styles.modalContainer} onPress={handleCloseModal}>
             <Pressable
               onPress={(e) => e.stopPropagation()}
               style={styles.modalContent}
