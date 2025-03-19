@@ -125,6 +125,21 @@ const AddTransaction = ({
       return false;
     }
 
+    // Get today's date without the time part
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); 
+    // Normalize time to midnight
+
+    // Get selected date without the time part
+    const selectedDate = new Date(date);
+    selectedDate.setHours(0, 0, 0, 0);
+
+    if (selectedDate >= today) {
+      setShowError(true);
+      setErrorText("Can't select a future date");
+      return false;
+    }
+
     return true;
   }
 
