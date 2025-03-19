@@ -36,7 +36,7 @@ const ReadPerson = ({
   clickedPerson: Person;
 }) => {
   const colorScheme = useColorScheme();
-  const { fetchUserDetails } = useUserData();
+  const { fetchUserDetails, loadingUserDetails } = useUserData();
   const { saveEditedPerson, deletePerson, savingPerson, deletingPerson } =
     usePeople();
 
@@ -164,7 +164,7 @@ const ReadPerson = ({
                     <TouchableOpacity
                       onPress={handleDeletePerson}
                       activeOpacity={0.5}
-                      disabled={savingPerson || deletingPerson}
+                      disabled={savingPerson || deletingPerson || loadingUserDetails}
                       style={[styles.doneButton, { backgroundColor: "red" }]}
                     >
                       <FontAwesome6
@@ -192,7 +192,7 @@ const ReadPerson = ({
                     <TouchableOpacity
                       onPress={handleSavingPerson}
                       activeOpacity={0.5}
-                      disabled={savingPerson || deletingPerson}
+                      disabled={savingPerson || deletingPerson || loadingUserDetails}
                       style={[
                         styles.doneButton,
                         { backgroundColor: "#4FB92D" },

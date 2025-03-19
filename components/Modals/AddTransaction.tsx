@@ -189,7 +189,7 @@ const AddTransaction = ({
         <Pressable
           style={styles.modalContainer}
           onPress={closeModal}
-          disabled={processing || loadingUserDetails}
+          disabled={processing}
         >
           <Pressable
             onPress={(e) => e.stopPropagation()}
@@ -205,7 +205,7 @@ const AddTransaction = ({
                 >
                   <Text style={styles.title}>Add Your {categoryName}</Text>
 
-                  {processing || loadingUserDetails ? (
+                  {processing ? (
                     <View style={styles.doneButton}>
                       <ActivityIndicator size="small" color={"#FFF"} />
                     </View>
@@ -214,6 +214,7 @@ const AddTransaction = ({
                       activeOpacity={0.5}
                       onPress={handleSave}
                       style={styles.doneButton}
+                      disabled={processing || loadingUserDetails}
                     >
                       <FontAwesome6
                         name="save"

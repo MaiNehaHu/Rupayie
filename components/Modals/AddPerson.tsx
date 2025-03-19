@@ -30,7 +30,7 @@ const AddPerson = ({
   setPerson: (value: any) => void;
 }) => {
   const colorScheme = useColorScheme();
-  const { fetchUserDetails } = useUserData();
+  const { fetchUserDetails,loadingUserDetails } = useUserData();
   const { addPerson, savingPerson } = usePeople();
 
   const inputBg = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
@@ -133,6 +133,7 @@ const AddPerson = ({
                       activeOpacity={0.5}
                       onPress={handleAddNewPerson}
                       style={styles.doneButton}
+                      disabled={savingPerson || loadingUserDetails}
                     >
                       <FontAwesome6
                         name="save"

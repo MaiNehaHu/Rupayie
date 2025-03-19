@@ -118,7 +118,7 @@ const ReadTrash = ({
         <Pressable
           style={styles.modalContainer}
           onPress={handleCloseModal}
-          disabled={isTransDeleting || isReverting || loadingUserDetails}
+          disabled={isTransDeleting || isReverting}
         >
           <Pressable
             onPress={(e) => e.stopPropagation()}
@@ -132,7 +132,7 @@ const ReadTrash = ({
                   <SafeAreaView
                     style={[styles.flex_row_start_btw, { marginBottom: 15 }]}
                   >
-                    {isTransDeleting || loadingUserDetails ? (
+                    {isTransDeleting ? (
                       <View
                         style={[styles.doneButton, { backgroundColor: "red" }]}
                       >
@@ -155,7 +155,7 @@ const ReadTrash = ({
 
                     <Text style={styles.title}>Your {category.name}</Text>
 
-                    {isReverting || loadingUserDetails ? (
+                    {isReverting ? (
                       <View
                         style={[
                           styles.doneButton,

@@ -42,7 +42,7 @@ const AddCategory = ({
   setCategory: (category: Category) => void;
   clickedCategory: string;
 }) => {
-  const { categoriesList, fetchUserDetails } = useUserData();
+  const { categoriesList, fetchUserDetails, loadingUserDetails } = useUserData();
   const { fetchAnalytics } = useAnalytics();
   const { addNewCategory, loadingCategories } = useCategory();
   const colorScheme = useColorScheme();
@@ -175,6 +175,7 @@ const AddCategory = ({
                       activeOpacity={0.5}
                       onPress={handleSave}
                       style={styles.doneButton}
+                      disabled={loadingUserDetails || loadingCategories}
                     >
                       <FontAwesome6
                         name="save"

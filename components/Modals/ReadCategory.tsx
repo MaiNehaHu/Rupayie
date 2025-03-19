@@ -39,7 +39,7 @@ const ReadCategory = ({
   slideModalAnim: any;
   category: Category;
 }) => {
-  const { categoriesList, fetchUserDetails } = useUserData();
+  const { categoriesList, fetchUserDetails, loadingUserDetails } = useUserData();
   const { fetchAnalytics } = useAnalytics();
   const {
     saveEditedCategory,
@@ -197,7 +197,7 @@ const ReadCategory = ({
                     <TouchableOpacity
                       onPress={handleDelete}
                       activeOpacity={0.5}
-                      disabled={loadingCategories || loadingCategoryDelete}
+                      disabled={loadingCategories || loadingCategoryDelete || loadingUserDetails}
                       style={[styles.doneButton, { backgroundColor: "red" }]}
                     >
                       <FontAwesome6
@@ -218,7 +218,7 @@ const ReadCategory = ({
                     <TouchableOpacity
                       activeOpacity={0.5}
                       onPress={handleSave}
-                      disabled={loadingCategoryDelete || loadingCategories}
+                      disabled={loadingCategoryDelete || loadingCategories || loadingUserDetails}
                       style={styles.doneButton}
                     >
                       <FontAwesome6

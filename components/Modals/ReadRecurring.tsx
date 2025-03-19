@@ -275,7 +275,7 @@ const ReadRecurring = ({
         <Pressable
           style={styles.modalContainer}
           onPress={closeTheModal}
-          disabled={loadingRecurring || loadingRecurringDelete || loadingUserDetails}
+          disabled={loadingRecurring || loadingRecurringDelete}
         >
           <Pressable
             onPress={(e) => e.stopPropagation()}
@@ -288,7 +288,7 @@ const ReadRecurring = ({
                 <SafeAreaView
                   style={[styles.flex_row_start_btw, { marginBottom: 15 }]}
                 >
-                  {loadingRecurringDelete || loadingUserDetails ? (
+                  {loadingRecurringDelete ? (
                     <View
                       style={[styles.doneButton, { backgroundColor: "red" }]}
                     >

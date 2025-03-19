@@ -253,7 +253,7 @@ const ReadTransaction = ({
           style={styles.modalContainer}
           onPress={closeModal}
           disabled={
-            processing || processingDelete || loadingUserDetails
+            processing || processingDelete
             // || imageUploading
           }
         >
@@ -269,7 +269,7 @@ const ReadTransaction = ({
                 <SafeAreaView
                   style={[styles.flex_row_start_btw, { marginBottom: 15 }]}
                 >
-                  {processingDelete || loadingUserDetails ? (
+                  {processingDelete ? (
                     <View
                       style={[styles.doneButton, { backgroundColor: "red" }]}
                     >
@@ -295,7 +295,7 @@ const ReadTransaction = ({
 
                   <Text style={styles.title}>Your {categoryName}</Text>
 
-                  {processing || loadingUserDetails ? (
+                  {processing ? (
                     // || imageUploading
                     <View
                       style={[

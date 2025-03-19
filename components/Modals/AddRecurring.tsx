@@ -77,9 +77,8 @@ const AddRecurring = ({
   const date = new Date();
   const hourIn12 = date.getHours() % 12 || 12; // Converts 0 to 12 for midnight
 
-  const time = `${paddingZero(hourIn12)}:${paddingZero(date.getMinutes())} ${
-    date.getHours() <= 12 ? "AM" : "PM"
-  }`;
+  const time = `${paddingZero(hourIn12)}:${paddingZero(date.getMinutes())} ${date.getHours() <= 12 ? "AM" : "PM"
+    }`;
 
   const constWhen: When = {
     everyDay: time,
@@ -115,10 +114,10 @@ const AddRecurring = ({
     clickedCategory === "Spent"
       ? "Expense"
       : clickedCategory === "Earned"
-      ? "Earning"
-      : clickedCategory === "Borrowed"
-      ? "Loan"
-      : "Lending";
+        ? "Earning"
+        : clickedCategory === "Borrowed"
+          ? "Loan"
+          : "Lending";
 
   function closeTheModal() {
     handleCloseModal();
@@ -224,7 +223,7 @@ const AddRecurring = ({
           style={styles.modalContainer}
           onPress={closeTheModal}
           disabled={
-            loadingRecurring || loadingUserDetails
+            loadingRecurring
             // || imageUploading
           }
         >
@@ -241,7 +240,7 @@ const AddRecurring = ({
                 >
                   <Text style={styles.title}>Add {categoryName} Recurring</Text>
 
-                  {loadingRecurring || loadingUserDetails ? (
+                  {loadingRecurring ? (
                     // || imageUploading
                     <View style={styles.doneButton}>
                       <ActivityIndicator size="small" color={"#FFF"} />
@@ -251,6 +250,7 @@ const AddRecurring = ({
                       activeOpacity={0.5}
                       onPress={handleSave}
                       style={styles.doneButton}
+                      disabled={loadingRecurring || loadingUserDetails}
                     >
                       <FontAwesome6
                         name="save"
@@ -288,19 +288,19 @@ const AddRecurring = ({
 
                 {(clickedCategory === "Borrowed" ||
                   clickedCategory === "Lend") && (
-                  <>
-                    <PersonPicker
-                      person={people}
-                      setPerson={setPeople}
-                      peopleList={peopleList}
-                    />
+                    <>
+                      <PersonPicker
+                        person={people}
+                        setPerson={setPeople}
+                        peopleList={peopleList}
+                      />
 
-                    {/* Status */}
-                    {/* <SafeAreaView>
+                      {/* Status */}
+                      {/* <SafeAreaView>
                       <StatusBar textColor={textColor} />
                     </SafeAreaView> */}
-                  </>
-                )}
+                    </>
+                  )}
 
                 {/* Recurrin when */}
                 <WhenPicker
