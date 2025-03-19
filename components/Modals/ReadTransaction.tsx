@@ -155,7 +155,7 @@ const ReadTransaction = ({
     const selectedDate = new Date(date);
     selectedDate.setHours(0, 0, 0, 0);
 
-    if (selectedDate >= today) {
+    if (selectedDate > today) {
       setShowError(true);
       setErrorText("Can't select a future date");
       return false;
