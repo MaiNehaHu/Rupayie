@@ -81,13 +81,12 @@ const WhenPicker = ({
   const everyMonthValue = when.everyMonth
     ? paddingZero(when.everyMonth)
     : paddingZero(constWhen.everyMonth);
-  const everyYearValue = `${
-    when.everyYear
+  const everyYearValue = `${when.everyYear
       ? paddingZero(when.everyYear.date)
       : paddingZero(constWhen.everyYear.date)
-  } ${moment()
-    .month(when.everyYear ? when.everyYear.month : constWhen.everyYear.month)
-    .format("MMM")}`;
+    } ${moment()
+      .month(when.everyYear ? when.everyYear.month : constWhen.everyYear.month)
+      .format("MMM")}`;
 
   const openIntervalModal = () => {
     setShowIntervalPicker(true);
@@ -184,12 +183,12 @@ const WhenPicker = ({
             {interval === intervalName.everyDay
               ? everyDayValue
               : interval === intervalName.everyWeek
-              ? everyWeekValue
-              : interval === intervalName.everyMonth
-              ? everyMonthValue
-              : interval === intervalName.everyYear
-              ? everyYearValue
-              : "Select Time"}
+                ? everyWeekValue
+                : interval === intervalName.everyMonth
+                  ? everyMonthValue
+                  : interval === intervalName.everyYear
+                    ? everyYearValue
+                    : "Select Time"}
           </Text>
         </TouchableOpacity>
       </SafeAreaView>
@@ -371,7 +370,7 @@ const WhenSelector = ({
   // Week
   function setWeek() {
     setWhen({
-      everyWeek: moment().day(weekName).format("dddd"),
+      everyWeek: weekName,
     });
 
     closeWhenModal();
@@ -454,11 +453,12 @@ const WhenSelector = ({
       {interval === intervalName.everyWeek && (
         <SafeAreaView style={[styles.scrollPicker, { width: "100%" }]}>
           <CarouselPicker
-            data={Array.from({ length: 7 }, (_, i) => i)} // Months of the year (0-7)
+            data={["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]}
             setSelectedDay={setWeekName}
             selectedDay={weekName}
             weekPicker={true}
           />
+
         </SafeAreaView>
       )}
 
@@ -499,10 +499,10 @@ const WhenSelector = ({
             interval === intervalName.everyDay
               ? setTime
               : interval === intervalName.everyMonth
-              ? setMonth
-              : interval === intervalName.everyWeek
-              ? setWeek
-              : setYear
+                ? setMonth
+                : interval === intervalName.everyWeek
+                  ? setWeek
+                  : setYear
           }
         >
           <Text style={styles.doneText}>DONE</Text>

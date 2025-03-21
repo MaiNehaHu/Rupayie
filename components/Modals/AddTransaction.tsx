@@ -138,8 +138,6 @@ const AddTransaction = ({
       setErrorText("Can't select a future date");
       return false;
     }
-    console.log(category);
-    
 
     if (!category) {
       setShowError(true);

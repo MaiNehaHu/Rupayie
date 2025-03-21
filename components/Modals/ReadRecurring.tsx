@@ -107,7 +107,7 @@ const ReadRecurring = ({
       : time,
     everyWeek: recurringTrans.recuring.when.everyWeek
       ? recurringTrans.recuring.when.everyWeek
-      : moment().day(),
+      : moment().format("dddd"),
     everyMonth: recurringTrans.recuring.when.everyMonth
       ? recurringTrans.recuring.when.everyMonth
       : new Date().getDate(),

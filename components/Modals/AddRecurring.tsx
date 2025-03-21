@@ -82,7 +82,7 @@ const AddRecurring = ({
 
   const constWhen: When = {
     everyDay: time,
-    everyWeek: "Monday",
+    everyWeek: moment().format("dddd"),
     everyMonth: new Date().getDate(),
     everyYear: {
       month: new Date().getMonth(),
