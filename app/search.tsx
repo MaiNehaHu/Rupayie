@@ -92,9 +92,9 @@ const Search = () => {
       transactionsList.filter((txn: Transaction) => {
         const matchesText = input
           ? txn.note.toLowerCase().includes(input.toLowerCase()) ||
-            txn.category.name.toLowerCase().includes(input.toLowerCase()) ||
-            txn.category.type.toLowerCase().includes(input.toLowerCase()) ||
-            txn.amount.toString().includes(input)
+          txn.category.name.toLowerCase().includes(input.toLowerCase()) ||
+          txn.category.type.toLowerCase().includes(input.toLowerCase()) ||
+          txn.amount.toString().includes(input)
           : true;
 
         const matchesType = type ? txn.category.type === type : true;
@@ -179,7 +179,7 @@ const Search = () => {
         {searchResultList?.length > 0 ? (
           searchResultList.map((txn: Transaction) => (
             <TouchableOpacity
-              key={txn._id}
+              key={txn.createdAt.toString()}
               activeOpacity={0.6}
               onPress={() => handleTransView(txn)}
             >
@@ -256,7 +256,7 @@ const TransactionCard = ({
       <SafeAreaView
         style={[
           styles.flex_row_end_btw,
-          { paddingBottom: 12, marginTop: 7 },
+          { paddingBottom: 7, marginTop: 7 },
           //   { paddingBottom: isRecurring ? 7 : 12, marginTop: 7 },
         ]}
       >
@@ -281,7 +281,7 @@ const TransactionCard = ({
       )} */}
 
       {/* Auto added */}
-      {/* {isRecurring && (
+      {isRecurring && (
         <>
           <SafeAreaView
             style={[
@@ -300,7 +300,7 @@ const TransactionCard = ({
             </Text>
           </SafeAreaView>
         </>
-      )} */}
+      )}
     </View>
   );
 };

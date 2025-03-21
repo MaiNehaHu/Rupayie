@@ -7,6 +7,8 @@ import { useColorScheme } from "@/components/useColorScheme";
 import { TransactionCard } from '@/components/Two/Transactions'
 import ReadTransaction from '@/components/Modals/ReadTransaction'
 import { formatAmount } from '@/utils/formatAmount'
+import { useTransactionsCategory } from '@/context/transCategory'
+import { useTransactionFilter } from '@/context/filterTransByDate'
 
 interface Transaction {
     _id: string;
@@ -35,18 +37,17 @@ const categoryTransactions = () => {
     const navigation = useNavigation()
     const route = useLocalSearchParams();
 
-    const transaltionsList = typeof route.transactions === "string"
-        ? JSON.parse(route.transactions)
-        : route.clickedBudget;
-
     const clickedCategory = typeof route.category === "string"
         ? JSON.parse(route.category)
         : route.clickedBudget;
 
     const colorScheme = useColorScheme();
-    const { loadingUserDetails, currencyObj } = useUserData();
 
-    const [categoryTransactionsList, setCategoryTransactionsList] = useState(transaltionsList)
+    const { donutCategory } = useTransactionsCategory();
+    const { loadingUserDetails, currencyObj, transactionsList } = useUserData();
+    const { donutTransactionsFilter } = useTransactionFilter()
+
+    const [categoryTransactionsList, setCategoryTransactionsList] = useState<Transaction[]>([]);
 
     const [clickedTransaction, setClickedTransaction] = useState<Transaction>();
     const [showClickedTransaction, setShowClickedTransaction] = useState(false);
@@ -86,6 +87,22 @@ const categoryTransactions = () => {
     };
 
     useEffect(() => {
+        // Filter transactions based on category and date range
+        const filtered = transactionsList
+            ?.filter((transaction: Transaction) => transaction.category._id === clickedCategory._id)
+            ?.filter(({ category }: any) => category.type === donutCategory)
+            .filter(({ createdAt }: any) => {
+                const createdAtDate = new Date(createdAt);
+                const fromDate = new Date(donutTransactionsFilter.from);
+                const toDate = new Date(donutTransactionsFilter.to);
+
+                return createdAtDate >= fromDate && createdAtDate <= toDate;
+            });
+
+        setCategoryTransactionsList(filtered);
+    }, [donutCategory, transactionsList, donutTransactionsFilter]);
+
+    useEffect(() => {
         navigation.setOptions({
             title: `${clickedCategory.name}`,
             headerRight: () => (
@@ -95,12 +112,6 @@ const categoryTransactions = () => {
             )
         })
     }, [route.category]);
-
-    useEffect(() => {
-        setCategoryTransactionsList((prev: Transaction[]) =>
-            prev.filter((transaction) => transaction.category._id === clickedCategory._id)
-        );
-    }, [route.transactions]);
 
     return (
         <ScrollView style={[styles.mainContainer, { backgroundColor: bgColor }]}>
@@ -126,7 +137,7 @@ const categoryTransactions = () => {
                                         <TouchableOpacity
                                             activeOpacity={0.8}
                                             onPress={() => handleTransView(transaction)}
-                                            key={_id.toString()}
+                                            key={createdAt.toString()}
                                         >
                                             <TransactionCard
                                                 _id={_id}

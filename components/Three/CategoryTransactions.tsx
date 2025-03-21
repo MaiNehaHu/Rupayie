@@ -88,7 +88,6 @@ const DonutTransactions = () => {
                 pathname: "/categoryTransactions",
                 params: {
                     category: JSON.stringify(category),
-                    transactions: JSON.stringify(filteredTransactions)
                 }
             })
     }
