@@ -218,7 +218,7 @@ export const TransactionCard = ({
     <View style={styles.transactionsCard}>
       <SafeAreaView style={styles.flex_row_end_btw}>
         {/* Category */}
-        <SafeAreaView style={styles.flex_row}>
+        <SafeAreaView style={[styles.flex_row, { maxWidth: "50%" }]}>
           <View
             style={[
               styles.categoryCircle,
@@ -226,7 +226,7 @@ export const TransactionCard = ({
             ]}
           ></View>
 
-          <Text style={[styles.text, { maxWidth: "60%" }]} numberOfLines={1}>{category.name}</Text>
+          <Text style={styles.text} numberOfLines={1}>{category.name}</Text>
         </SafeAreaView>
 
         {/* Amount */}
