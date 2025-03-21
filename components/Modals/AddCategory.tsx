@@ -229,7 +229,7 @@ const AddCategory = ({
                       { backgroundColor: hexColor },
                     ]}
                   ></View>
-                  <Text numberOfLines={1} style={{ fontWeight: 500, textAlign: "center", width: "50%" }}>
+                  <Text numberOfLines={1} style={{ fontWeight: 500, textAlign: "center", maxWidth: "50%" }}>
                     {name == "" ? "Category Name" : name}
                   </Text>
                 </SafeAreaView>
