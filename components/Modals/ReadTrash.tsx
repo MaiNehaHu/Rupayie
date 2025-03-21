@@ -20,6 +20,7 @@ import formatDateTimeSimple from "@/utils/formatDateTimeSimple";
 import { formatAmount } from "@/utils/formatAmount";
 import calculateDaysFrom from "@/utils/calculateDateFrom";
 import { Image } from "react-native";
+import { useMessages } from "@/context/messages";
 
 interface Transaction {
   _id: string;
@@ -60,12 +61,9 @@ const ReadTrash = ({
 }) => {
   const { fetchUserDetails, currencyObj, loadingUserDetails } = useUserData();
   const { fetchAnalytics } = useAnalytics();
-  const {
-    isTransDeleting,
-    isReverting,
-    deleteTranshTrans,
-    revertTrashTransaction,
-  } = useTrash();
+  const { isTransDeleting, isReverting, deleteTranshTrans, revertTrashTransaction, } = useTrash();
+  const { setError, setMessageText } = useMessages()
+
   const colorScheme = useColorScheme();
   const inputBg = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
   const textColor = colorScheme === "dark" ? "#FFF" : "#000";
@@ -86,24 +84,30 @@ const ReadTrash = ({
   async function handleDelete() {
     try {
       await deleteTranshTrans(_id);
-      fetchBoth();
-
+      await fetchBoth();
       handleCloseModal();
+
+      setMessageText("Sucessfully Deleted :)");
     } catch (error) {
       handleCloseModal();
-      Alert.alert("Failed", "Failed to Delete");
+
+      setError("Failed to Delete :(");
+      // Alert.alert("Failed", "Failed to Delete");
     }
   }
 
   async function handleRevert() {
     try {
       await revertTrashTransaction(_id);
-      fetchBoth();
-
+      await fetchBoth();
       handleCloseModal();
+
+      setMessageText("Sucessfully Reverted :)");
     } catch (error) {
       handleCloseModal();
-      Alert.alert("Failed", "Failed to Revert");
+
+      setError("Failed to Revert :(");
+      // Alert.alert("Failed", "Failed to Revert");
     }
   }
 
@@ -153,7 +157,7 @@ const ReadTrash = ({
                       </TouchableOpacity>
                     )}
 
-                    <Text style={styles.title}>Your {category.name}</Text>
+                    <Text style={[styles.title, { maxWidth: "50%" }]} numberOfLines={1}>Your {category.name}</Text>
 
                     {isReverting ? (
                       <View
@@ -211,7 +215,7 @@ const ReadTrash = ({
                     ]}
                   ></View>
 
-                  <Text numberOfLines={1}>{category?.name}</Text>
+                  <Text numberOfLines={1} style={{ width: "85%" }}>{category?.name}</Text>
                 </View>
 
                 {/* Person */}

@@ -21,6 +21,7 @@ import SetCategoryLimit from "@/components/Budget/SetCategoryLimit";
 import { useUserData } from "@/context/user";
 import { useBudget } from "@/context/budget";
 import { FontAwesome6 } from "@expo/vector-icons";
+import { useMessages } from "@/context/messages";
 
 interface IncludedCategory {
   budget: number;
@@ -74,7 +75,9 @@ interface Transaction {
 const EditBudget = () => {
   const { saveEditedBudget, deleteBudget, budgetProcessing, budgetDeleting } =
     useBudget();
-  const { fetchUserDetails, transactionsList } = useUserData();
+  const { fetchUserDetails, transactionsList, categoriesList } = useUserData();
+  const { setError, setMessageText } = useMessages()
+
   const navigation = useNavigation();
 
   const route = useLocalSearchParams();
@@ -183,10 +186,14 @@ const EditBudget = () => {
         await saveEditedBudget(_id, values);
         await fetchUserDetails();
         navigation.goBack();
+
+        setMessageText("Successfully Saved Budget :)")
       }
     } catch (error) {
       navigation.goBack();
-      Alert.alert("Failed", "Failed to Save");
+
+      setError("Failed to Save Budget :(")
+      // Alert.alert("Failed", "Failed to Save");
     }
   }
 
@@ -206,9 +213,14 @@ const EditBudget = () => {
               await deleteBudget(_id);
               await fetchUserDetails();
               navigation.goBack();
+              navigation.goBack();
+
+              setMessageText("Successfully Deleted Budget :)")
             } catch (error) {
               console.log(error);
-              Alert.alert("Failed", "Failed to Delete");
+
+              setError("Failed to Delete Budget :(")
+              // Alert.alert("Failed", "Failed to Delete");
             }
           },
           style: "destructive",

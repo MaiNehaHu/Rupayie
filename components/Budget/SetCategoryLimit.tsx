@@ -107,8 +107,8 @@ const SetCategoryLimit = ({
         {includedCount === 0
           ? "No Categories Included in Budget"
           : includedCount > 0 && includedCount !== includedCategories.length
-          ? `${includedCount} Categories Included in Budget`
-          : includedCount > 0 &&
+            ? `${includedCount} Categories Included in Budget`
+            : includedCount > 0 &&
             includedCount === includedCategories.length &&
             `All Categories Included in Budget`}
       </Text>
@@ -200,9 +200,9 @@ const CategoryLimitSetter = ({
 
   return (
     <View style={[styles.flex_row_btw, styles.box]}>
-      <View style={styles.flex_row}>
+      <View style={[styles.flex_row, { maxWidth: "40%" }]}>
         <View style={[styles.circle, { backgroundColor: category.hexColor }]} />
-        <Text>{category.name}</Text>
+        <Text numberOfLines={1}>{category.name}</Text>
       </View>
 
       <TextInput

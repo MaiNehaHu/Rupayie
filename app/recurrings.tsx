@@ -20,6 +20,8 @@ import formatDateTimeSimple from "@/utils/formatDateTimeSimple";
 import ReadRecurring from "@/components/Modals/ReadRecurring";
 import intervalName from "@/constants/intervalName";
 import moment from "moment";
+import { useMessages } from "@/context/messages";
+import MessagePopUp from "@/components/MessagePopUp";
 
 interface Recurring {
   amount: number;
@@ -46,6 +48,7 @@ interface Recurring {
 
 const Recurrings = () => {
   const { recurringTransactions } = useUserData();
+  const { error, setError, messageText, setMessageText } = useMessages()
 
   const colorScheme = useColorScheme();
   const recurringBg = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
@@ -138,6 +141,13 @@ const Recurrings = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: recurringBg }]}>
+      <MessagePopUp
+        error={error}
+        messageText={messageText}
+        setError={setError}
+        setMessageText={setMessageText}
+      />
+
       <View
         style={{ padding: 20, borderRadius: 20, margin: 15, marginBottom: 0 }}
       >

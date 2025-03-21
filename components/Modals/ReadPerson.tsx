@@ -16,6 +16,7 @@ import { useColorScheme } from "@/components/useColorScheme";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { usePeople } from "@/context/people";
 import { useUserData } from "@/context/user";
+import { useMessages } from "@/context/messages";
 
 interface Person {
   _id: string;
@@ -39,6 +40,8 @@ const ReadPerson = ({
   const { fetchUserDetails, loadingUserDetails } = useUserData();
   const { saveEditedPerson, deletePerson, savingPerson, deletingPerson } =
     usePeople();
+  const { setError, setMessageText } = useMessages()
+
 
   const inputBg = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
   const textColor = colorScheme === "dark" ? "#FFF" : "#000";
@@ -105,26 +108,34 @@ const ReadPerson = ({
 
         // save
         await saveEditedPerson(clickedPerson._id, values);
-        // close
-        handleCloseModal();
         // fetch
         await fetchUserDetails();
+        // close
+        handleCloseModal();
+
+        setMessageText("Successfully Saved :)")
       }
     } catch (error) {
       handleCloseModal();
-      Alert.alert("Failed", "Failed to Save");
+
+      setError("Failed to Save :(")
+      // Alert.alert("Failed", "Failed to Save");
     }
   }
 
   async function handleDeletePerson() {
     try {
       await deletePerson(clickedPerson._id);
-      handleCloseModal();
       // fetch
       await fetchUserDetails();
+      handleCloseModal();
+
+      setMessageText("Successfully Deleted :)")
     } catch (error) {
       handleCloseModal();
-      Alert.alert("Failed", "Failed to Delete");
+
+      setError("Failed to Delete :(")
+      // Alert.alert("Failed", "Failed to Delete");
     }
   }
 
@@ -175,7 +186,7 @@ const ReadPerson = ({
                     </TouchableOpacity>
                   )}
 
-                  <Text numberOfLines={1} style={styles.title}>
+                  <Text numberOfLines={1} style={[styles.title, { maxWidth: "50%" }]}>
                     {clickedPerson.name}
                   </Text>
 
@@ -216,6 +227,7 @@ const ReadPerson = ({
                   keyboardType="default"
                   placeholderTextColor={placeholderColor}
                   value={name}
+                  numberOfLines={1}
                   onChangeText={(text) => setName(text)}
                 />
 
@@ -228,6 +240,7 @@ const ReadPerson = ({
                   keyboardType="default"
                   placeholderTextColor={placeholderColor}
                   value={relation}
+                  numberOfLines={1}
                   onChangeText={(text) => setRelation(text)}
                 />
 

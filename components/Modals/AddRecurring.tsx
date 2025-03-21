@@ -23,6 +23,7 @@ import WhenPicker from "../Pickers/WhenPicker";
 import CountPicker from "../Pickers/CountPicker";
 import moment from "moment";
 import PersonPicker from "../Pickers/PersonPicker";
+import { useMessages } from "@/context/messages";
 // import { useTransactionImage } from "@/context/image";
 // import ImagePickerCompo from "../Pickers/ImagePicker";
 
@@ -69,6 +70,8 @@ const AddRecurring = ({
   const { fetchUserDetails, categoriesList, peopleList, loadingUserDetails } = useUserData();
   const { addNewRecurringTransaction, loadingRecurring } =
     useRecurringTransactions();
+  const { setError, setMessageText } = useMessages()
+
   // const { deleteImage, uploadImage, imageUploading } = useTransactionImage();
   const filteredCategories = categoriesList.filter(
     (cat: Category) => cat.type === clickedCategory
@@ -190,14 +193,16 @@ const AddRecurring = ({
 
       await addNewRecurringTransaction(values);
       await reFetchBoth();
-
       // Close modal
       closeTheModal();
+
+      setMessageText("Successfully Added :)")
     } catch (error) {
       // close
       closeTheModal();
 
-      Alert.alert("Failed", "Failed to add your transaction");
+      setError("Failed to Add :(");
+      // Alert.alert("Failed", "Failed to add your transaction");
     }
   }
 

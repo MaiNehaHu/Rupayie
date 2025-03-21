@@ -18,6 +18,7 @@ import { useBudget } from "@/context/budget";
 import TotalBudget from "@/components/Budget/TotalBudget";
 import SetCategoryLimit from "@/components/Budget/SetCategoryLimit";
 import { FontAwesome6 } from "@expo/vector-icons";
+import { useMessages } from "@/context/messages";
 
 interface IncludedCategory {
   budget: number;
@@ -64,6 +65,7 @@ interface Period {
 const AddBudget = () => {
   const { addNewBudget, budgetProcessing } = useBudget();
   const { categoriesList, fetchUserDetails, transactionsList } = useUserData();
+  const { setError, setMessageText } = useMessages()
 
   const route = useLocalSearchParams();
   const { addBudgetFor } = route;
@@ -137,17 +139,26 @@ const AddBudget = () => {
   }
 
   async function handleSaveBudget() {
-    const values = {
-      type,
-      period,
-      totalBudget,
-      totalSpent: totalSpentForIncludedCategories,
-      categories: includedCategories,
-    };
+    try {
 
-    await addNewBudget(values);
-    navigation.goBack();
-    await fetchUserDetails();
+      const values = {
+        type,
+        period,
+        totalBudget,
+        totalSpent: totalSpentForIncludedCategories,
+        categories: includedCategories,
+      };
+
+      await addNewBudget(values);
+      await fetchUserDetails();
+      navigation.goBack();
+
+      setMessageText("Successfully Added Budget :)")
+    } catch (error) {
+      navigation.goBack();
+
+      setError("Failed to Add Budget :(")
+    }
   }
 
   useEffect(() => {

@@ -27,6 +27,7 @@ import { useAnalytics } from "@/context/analytics";
 import { Alert } from "react-native";
 import PersonPicker from "../Pickers/PersonPicker";
 import formatDateTimeSimple from "@/utils/formatDateTimeSimple";
+import { useMessages } from "@/context/messages";
 
 interface Category {
   name: string;
@@ -57,6 +58,8 @@ const AddTransaction = ({
   const { loadingCategories } = useCategory();
   const { clickedTransCategory } = useTransactionsCategory();
   const { addNewTransaction, processing } = useTransactions();
+  const { setError, setMessageText } = useMessages()
+
   // const { deleteImage, uploadImage, imageUploading } = useTransactionImage();
   const filteredCategories = categoriesList.filter(
     (cat: Category) => cat.type === clickedTransCategory
@@ -181,11 +184,14 @@ const AddTransaction = ({
 
       // Close modal
       closeModal();
+
+      setMessageText("Successfully Added :)")
     } catch (error) {
       // Close modal
       closeModal();
 
-      Alert.alert("Failed", "Failed to add your transaction");
+      setError("Failed to Add :(")
+      // Alert.alert("Failed", "Failed to add your transaction");
     }
   }
 

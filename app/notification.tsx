@@ -164,14 +164,14 @@ const NotificationCard = ({ notification }: { notification: Notification }) => {
       </Text>
 
       <SafeAreaView style={styles.flex_row_btw}>
-        <SafeAreaView style={styles.headerBox}>
+        <SafeAreaView style={[styles.headerBox, { maxWidth: "50%" }]}>
           <View
             style={[
               styles.categoryCircle,
               { backgroundColor: notification.transaction.category.hexColor },
             ]}
           ></View>
-          <Text style={{ fontWeight: notification.read ? 400 : 600 }}>
+          <Text numberOfLines={1} style={{ fontWeight: notification.read ? 400 : 600 }}>
             {notification.transaction.category.name}
           </Text>
         </SafeAreaView>

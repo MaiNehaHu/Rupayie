@@ -10,20 +10,19 @@ export default function Greeting() {
     const time = new Date();
     const h = time.getHours();
 
-    return `${
-      h < 12
-        ? "Good Morning :)"
-        : h >= 12 && h >= 15
+    return `${h < 12
+      ? "Good Morning :)"
+      : h >= 12 && h >= 15
         ? "Good Afternoon :)"
         : "Good Evening :)"
-    }`;
+      }`;
   };
 
   return (
     <View style={styles.container}>
       <Text style={{ fontWeight: 500, color: "white" }}>{greeting()}</Text>
       {!loadingUserDetails ? (
-        <Text style={[styles.text, { color: "white" }]}>
+        <Text numberOfLines={1} style={[styles.text, { color: "white", maxWidth: "85%" }]}>
           {userDetails?.name}
         </Text>
       ) : (

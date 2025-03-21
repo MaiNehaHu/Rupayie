@@ -226,11 +226,11 @@ export const TransactionCard = ({
             ]}
           ></View>
 
-          <Text style={styles.text}>{category.name}</Text>
+          <Text style={[styles.text, { maxWidth: "60%" }]} numberOfLines={1}>{category.name}</Text>
         </SafeAreaView>
 
         {/* Amount */}
-        <Text style={styles.text}>{formatAmount(amount, currencyObj)}</Text>
+        <Text style={[styles.text, { maxWidth: "40%" }]} numberOfLines={1}>{formatAmount(amount, currencyObj)}</Text>
       </SafeAreaView>
 
       <SafeAreaView

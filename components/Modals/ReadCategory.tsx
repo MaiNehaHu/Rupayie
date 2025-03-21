@@ -19,6 +19,7 @@ import categoryColors from "@/constants/categoryColors";
 import { useCategory } from "@/context/categories";
 import { useUserData } from "@/context/user";
 import { useAnalytics } from "@/context/analytics";
+import { useMessages } from "@/context/messages";
 
 interface Category {
   name: string;
@@ -41,12 +42,9 @@ const ReadCategory = ({
 }) => {
   const { categoriesList, fetchUserDetails, loadingUserDetails } = useUserData();
   const { fetchAnalytics } = useAnalytics();
-  const {
-    saveEditedCategory,
-    deleteCategory,
-    loadingCategories,
-    loadingCategoryDelete,
-  } = useCategory();
+  const { saveEditedCategory, deleteCategory, loadingCategories, loadingCategoryDelete, } = useCategory();
+  const { setError, setMessageText } = useMessages()
+
   const colorScheme = useColorScheme();
   const inputBg = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
   const textColor = colorScheme === "dark" ? "#FFF" : "#000";
@@ -105,11 +103,15 @@ const ReadCategory = ({
         await reFetchBoth();
         // then close
         closeTheModal();
+
+        setMessageText("Successfully Saved :)");
       }
+
     } catch (error) {
       closeTheModal();
 
-      Alert.alert("Failed", "Failed to Save");
+      setError("Failed to Save :(");
+      // Alert.alert("Failed", "Failed to Save");
     }
   }
 
@@ -135,11 +137,15 @@ const ReadCategory = ({
     try {
       await deleteCategory(category._id);
 
-      closeTheModal();
       await reFetchBoth();
+      closeTheModal();
+
+      setMessageText("Sucessfully Added :)");
     } catch (error) {
       closeTheModal();
-      Alert.alert("Failed", "Failed to Delete");
+
+      setError("Failed to Add :(");
+      // Alert.alert("Failed", "Failed to Delete");
     }
   }
 
@@ -206,7 +212,7 @@ const ReadCategory = ({
                     </TouchableOpacity>
                   )}
 
-                  <Text style={styles.title}>Edit {category.name}</Text>
+                  <Text style={[styles.title, { maxWidth: "50%" }]} numberOfLines={1}>Edit {category.name}</Text>
 
                   {loadingCategories ? (
                     <View style={styles.doneButton}>
@@ -237,6 +243,7 @@ const ReadCategory = ({
                   keyboardType="default"
                   placeholderTextColor={placeholderColor}
                   value={name}
+                  numberOfLines={1}
                   onChangeText={(text) => setName(text)}
                 />
 
@@ -273,7 +280,7 @@ const ReadCategory = ({
                       { backgroundColor: hexColor },
                     ]}
                   ></View>
-                  <Text style={{ fontWeight: 500, textAlign: "center" }}>
+                  <Text numberOfLines={1} style={{ fontWeight: 500, textAlign: "center", width: "50%" }}>
                     {name == "" ? "Category Name" : name}
                   </Text>
                 </SafeAreaView>

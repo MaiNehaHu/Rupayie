@@ -23,6 +23,7 @@ import WhenPicker from "../Pickers/WhenPicker";
 import moment from "moment";
 import CountPicker from "../Pickers/CountPicker";
 import PersonPicker from "../Pickers/PersonPicker";
+import { useMessages } from "@/context/messages";
 
 interface Recurring {
   amount: number;
@@ -85,12 +86,9 @@ const ReadRecurring = ({
 }) => {
   const { fetchAnalytics } = useAnalytics();
   const { fetchUserDetails, categoriesList, peopleList, loadingUserDetails } = useUserData();
-  const {
-    saveEditedRecurringTransaction,
-    deleteRecurringTransaction,
-    loadingRecurring,
-    loadingRecurringDelete,
-  } = useRecurringTransactions();
+  const { saveEditedRecurringTransaction, deleteRecurringTransaction, loadingRecurring, loadingRecurringDelete, } = useRecurringTransactions();
+  const { setError, setMessageText } = useMessages()
+
   const filteredCategories = categoriesList.filter(
     (cat: Category) => cat.type === clickedCategory
   );
@@ -171,11 +169,15 @@ const ReadRecurring = ({
     try {
       await deleteRecurringTransaction(recurringTrans._id);
 
-      closeTheModal();
       await reFetchBoth();
+      closeTheModal();
+      
+      setMessageText("Successfully Deleted :)");
     } catch (error) {
       closeTheModal();
-      Alert.alert("Failed", "Failed to Delete");
+
+      setError("Failed to Delete :(");
+      // Alert.alert("Failed", "Failed to Delete");
     }
   }
 
@@ -242,10 +244,12 @@ const ReadRecurring = ({
       await reFetchBoth();
 
       closeTheModal();
+      setMessageText("Successfully Saved :)");
     } catch (error) {
       closeTheModal();
 
-      Alert.alert("Failed", "Failed to Save");
+      setError("Failed to Save :(");
+      // Alert.alert("Failed", "Failed to Save");
     }
   }
 

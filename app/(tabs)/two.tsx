@@ -21,6 +21,8 @@ import AddTransactionButton from "@/components/Two/AddButton";
 import AddTransaction from "@/components/Modals/AddTransaction";
 import { useUserData } from "@/context/user";
 import Slider from "../slider";
+import MessagePopUp from "@/components/MessagePopUp";
+import { useMessages } from "@/context/messages";
 
 const GradientImage = require("@/assets/pages/gradientBg.png");
 
@@ -28,6 +30,7 @@ export default function TabTwoScreen() {
   const colorScheme = useColorScheme();
   const { fetchUserDetails } = useUserData();
   const { fetchAnalytics } = useAnalytics();
+  const { error, setError, messageText, setMessageText } = useMessages()
 
   const [refresh, setRefresh] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -83,6 +86,13 @@ export default function TabTwoScreen() {
         { backgroundColor: colorScheme === "dark" ? "#1C1C1C" : "#EDEDED" },
       ]}
     >
+      <MessagePopUp
+        error={error}
+        messageText={messageText}
+        setError={setError}
+        setMessageText={setMessageText}
+      />
+
       <StatusBar backgroundColor={"transparent"} />
 
       <Image

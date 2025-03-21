@@ -115,10 +115,13 @@ export default function TabOne() {
   ), [transactionsList]);
 
   useEffect(() => {
-    setMessageText("Welcome!");
 
     if (!loadingUserDetails) updateBudgets();
   }, [transactionsList?.length, transactionsHash]);
+
+  useEffect(() => {
+    setMessageText("Welcome!");
+  }, [])
 
   async function updateBudgets() {
     try {
@@ -208,7 +211,8 @@ export default function TabOne() {
         { backgroundColor: colorScheme === "dark" ? "#1C1C1C" : "#EDEDED" },
       ]}
     >
-      <MessagePopUp error={error}
+      <MessagePopUp
+        error={error}
         messageText={messageText}
         setError={setError}
         setMessageText={setMessageText}

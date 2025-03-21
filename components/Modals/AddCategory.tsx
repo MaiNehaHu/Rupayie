@@ -21,6 +21,7 @@ import categoryColors from "@/constants/categoryColors";
 import { useCategory } from "@/context/categories";
 import { useUserData } from "@/context/user";
 import { useAnalytics } from "@/context/analytics";
+import { useMessages } from "@/context/messages";
 
 interface Category {
   name: string;
@@ -45,6 +46,8 @@ const AddCategory = ({
   const { categoriesList, fetchUserDetails, loadingUserDetails } = useUserData();
   const { fetchAnalytics } = useAnalytics();
   const { addNewCategory, loadingCategories } = useCategory();
+  const { setError, setMessageText } = useMessages()
+
   const colorScheme = useColorScheme();
   const inputBg = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
   const textColor = colorScheme === "dark" ? "#FFF" : "#000";
@@ -92,14 +95,14 @@ const AddCategory = ({
       await reFetchBoth();
 
       setCategory(addedCategory);
-      handleCloseModal();
+      closeTheModal();
 
-      resetAllValues();
+      setMessageText("Successfully Added :)")
     } catch (error) {
-      handleCloseModal();
-      resetAllValues();
+      closeTheModal();
 
-      Alert.alert("Failed", "Failed to add category");
+      setError("Failed to Add :(");
+      // Alert.alert("Failed", "Failed to add category");
     }
   }
 
@@ -189,6 +192,7 @@ const AddCategory = ({
                   keyboardType="default"
                   placeholderTextColor={placeholderColor}
                   value={name}
+                  numberOfLines={1}
                   onChangeText={(text) => setName(text)}
                 />
 
@@ -225,7 +229,7 @@ const AddCategory = ({
                       { backgroundColor: hexColor },
                     ]}
                   ></View>
-                  <Text style={{ fontWeight: 500, textAlign: "center" }}>
+                  <Text numberOfLines={1} style={{ fontWeight: 500, textAlign: "center", width: "50%" }}>
                     {name == "" ? "Category Name" : name}
                   </Text>
                 </SafeAreaView>

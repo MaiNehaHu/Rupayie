@@ -17,6 +17,7 @@ import { useUserData } from "@/context/user";
 import { useColorScheme } from "@/components/useColorScheme";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { usePeople } from "@/context/people";
+import { useMessages } from "@/context/messages";
 
 const AddPerson = ({
   visible,
@@ -30,8 +31,9 @@ const AddPerson = ({
   setPerson: (value: any) => void;
 }) => {
   const colorScheme = useColorScheme();
-  const { fetchUserDetails,loadingUserDetails } = useUserData();
+  const { fetchUserDetails, loadingUserDetails } = useUserData();
   const { addPerson, savingPerson } = usePeople();
+  const { setError, setMessageText } = useMessages()
 
   const inputBg = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
   const textColor = colorScheme === "dark" ? "#FFF" : "#000";
@@ -79,13 +81,17 @@ const AddPerson = ({
       const addedPerson = await addPerson(values);
       setPerson(addedPerson);
 
-      // close
-      closeTheModal();
       // and fetch
       await fetchUserDetails();
+      // close
+      closeTheModal();
+
+      setMessageText("Successfully Added :)")
     } catch (error) {
       closeTheModal();
-      Alert.alert("Failed", "Failed to Add");
+
+      setError("Failed to Add :(")
+      // Alert.alert("Failed", "Failed to Add");
     }
   }
 
@@ -153,6 +159,7 @@ const AddPerson = ({
                   keyboardType="default"
                   placeholderTextColor={placeholderColor}
                   value={name}
+                  numberOfLines={1}
                   onChangeText={(text) => setName(text)}
                 />
                 <TextInput
@@ -164,6 +171,7 @@ const AddPerson = ({
                   keyboardType="default"
                   placeholderTextColor={placeholderColor}
                   value={relation}
+                  numberOfLines={1}
                   onChangeText={(text) => setRelation(text)}
                 />
 

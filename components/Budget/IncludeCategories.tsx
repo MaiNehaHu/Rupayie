@@ -138,7 +138,7 @@ const CategoryItem = ({ category }: any) => {
       <View style={[styles.circle, { backgroundColor: category.hexColor }]} />
 
       {/* IncludedCategory Name */}
-      <Text numberOfLines={1} style={styles.categoryText}>
+      <Text numberOfLines={1} style={[styles.categoryText]}>
         {category.name}
       </Text>
     </View>

@@ -127,7 +127,7 @@ const CategoryPicker = ({
             ]}
           ></View>
 
-          <Text numberOfLines={1}>{category?.name}</Text>
+          <Text numberOfLines={1} style={{ width: "85%" }}>{category?.name}</Text>
         </TouchableOpacity>
       ) : (
         <TouchableOpacity
@@ -190,7 +190,7 @@ const CategoryPicker = ({
                             ]}
                           ></View>
 
-                          <Text numberOfLines={1}>{category?.name}</Text>
+                          <Text numberOfLines={1} style={{ width: "85%" }}>{category?.name}</Text>
                         </TouchableOpacity>
                       ))
                     ) : (

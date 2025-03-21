@@ -15,6 +15,8 @@ import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import AddPerson from "@/components/Modals/AddPerson";
 import ReadPerson from "@/components/Modals/ReadPerson";
 import { useNavigation } from "expo-router";
+import { useMessages } from "@/context/messages";
+import MessagePopUp from "@/components/MessagePopUp";
 
 interface Person {
   _id: string;
@@ -26,6 +28,7 @@ interface Person {
 const People = () => {
   const navigation = useNavigation();
   const { peopleList } = useUserData();
+  const { error, setError, messageText, setMessageText } = useMessages()
 
   const colorScheme = useColorScheme();
   const bgColor = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
@@ -104,6 +107,13 @@ const People = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: bgColor }]}>
+      <MessagePopUp
+        error={error}
+        messageText={messageText}
+        setError={setError}
+        setMessageText={setMessageText}
+      />
+
       <ScrollView style={styles.peopleContainer}>
         {peopleList.length > 0 ? (
           peopleList.map((person: Person) => (
@@ -165,7 +175,7 @@ const People = () => {
           visible={showAddPersonModal}
           slideModalAnim={slideAddModalAnim}
           handleCloseModal={closeAddModal}
-          setPerson={() => {}}
+          setPerson={() => { }}
         />
       )}
 

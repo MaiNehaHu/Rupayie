@@ -191,7 +191,7 @@ const CategoryCard = ({
     >
       <SafeAreaView style={[styles.flex_row, { gap: 15 }]}>
         <View style={[styles.circle, { backgroundColor: hexColor }]} />
-        <Text>{name}</Text>
+        <Text numberOfLines={1} style={{ maxWidth: "70%" }}>{name}</Text>
       </SafeAreaView>
 
       <TouchableOpacity

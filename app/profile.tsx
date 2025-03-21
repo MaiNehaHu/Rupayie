@@ -19,6 +19,8 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { useLogin } from "@/context/login";
 import { useAnalytics } from "@/context/analytics";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useMessages } from "@/context/messages";
+import MessagePopUp from "@/components/MessagePopUp";
 
 type RootStackParamList = {
   login: undefined;
@@ -35,7 +37,9 @@ const profile = () => {
   const { setProfilePhoto } = useProfile();
   const { setLoggedIn, setLoggedUserId } = useLogin();
   const { setUserDetailsDetails } = useUserData();
-  const { setAnalytics } = useAnalytics()
+  const { setAnalytics } = useAnalytics();
+  const { error, setError, messageText, setMessageText } = useMessages()
+
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const colorScheme = useColorScheme();
@@ -54,25 +58,38 @@ const profile = () => {
   }
 
   async function handleSaveName() {
-    await updateUserDetails({ ...userDetails, name: userName }, "name");
-    await fetchUserDetails();
-    setShowUserNameSaveBtn(false);
+    try {
+      await updateUserDetails({ ...userDetails, name: userName }, "name");
+      await fetchUserDetails();
+      setShowUserNameSaveBtn(false);
+
+      setMessageText("Successfully Saved Name :)");
+    } catch (error) {
+      setError("Failed to Save Name :(");
+    }
   }
 
   async function handleSaveProfile() {
-    if (userProfile === userDetails?.userImage) {
+    try {
+
+      if (userProfile === userDetails?.userImage) {
+        setShowProfilePicker(false);
+        return;
+      }
+
+      setProfilePhoto(userProfile);
       setShowProfilePicker(false);
-      return;
+
+      await updateUserDetails(
+        { ...userDetails, userImage: userProfile },
+        "profile"
+      );
+      await fetchUserDetails();
+
+      setMessageText("Successfully Saved Avatar :)")
+    } catch (error) {
+      setError("Failed Updating Avatar :(");
     }
-
-    setProfilePhoto(userProfile);
-    setShowProfilePicker(false);
-
-    await updateUserDetails(
-      { ...userDetails, userImage: userProfile },
-      "profile"
-    );
-    await fetchUserDetails();
   }
 
   async function handleLogout() {
@@ -103,129 +120,139 @@ const profile = () => {
   }, [userName]);
 
   return (
-    <ScrollView style={{ flex: 1 }}>
-      <View style={[styles.container, { backgroundColor: bgColor }]}>
-        <SafeAreaView style={styles.flex_row_btw}>
-          {/* Edit Avatar */}
-          <TouchableOpacity
-            style={[
-              styles.flex_row,
-              styles.logoutButton,
-              { backgroundColor: !showProfilePicker ? textColor : "#4FB92D", alignSelf: "flex-end" },
-            ]}
-            onPress={!showProfilePicker ? handlePenClick : handleSaveProfile}
-            activeOpacity={0.7}
-            disabled={savingUserProfile}
-          >
-            <Text style={{ color: showProfilePicker ? textColor : oppColor, fontWeight: 500 }} >
-              {showProfilePicker ? "Save" : savingUserProfile ? "Saving..." : "Edit Avatar"}
-            </Text>
-            {!savingUserProfile ? (
-              <FontAwesome6
-                size={16}
-                color={showProfilePicker ? textColor : oppColor}
-                name={!showProfilePicker ? "pen" : "check"}
-              />) : (
-              <ActivityIndicator size="small" color={showProfilePicker ? textColor : oppColor} />
-            )}
-          </TouchableOpacity>
+    <View style={{ flex: 1 }}>
+      <MessagePopUp
+        error={error}
+        messageText={messageText}
+        setError={setError}
+        setMessageText={setMessageText}
+      />
 
-          {/* Logout */}
-          <TouchableOpacity
-            style={[
-              styles.flex_row,
-              styles.logoutButton,
-              { backgroundColor: textColor, alignSelf: "flex-end" },
-            ]}
-            activeOpacity={0.7}
-            onPress={handleLogout}
-          >
-            <Text style={{ color: oppColor, fontWeight: 500 }} >Logout</Text>
-
-            <FontAwesome6
-              size={16}
-              color={oppColor}
-              name="arrow-right-from-bracket"
-            />
-          </TouchableOpacity>
-        </SafeAreaView>
-
-        <SafeAreaView style={[styles.center, { marginVertical: 20 }]}>
-          <SafeAreaView style={{ width: 200, height: 200 }}>
-            {userProfile ? (
-              <Image
-                source={userProfile}
-                style={[styles.image, { borderColor: textColor }]}
-              />
-            ) : (
-              <View
-                style={[
-                  styles.image,
-                  styles.center,
-                  { borderColor: textColor },
-                ]}
-              >
-                <Ionicons
-                  name="person"
-                  size={100}
-                  style={{ color: textColor }}
-                />
-              </View>
-            )}
-          </SafeAreaView>
-        </SafeAreaView>
-
-        <SafeAreaView style={[styles.flex_row, { alignSelf: "center" }]}>
-          <View style={[styles.inputField, { backgroundColor: oppColor }]}>
-            <TextInput
-              style={{ color: textColor, fontWeight: 600 }}
-              placeholder="Your Name"
-              value={userName}
-              onChangeText={(text) => setUserName(text)}
-              placeholderTextColor={placeholderColor}
-            />
-          </View>
-
-          {showUserNameSaveBtn && userName?.trim("") !== "" && (
+      <ScrollView style={{ flex: 1 }}>
+        <View style={[styles.container, { backgroundColor: bgColor }]}>
+          <SafeAreaView style={styles.flex_row_btw}>
+            {/* Edit Avatar */}
             <TouchableOpacity
-              activeOpacity={0.5}
-              onPress={handleSaveName}
-              disabled={savingUserName}
               style={[
-                styles.doneButton,
-                { marginLeft: 5, alignSelf: "center" },
+                styles.flex_row,
+                styles.logoutButton,
+                { backgroundColor: !showProfilePicker ? textColor : "#4FB92D", alignSelf: "flex-end" },
               ]}
+              onPress={!showProfilePicker ? handlePenClick : handleSaveProfile}
+              activeOpacity={0.7}
+              disabled={savingUserProfile}
             >
-              {!savingUserName ? (
+              <Text style={{ color: showProfilePicker ? textColor : oppColor, fontWeight: 500 }} >
+                {showProfilePicker ? "Save" : savingUserProfile ? "Saving..." : "Edit Avatar"}
+              </Text>
+              {!savingUserProfile ? (
                 <FontAwesome6
-                  name={"check"}
-                  size={20}
-                  color={"#FFF"}
-                  style={styles.doneText}
-                />
-              ) : (
-                <ActivityIndicator size="small" color={"#FFF"} />
+                  size={16}
+                  color={showProfilePicker ? textColor : oppColor}
+                  name={!showProfilePicker ? "pen" : "check"}
+                />) : (
+                <ActivityIndicator size="small" color={showProfilePicker ? textColor : oppColor} />
               )}
             </TouchableOpacity>
-          )}
-        </SafeAreaView>
 
-        <SafeAreaView style={{ marginTop: 10 }}>
-          <View style={[styles.inputField, { backgroundColor: oppColor, alignSelf: "center", }]}>
-            <Text style={{ color: textColor, fontWeight: 600, textAlign: "center" }}>{userDetails?.email}</Text>
-          </View>
-        </SafeAreaView>
+            {/* Logout */}
+            <TouchableOpacity
+              style={[
+                styles.flex_row,
+                styles.logoutButton,
+                { backgroundColor: textColor, alignSelf: "flex-end" },
+              ]}
+              activeOpacity={0.7}
+              onPress={handleLogout}
+            >
+              <Text style={{ color: oppColor, fontWeight: 500 }} >Logout</Text>
 
-        {showProfilePicker && (
-          <SafeAreaView style={{ padding: 30 }}>
-            <ProfilePicker
-              currentImage={userProfile}
-              setCurrentImage={setUserProfile}
-            />
+              <FontAwesome6
+                size={16}
+                color={oppColor}
+                name="arrow-right-from-bracket"
+              />
+            </TouchableOpacity>
           </SafeAreaView>
-        )}
-      </View>
-    </ScrollView >
+
+          <SafeAreaView style={[styles.center, { marginVertical: 20 }]}>
+            <SafeAreaView style={{ width: 200, height: 200 }}>
+              {userProfile ? (
+                <Image
+                  source={userProfile}
+                  style={[styles.image, { borderColor: textColor }]}
+                />
+              ) : (
+                <View
+                  style={[
+                    styles.image,
+                    styles.center,
+                    { borderColor: textColor },
+                  ]}
+                >
+                  <Ionicons
+                    name="person"
+                    size={100}
+                    style={{ color: textColor }}
+                  />
+                </View>
+              )}
+            </SafeAreaView>
+          </SafeAreaView>
+
+          <SafeAreaView style={[styles.flex_row, { alignSelf: "center" }]}>
+            <View style={[styles.inputField, { backgroundColor: oppColor, maxWidth: "60%" }]}>
+              <TextInput
+                style={{ color: textColor, fontWeight: 600 }}
+                placeholder="Your Name"
+                value={userName}
+                numberOfLines={1}
+                onChangeText={(text) => setUserName(text)}
+                placeholderTextColor={placeholderColor}
+              />
+            </View>
+
+            {showUserNameSaveBtn && userName?.trim("") !== "" && (
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={handleSaveName}
+                disabled={savingUserName}
+                style={[
+                  styles.doneButton,
+                  { marginLeft: 5, alignSelf: "center" },
+                ]}
+              >
+                {!savingUserName ? (
+                  <FontAwesome6
+                    name={"check"}
+                    size={20}
+                    color={"#FFF"}
+                    style={styles.doneText}
+                  />
+                ) : (
+                  <ActivityIndicator size="small" color={"#FFF"} />
+                )}
+              </TouchableOpacity>
+            )}
+          </SafeAreaView>
+
+          <SafeAreaView style={{ marginTop: 10 }}>
+            <View style={[styles.inputField, { backgroundColor: oppColor, alignSelf: "center", }]}>
+              <Text style={{ color: textColor, fontWeight: 600, textAlign: "center" }}>{userDetails?.email}</Text>
+            </View>
+          </SafeAreaView>
+
+          {showProfilePicker && (
+            <SafeAreaView style={{ padding: 30 }}>
+              <ProfilePicker
+                currentImage={userProfile}
+                setCurrentImage={setUserProfile}
+              />
+            </SafeAreaView>
+          )}
+        </View>
+      </ScrollView >
+    </View >
   );
 };
 

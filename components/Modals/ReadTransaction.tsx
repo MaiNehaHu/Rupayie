@@ -22,6 +22,7 @@ import { useTransactions } from "@/context/transactions";
 import { useAnalytics } from "@/context/analytics";
 import { Alert } from "react-native";
 import PersonPicker from "../Pickers/PersonPicker";
+import { useMessages } from "@/context/messages";
 
 interface Transaction {
   _id: string;
@@ -68,12 +69,9 @@ const ReadTransaction = ({
   const { fetchAnalytics } = useAnalytics();
   const { categoriesList, peopleList, fetchUserDetails, loadingUserDetails } = useUserData();
   const { clickedTransCategory } = useTransactionsCategory();
-  const {
-    deleteTransaction,
-    saveEditedTransaction,
-    processing,
-    processingDelete,
-  } = useTransactions();
+  const { deleteTransaction, saveEditedTransaction, processing, processingDelete, } = useTransactions();
+  const { setError, setMessageText } = useMessages()
+
   // const { deleteExistingTransImage, uploadExistingTransImage, imageUploading } =
   //   useTransactionImage();
   const filteredCategories = categoriesList.filter(
@@ -222,11 +220,14 @@ const ReadTransaction = ({
       await saveEditedTransaction(transaction._id, values);
       await reFetchBoth();
       closeModal();
+
+      setMessageText("Successfully Saved :)");
     } catch (error) {
       closeModal();
       console.log(error);
 
-      Alert.alert("Failed", "Failed to Save");
+      setError("Failed to Save :(")
+      // Alert.alert("Failed", "Failed to Save");
     }
   }
 
@@ -236,10 +237,14 @@ const ReadTransaction = ({
       await reFetchBoth();
 
       closeModal();
+
+      setMessageText("Successfully Moved to Trash :)");
       // setImageURI(null);
     } catch (error) {
       closeModal();
-      Alert.alert("Failed", "Failed to Delete");
+
+      setError("Failed to Trash :(")
+      // Alert.alert("Failed", "Failed to Delete");
     }
   }
 
@@ -306,7 +311,7 @@ const ReadTransaction = ({
                     </TouchableOpacity>
                   )}
 
-                  <Text style={styles.title}>Your {categoryName}</Text>
+                  <Text style={[styles.title, { maxWidth: "50%" }]} numberOfLines={1}>Your {categoryName}</Text>
 
                   {processing ? (
                     // || imageUploading

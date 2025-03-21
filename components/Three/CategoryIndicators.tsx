@@ -64,7 +64,7 @@ const CategoryIndicators = () => {
                 filteredCategoryList.map((category: Category) => (
                     <SafeAreaView style={styles.flex_row} key={category._id}>
                         <View style={[styles.circle, { backgroundColor: category.hexColor }]} />
-                        <Text style={{ fontSize: 12 }}>{category.name}</Text>
+                        <Text style={{ fontSize: 12, maxWidth: "85%" }} numberOfLines={1}>{category.name}</Text>
                     </SafeAreaView>
                 )) :
                 <></>

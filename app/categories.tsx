@@ -15,6 +15,8 @@ import { Ionicons } from "@expo/vector-icons";
 import AddCategory from "@/components/Modals/AddCategory";
 import { Animated } from "react-native";
 import ReadCategory from "@/components/Modals/ReadCategory";
+import MessagePopUp from "@/components/MessagePopUp";
+import { useMessages } from "@/context/messages";
 
 interface Category {
   name: string;
@@ -26,6 +28,7 @@ interface Category {
 
 const Category = () => {
   const { categoriesList } = useUserData();
+  const { error, setError, messageText, setMessageText } = useMessages()
 
   const colorScheme = useColorScheme();
   const categoryBg = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
@@ -117,6 +120,13 @@ const Category = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: categoryBg }]}>
+      <MessagePopUp
+        error={error}
+        messageText={messageText}
+        setError={setError}
+        setMessageText={setMessageText}
+      />
+
       <View style={{ padding: 20, borderRadius: 20 }}>
         <CategorySelector
           setClickedCategory={switchCategory}
@@ -141,7 +151,7 @@ const Category = () => {
                   ]}
                 ></View>
 
-                <Text style={styles.text} numberOfLines={1}>
+                <Text style={[styles.text, { width: "85%" }]} numberOfLines={1}>
                   {category?.name}
                 </Text>
               </TouchableOpacity>
