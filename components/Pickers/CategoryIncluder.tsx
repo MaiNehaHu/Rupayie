@@ -15,6 +15,7 @@ import React, { useEffect, useState } from "react";
 import { Text, View } from "../Themed";
 import { useColorScheme } from "@/components/useColorScheme";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
+import { useUserData } from "@/context/user";
 
 interface IncludedCategory {
   budget: number;
@@ -39,14 +40,31 @@ const CategoryIncluder = ({
   visible: boolean;
   handleCloseModal: () => void;
   slideModalAnim: any;
-  includedCategories: any[];
+  includedCategories: IncludedCategory[];
   setIncludedCategories: (includedCategories: any) => void;
 }) => {
+  const { categoriesList } = useUserData();
+
   const colorScheme = useColorScheme();
   const oppBgColor = colorScheme === "dark" ? "#000" : "#FFF";
   const textColor = colorScheme === "dark" ? "#FFF" : "#000";
 
-  const [catsCopy, setCatsCopy] = useState(includedCategories);
+  const mergedCategories = categoriesList
+    .filter((cat: IncludedCategory) => cat.type === "Spent")
+    .map((cat: IncludedCategory) => {
+      const existingCategory = includedCategories.find(
+        (incCat) => incCat._id === cat._id
+      );
+
+      return {
+        ...cat,
+        included: existingCategory ? existingCategory.included : false, // Retain selection
+        budget: existingCategory ? existingCategory.budget : 0, // Keep existing budget
+        spent: existingCategory ? existingCategory.spent : 0, // Keep existing spent value
+      };
+    });
+
+  const [catsCopy, setCatsCopy] = useState(mergedCategories);
 
   const includedCount = catsCopy?.reduce(
     (count: number, category: IncludedCategory) =>

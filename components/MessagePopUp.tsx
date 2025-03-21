@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        marginBottom : 50 // to go above
+        marginBottom : 30 // to go above
     },
     notification: {
         padding: 5,

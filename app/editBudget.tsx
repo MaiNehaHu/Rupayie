@@ -185,9 +185,9 @@ const EditBudget = () => {
 
         await saveEditedBudget(_id, values);
         await fetchUserDetails();
-        navigation.goBack();
+        setMessageText("Successfully Saved Budget :)");
 
-        setMessageText("Successfully Saved Budget :)")
+        navigation.goBack();
       }
     } catch (error) {
       navigation.goBack();
