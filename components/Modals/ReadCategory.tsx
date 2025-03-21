@@ -140,11 +140,11 @@ const ReadCategory = ({
       await reFetchBoth();
       closeTheModal();
 
-      setMessageText("Sucessfully Added :)");
+      setMessageText("Sucessfully Deleted :)");
     } catch (error) {
       closeTheModal();
 
-      setError("Failed to Add :(");
+      setError("Failed to Delete :(");
       // Alert.alert("Failed", "Failed to Delete");
     }
   }
