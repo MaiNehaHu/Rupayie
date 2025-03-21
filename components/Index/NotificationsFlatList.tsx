@@ -55,6 +55,7 @@ const NotificationsFlatList = () => {
           flatListRef.current?.scrollToIndex({
             animated: true,
             index: nextIndex,
+            viewPosition: 0.5,
           });
           return nextIndex;
         });
@@ -69,6 +70,21 @@ const NotificationsFlatList = () => {
     flatListRef.current?.scrollToIndex({
       animated: true,
       index,
+      viewPosition: 0.5
+    });
+  };
+
+  const handleScrollEnd = (event: any) => {
+    const index = Math.round(
+      event.nativeEvent.contentOffset.x / screenWidth
+    );
+    setActiveCircle(index);
+
+    // Ensure the item snaps into the center
+    flatListRef.current?.scrollToIndex({
+      animated: true,
+      index,
+      viewPosition: 0.5,
     });
   };
 
@@ -143,40 +159,43 @@ const NotificationsFlatList = () => {
         }
         horizontal
         showsHorizontalScrollIndicator={false}
-        onMomentumScrollEnd={(event) => {
-          const index = Math.round(
-            event.nativeEvent.contentOffset.x / screenWidth
-          );
-          setActiveCircle(index);
-        }}
+        // onMomentumScrollEnd={(event) => {
+        //   const index = Math.round(
+        //     event.nativeEvent.contentOffset.x / screenWidth
+        //   );
+        //   setActiveCircle(index);
+        // }}
+        snapToAlignment="center"
+        pagingEnabled
+        onMomentumScrollEnd={handleScrollEnd}
       />
 
       {/* Circle Indicators */}
       <SafeAreaView style={[styles.flex_row, { marginTop: 15 }]}>
-        {!loadingUserDetails
-          ? dataToShow.map((_: any, index: number) => (
-              <Pressable key={index} onPress={() => handleCirclePress(index)}>
-                <View
-                  style={[
-                    styles.circle,
-                    {
-                      backgroundColor:
-                        activeCircle === index
-                          ? "#4588DF"
-                          : colorScheme == "dark"
+        {!loadingUserDetails && dataToShow.length > 1 ?
+          dataToShow.map((_: any, index: number) => (
+            <Pressable key={index} onPress={() => handleCirclePress(index)}>
+              <View
+                style={[
+                  styles.circle,
+                  {
+                    backgroundColor:
+                      activeCircle === index
+                        ? "#4588DF"
+                        : colorScheme == "dark"
                           ? "#3b3b3b"
                           : "#c2c2c2",
-                    },
-                  ]}
-                />
-              </Pressable>
-            ))
+                  },
+                ]}
+              />
+            </Pressable>
+          ))
           : Array.from({ length: 3 }).map((_, index) => (
-              <View
-                key={index}
-                style={[styles.circle, { backgroundColor: placeholderColor }]}
-              ></View>
-            ))}
+            <View
+              key={index}
+              style={[styles.circle, { backgroundColor: placeholderColor }]}
+            ></View>
+          ))}
       </SafeAreaView>
     </View>
   );
