@@ -22,6 +22,8 @@ import { useUserData } from "@/context/user";
 import Slider from "../slider";
 import moment from "moment";
 import { useBudget } from "@/context/budget";
+import MessagePopUp from "@/components/MessagePopUp";
+import { useMessages } from "@/context/messages";
 
 const GradientImage = require("@/assets/pages/gradientBg.png");
 
@@ -78,7 +80,8 @@ export default function TabOne() {
   const colorScheme = useColorScheme();
   const { fetchAnalytics } = useAnalytics();
   const { fetchUserDetails, loadingUserDetails, transactionsList, budgetList } = useUserData();
-  const { saveEditedBudget } = useBudget()
+  const { saveEditedBudget } = useBudget();
+  const { error, setError, messageText, setMessageText } = useMessages()
 
   const [sliderVisible, setSliderVisible] = useState(false);
   const [refresh, setRefresh] = useState(false);
@@ -91,8 +94,10 @@ export default function TabOne() {
 
       await fetchAnalytics();
       await fetchUserDetails();
+      setMessageText("Sucessfully Refreshed")
     } catch (error) {
       console.error("Error Refreshing: ", error);
+      setError("Something Went Wrong!")
     } finally {
       setRefresh(false);
     }
@@ -106,12 +111,14 @@ export default function TabOne() {
   }
 
   const transactionsHash = useMemo(() => JSON.stringify(
-    transactionsList.map((txn: Transaction) => (txn))
+    transactionsList?.map((txn: Transaction) => (txn))
   ), [transactionsList]);
 
   useEffect(() => {
+    setMessageText("Welcome!");
+
     if (!loadingUserDetails) updateBudgets();
-  }, [transactionsList.length, transactionsHash]);
+  }, [transactionsList?.length, transactionsHash]);
 
   async function updateBudgets() {
     try {
@@ -201,6 +208,12 @@ export default function TabOne() {
         { backgroundColor: colorScheme === "dark" ? "#1C1C1C" : "#EDEDED" },
       ]}
     >
+      <MessagePopUp error={error}
+        messageText={messageText}
+        setError={setError}
+        setMessageText={setMessageText}
+      />
+
       <StatusBar backgroundColor={"transparent"} />
 
       <Image
