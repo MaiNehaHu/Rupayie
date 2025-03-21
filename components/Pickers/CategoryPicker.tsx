@@ -141,7 +141,7 @@ const CategoryPicker = ({
           ]}
         >
           <Ionicons name="add-circle" size={20} color={textColor} />
-          <Text style={styles.addText}>Add</Text>
+          <Text style={styles.addText}>Category</Text>
         </TouchableOpacity>
       )}
 
@@ -310,7 +310,7 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
   },
   addText: {
-    fontWeight: 500,
+    fontWeight: 400,
     fontSize: 16,
     marginRight: 5,
   },

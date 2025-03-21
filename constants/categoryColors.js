@@ -34,7 +34,6 @@ export default [
     "#3d1620", // Dark Maroon
     "#a1334f", // Dark Ruby
     "#5c53ad", // Dark Periwinkle
-    "#33256b", // Deep Navy
     "#491aa1", // Dark Violet
     "#4c1273", // Dark Purple
     "#b005ad", // Deep Magenta
