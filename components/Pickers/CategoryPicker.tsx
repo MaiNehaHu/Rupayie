@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useColorScheme } from "@/components/useColorScheme";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Text, View } from "../Themed";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import AddCategory from "@/components/Modals/AddCategory";
@@ -27,8 +27,8 @@ const CategoryPicker = ({
   filteredCategories,
   clickedTransCategory,
 }: {
-  category: Category;
-  setCategory: any;
+  category: Category | undefined;
+  setCategory: (category: any) => void;
   filteredCategories: any[];
   clickedTransCategory: string;
 }) => {

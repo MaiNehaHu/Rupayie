@@ -112,9 +112,7 @@ const ReadTransaction = ({
   function closeModal() {
     handleCloseModal();
 
-    setTimeout(() => {
-      resetAllValues();
-    }, 3000);
+    resetAllValues();
   }
 
   function resetAllValues() {

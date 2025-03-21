@@ -26,6 +26,7 @@ import { useCategory } from "@/context/categories";
 import { useAnalytics } from "@/context/analytics";
 import { Alert } from "react-native";
 import PersonPicker from "../Pickers/PersonPicker";
+import formatDateTimeSimple from "@/utils/formatDateTimeSimple";
 
 interface Category {
   name: string;
@@ -89,9 +90,7 @@ const AddTransaction = ({
   function closeModal() {
     handleCloseModal();
 
-    setTimeout(() => {
-      resetAllValues();
-    }, 3000);
+    resetAllValues();
   }
 
   function resetAllValues() {
@@ -127,7 +126,7 @@ const AddTransaction = ({
 
     // Get today's date without the time part
     const today = new Date();
-    today.setHours(0, 0, 0, 0); 
+    today.setHours(0, 0, 0, 0);
     // Normalize time to midnight
 
     // Get selected date without the time part

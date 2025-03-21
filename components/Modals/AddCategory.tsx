@@ -94,14 +94,10 @@ const AddCategory = ({
       setCategory(addedCategory);
       handleCloseModal();
 
-      setTimeout(() => {
-        resetAllValues();
-      }, 3000);
+      resetAllValues();
     } catch (error) {
       handleCloseModal();
-      setTimeout(() => {
-        resetAllValues();
-      }, 3000);
+      resetAllValues();
 
       Alert.alert("Failed", "Failed to add category");
     }
@@ -110,9 +106,7 @@ const AddCategory = ({
   function closeTheModal() {
     handleCloseModal();
 
-    setTimeout(() => {
-      resetAllValues();
-    }, 3000);
+    resetAllValues();
   }
 
   function resetAllValues() {

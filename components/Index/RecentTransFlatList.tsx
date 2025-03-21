@@ -81,7 +81,7 @@ const RecentTransFlatList = () => {
 
       <FlatList
         data={recentTransactions}
-        keyExtractor={(item) => item._id}
+        keyExtractor={(item) => item.createdAt}
         renderItem={renderNotificationItem}
         horizontal
         showsHorizontalScrollIndicator={false}
