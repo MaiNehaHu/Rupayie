@@ -5,7 +5,7 @@ import {
   RefreshControl,
   Button,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useColorScheme } from "@/components/useColorScheme";
 
 import { Text, View } from "@/components/Themed";
@@ -105,9 +105,13 @@ export default function TabOne() {
     setSliderVisible(false);
   }
 
+  const transactionsHash = useMemo(() => {
+    return transactionsList.map((txn: Transaction) => txn.createdAt).join("|");
+  }, [transactionsList]);
+
   useEffect(() => {
     if (!loadingUserDetails) updateBudgets();
-  }, []);
+  }, [transactionsList.length, transactionsHash]);
 
   async function updateBudgets() {
     try {
