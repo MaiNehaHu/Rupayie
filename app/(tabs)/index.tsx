@@ -105,9 +105,9 @@ export default function TabOne() {
     setSliderVisible(false);
   }
 
-  const transactionsHash = useMemo(() => {
-    return transactionsList.map((txn: Transaction) => txn.createdAt).join("|");
-  }, [transactionsList]);
+  const transactionsHash = useMemo(() => JSON.stringify(
+    transactionsList.map((txn: Transaction) => (txn))
+  ), [transactionsList]);
 
   useEffect(() => {
     if (!loadingUserDetails) updateBudgets();
