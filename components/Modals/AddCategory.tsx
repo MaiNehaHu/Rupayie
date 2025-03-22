@@ -142,7 +142,7 @@ const AddCategory = ({
 
   return (
     <ScrollView style={{ flex: 1, position: "absolute" }}>
-      <Modal visible={visible} transparent animationType="fade">
+      <Modal visible={visible} transparent animationType="fade" onRequestClose={closeTheModal}>
         <Pressable
           style={styles.modalContainer}
           onPress={closeTheModal}

@@ -146,7 +146,7 @@ const CategoryPicker = ({
       )}
 
       {showPicker && (
-        <Modal visible={showPicker} transparent animationType="fade">
+        <Modal visible={showPicker} transparent animationType="fade" onRequestClose={handleCloseCategoryPickerModal}>
           <Pressable
             style={styles.modalContainer}
             onPress={handleCloseCategoryPickerModal}

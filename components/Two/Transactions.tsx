@@ -11,7 +11,7 @@ import { SafeAreaView } from "react-native";
 import { useColorScheme } from "@/components/useColorScheme";
 
 import { formatAmount } from "@/utils/formatAmount";
-import formatDateTimeSimple from "@/utils/formatDateTimeSimple";
+import formatDateTimeSimple, { formatDate } from "@/utils/formatDateTimeSimple";
 import { useTransactionsCategory } from "@/context/transCategory";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useUserData } from "@/context/user";
@@ -54,6 +54,7 @@ const Transactions = () => {
     useState<Transaction[]>(transactionsList);
   const [clickedTransaction, setClickedTransaction] = useState<Transaction>();
   const [showClickedTransaction, setShowClickedTransaction] = useState(false);
+  const [filtering, setFiltering] = useState<boolean>(false);
 
   const loaderColor = colorScheme === "dark" ? "#2e2e2e" : "#e3e3e3";
 
@@ -89,8 +90,10 @@ const Transactions = () => {
   };
 
   useEffect(() => {
-    setTransactions(
-      transactionsList
+    setFiltering(true);
+
+    setTimeout(() => { // Simulate small delay for a smoother update
+      const filteredTransactions = transactionsList
         ?.filter(({ category }: any) => category.type === clickedTransCategory)
         .filter(({ createdAt }: any) => {
           const createdAtDate = new Date(createdAt);
@@ -98,8 +101,12 @@ const Transactions = () => {
           const toDate = new Date(transactionsFilter.to);
 
           return createdAtDate >= fromDate && createdAtDate <= toDate;
-        })
-    );
+        });
+
+      setTransactions(filteredTransactions);
+
+      setFiltering(false);
+    }, 100);
   }, [clickedTransCategory, transactionsList, transactionsFilter]);
 
   return (
@@ -107,7 +114,9 @@ const Transactions = () => {
       <View style={styles.container}>
         {!loadingUserDetails ? (
           <SafeAreaView style={styles.transactionContainer}>
-            {transactions?.length > 0 ? (
+            {filtering ? (
+              <Skeleton loaderColor={loaderColor} />
+            ) : transactions?.length > 0 ? (
               transactions.map((transaction: Transaction, index: number) => {
                 const {
                   _id,
@@ -145,13 +154,26 @@ const Transactions = () => {
               <>
                 <Text
                   style={{
-                    marginVertical: 20,
+                    marginTop: 30,
                     textAlign: "center",
                     fontStyle: "italic",
                   }}
                 >
                   No Record
                 </Text>
+
+                <Text
+                  style={{
+                    marginVertical: 10,
+                    textAlign: "center",
+                  }}>
+                  {transactionsFilter.title === "Custom Range" ?
+                    `For Range: ${formatDate(transactionsFilter.from)} - ${formatDate(transactionsFilter.to)}`
+                    :
+                    transactionsFilter.title
+                  }
+                </Text>
+
                 <Text style={{
                   textAlign: "center",
                   fontStyle: "italic",
@@ -171,12 +193,7 @@ const Transactions = () => {
             )}
           </SafeAreaView>
         ) : (
-          Array.from({ length: 5 }).map((_, index) => (
-            <View
-              key={index}
-              style={[styles.cardSkeleton, { backgroundColor: loaderColor }]}
-            ></View>
-          ))
+          <Skeleton loaderColor={loaderColor} />
         )}
       </View>
 
@@ -191,6 +208,19 @@ const Transactions = () => {
     </>
   );
 };
+
+const Skeleton = ({ loaderColor }: { loaderColor: string }) => {
+  return (
+    <SafeAreaView style={{ marginTop: 10 }}>
+      {Array.from({ length: 5 }).map((_, index) => (
+        <View
+          key={index}
+          style={[styles.cardSkeleton, { backgroundColor: loaderColor }]}
+        ></View>
+      ))}
+    </SafeAreaView>
+  )
+}
 
 export const TransactionCard = ({
   _id,

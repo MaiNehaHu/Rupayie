@@ -77,7 +77,7 @@ const CountPicker = ({
       </TouchableOpacity>
 
       {showPicker && (
-        <Modal visible={showPicker} transparent animationType="fade">
+        <Modal visible={showPicker} transparent animationType="fade" onRequestClose={handleCloseAddModal}>
           <Pressable
             style={styles.modalContainer}
             onPress={handleCloseAddModal}

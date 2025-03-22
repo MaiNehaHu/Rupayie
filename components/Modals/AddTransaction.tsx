@@ -90,7 +90,7 @@ const AddTransaction = ({
   const placeholderColor = colorScheme === "dark" ? "#c2c2c2" : "#4d4d4d";
   const inputBg = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
 
-  function closeModal() {
+  function closeTheModal() {
     handleCloseModal();
 
     resetAllValues();
@@ -183,12 +183,12 @@ const AddTransaction = ({
       await reFetchBoth();
 
       // Close modal
-      closeModal();
+      closeTheModal();
 
       setMessageText("Successfully Added :)")
     } catch (error) {
       // Close modal
-      closeModal();
+      closeTheModal();
 
       setError("Failed to Add :(")
       // Alert.alert("Failed", "Failed to add your transaction");
@@ -211,10 +211,10 @@ const AddTransaction = ({
 
   return (
     <ScrollView style={{ flex: 1, position: "absolute" }}>
-      <Modal visible={isVisible} transparent animationType="fade">
+      <Modal visible={isVisible} transparent animationType="fade" onRequestClose={closeTheModal}>
         <Pressable
           style={styles.modalContainer}
-          onPress={closeModal}
+          onPress={closeTheModal}
           disabled={processing}
         >
           <Pressable

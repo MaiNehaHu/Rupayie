@@ -107,7 +107,7 @@ const ReadTransaction = ({
   const placeholderColor = colorScheme === "dark" ? "#c2c2c2" : "#4d4d4d";
   const inputBg = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
 
-  function closeModal() {
+  function closeTheModal() {
     handleCloseModal();
 
     resetAllValues();
@@ -212,18 +212,18 @@ const ReadTransaction = ({
       };
 
       if (noChangesDone()) {
-        closeModal();
+        closeTheModal();
         return;
       }
 
       // Save transaction and refresh
       await saveEditedTransaction(transaction._id, values);
       await reFetchBoth();
-      closeModal();
+      closeTheModal();
 
       setMessageText("Successfully Saved :)");
     } catch (error) {
-      closeModal();
+      closeTheModal();
       console.log(error);
 
       setError("Failed to Save :(")
@@ -236,12 +236,12 @@ const ReadTransaction = ({
       await deleteTransaction(transaction._id);
       await reFetchBoth();
 
-      closeModal();
+      closeTheModal();
 
       setMessageText("Successfully Moved to Trash :)");
       // setImageURI(null);
     } catch (error) {
-      closeModal();
+      closeTheModal();
 
       setError("Failed to Trash :(")
       // Alert.alert("Failed", "Failed to Delete");
@@ -266,10 +266,10 @@ const ReadTransaction = ({
 
   return (
     <ScrollView style={{ flex: 1, position: "absolute" }}>
-      <Modal visible={isVisible} transparent animationType="fade">
+      <Modal visible={isVisible} transparent animationType="fade" onRequestClose={closeTheModal}>
         <Pressable
           style={styles.modalContainer}
-          onPress={closeModal}
+          onPress={closeTheModal}
           disabled={
             processing || processingDelete
             // || imageUploading

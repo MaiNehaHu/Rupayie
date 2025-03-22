@@ -90,7 +90,7 @@ const DateAndTimePicker = ({
       </TouchableOpacity>
 
       {showPicker && (
-        <Modal visible={showPicker} transparent animationType="fade">
+        <Modal visible={showPicker} transparent animationType="fade" onRequestClose={handleCloseModal}>
           <Pressable style={styles.modalContainer} onPress={handleCloseModal}>
             <Pressable
               onPress={(e) => e.stopPropagation()}

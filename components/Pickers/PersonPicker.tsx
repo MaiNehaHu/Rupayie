@@ -138,7 +138,7 @@ const PersonPicker = ({
       )}
 
       {showPersonPicker && (
-        <Modal visible={showPersonPicker} transparent animationType="fade">
+        <Modal visible={showPersonPicker} transparent animationType="fade" onRequestClose={closePersonPickerModal}>
           <Pressable
             style={styles.modalContainer}
             onPress={closePersonPickerModal}

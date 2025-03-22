@@ -14,7 +14,7 @@ const IntervalPicker = ({
 }) => {
   return (
     <ScrollView style={{ flex: 1 }}>
-      <Modal visible={isVisible} transparent animationType="fade">
+      <Modal visible={isVisible} transparent animationType="fade" onRequestClose={handleCloseModal}>
         <Pressable style={styles.modalContainer} onPress={handleCloseModal}>
           <Pressable
             onPress={(e) => e.stopPropagation()}

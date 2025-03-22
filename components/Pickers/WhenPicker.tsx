@@ -194,7 +194,7 @@ const WhenPicker = ({
       </SafeAreaView>
 
       {showIntervalPicker && (
-        <Modal visible={showIntervalPicker} transparent animationType="fade">
+        <Modal visible={showIntervalPicker} transparent animationType="fade" onRequestClose={closeIntervalModal}>
           <Pressable style={styles.modalContainer} onPress={closeIntervalModal}>
             <Pressable
               onPress={(e) => e.stopPropagation()}
@@ -219,7 +219,7 @@ const WhenPicker = ({
       )}
 
       {showWhenPicker && (
-        <Modal visible={showWhenPicker} transparent animationType="fade">
+        <Modal visible={showWhenPicker} transparent animationType="fade" onRequestClose={closeWhenModal}>
           <Pressable style={styles.modalContainer} onPress={closeWhenModal}>
             <Pressable
               onPress={(e) => e.stopPropagation()}

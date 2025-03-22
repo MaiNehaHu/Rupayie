@@ -147,7 +147,7 @@ const ReadPerson = ({
 
   return (
     <ScrollView style={{ flex: 1, position: "absolute" }}>
-      <Modal visible={visible} transparent animationType="fade">
+      <Modal visible={visible} transparent animationType="fade" onRequestClose={handleCloseModal}>
         <Pressable
           style={styles.modalContainer}
           onPress={handleCloseModal}

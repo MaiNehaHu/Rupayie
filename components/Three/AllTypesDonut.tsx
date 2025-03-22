@@ -5,6 +5,7 @@ import { useUserData } from "@/context/user";
 import { useColorScheme } from "@/components/useColorScheme";
 import Svg, { Circle, Rect, Text as SvgText } from "react-native-svg";
 import { useTransactionFilter } from "@/context/filterTransByDate";
+import { formatDate } from "@/utils/formatDateTimeSimple";
 
 interface Transaction {
   _id: string;
@@ -133,6 +134,15 @@ interface OneDonutProps {
   loadingUserDetails: boolean;
 }
 
+// const formatDateTimeSimple = (dateString: string | Date) => {
+//   const date = new Date(dateString);
+//   const day = String(date.getDate()).padStart(2, "0");
+//   const month = String(date.getMonth() + 1).padStart(2, "0");
+//   const year = String(date.getFullYear()).slice(-2);
+
+//   return `${day}/${month}/${year}`;
+// };
+
 const OneDonut: React.FC<OneDonutProps> = ({
   center,
   radius,
@@ -180,16 +190,32 @@ const OneDonut: React.FC<OneDonutProps> = ({
       />
 
       {!loadingUserDetails && (
-        <SvgText
-          x={center}
-          y={center + 2}
-          fontSize="16"
-          fill={textColor}
-          textAnchor="middle"
-          fontWeight="400"
-        >
-          {donutTransactionsFilter.title}
-        </SvgText>
+        <>
+          <SvgText
+            x={center}
+            y={center + 2}
+            fontSize="16"
+            fill={textColor}
+            textAnchor="middle"
+            fontWeight="400"
+          >
+            {donutTransactionsFilter.title}
+          </SvgText>
+          <SvgText
+            x={center}
+            y={center + 22}
+            fontSize="12"
+            fill={textColor}
+            textAnchor="middle"
+            fontWeight="400"
+          >
+            {donutTransactionsFilter.title === "Custom Range" ?
+              `${formatDate(donutTransactionsFilter.from)} - ${formatDate(donutTransactionsFilter.to)}`
+              :
+              ""
+            }
+          </SvgText>
+        </>
       )}
 
       {!loadingUserDetails && percentage > 5 && (
