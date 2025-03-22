@@ -30,6 +30,13 @@ const getMonthRange = (monthsAgo: number) => {
   return { from: start, to: end };
 };
 
+const getYearRange = (yearsAgo: number) => {
+  const now = new Date();
+  const start = new Date(now.getFullYear() - yearsAgo, 0, 1); // January 1st
+  const end = new Date(now.getFullYear() - yearsAgo, 11, 31); // December 31st
+  return { from: start, to: end };
+};
+
 const Filter = ({ tabTwoFlag }: { tabTwoFlag: boolean }) => {
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === "dark";
@@ -47,6 +54,8 @@ const Filter = ({ tabTwoFlag }: { tabTwoFlag: boolean }) => {
     { title: "Last Month", ...getMonthRange(1) },
     { title: "Last 3 Months", from: getMonthRange(2).from, to: getMonthRange(0).to },
     { title: "Last 6 Months", from: getMonthRange(5).from, to: getMonthRange(0).to },
+    { title: "This Year", ...getYearRange(0) },
+    { title: "Last Year", ...getYearRange(1) },
     { title: "Custom Range", from: new Date(), to: new Date() },
   ];
 
