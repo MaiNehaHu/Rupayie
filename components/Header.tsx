@@ -45,7 +45,7 @@ const Header = ({ showSlider }: { showSlider: any }) => {
       <TouchableOpacity activeOpacity={0.5} onPress={() => showSlider()}>
         <FontAwesome
           name="bars"
-          size={20}
+          size={22}
           style={{
             color: "#fff",
           }}
@@ -56,7 +56,7 @@ const Header = ({ showSlider }: { showSlider: any }) => {
         <Link href="/search" asChild>
           <FontAwesome6
             name="magnifying-glass-dollar"
-            size={20}
+            size={22}
             style={{
               color: "#fff",
             }}
@@ -65,7 +65,7 @@ const Header = ({ showSlider }: { showSlider: any }) => {
         <Link href="/notification" asChild>
           <FontAwesome
             name="bell"
-            size={20}
+            size={22}
             style={{
               color: "#fff",
             }}
