@@ -54,7 +54,6 @@ const Transactions = () => {
     useState<Transaction[]>(transactionsList);
   const [clickedTransaction, setClickedTransaction] = useState<Transaction>();
   const [showClickedTransaction, setShowClickedTransaction] = useState(false);
-  const [filtering, setFiltering] = useState<boolean>(false);
 
   const loaderColor = colorScheme === "dark" ? "#2e2e2e" : "#e3e3e3";
 
@@ -90,23 +89,17 @@ const Transactions = () => {
   };
 
   useEffect(() => {
-    setFiltering(true);
+    const filteredTransactions = transactionsList
+      ?.filter(({ category }: any) => category.type === clickedTransCategory)
+      .filter(({ createdAt }: any) => {
+        const createdAtDate = new Date(createdAt);
+        const fromDate = new Date(transactionsFilter.from);
+        const toDate = new Date(transactionsFilter.to);
 
-    setTimeout(() => { // Simulate small delay for a smoother update
-      const filteredTransactions = transactionsList
-        ?.filter(({ category }: any) => category.type === clickedTransCategory)
-        .filter(({ createdAt }: any) => {
-          const createdAtDate = new Date(createdAt);
-          const fromDate = new Date(transactionsFilter.from);
-          const toDate = new Date(transactionsFilter.to);
+        return createdAtDate >= fromDate && createdAtDate <= toDate;
+      });
 
-          return createdAtDate >= fromDate && createdAtDate <= toDate;
-        });
-
-      setTransactions(filteredTransactions);
-
-      setFiltering(false);
-    }, 50);
+    setTransactions(filteredTransactions);
   }, [clickedTransCategory, transactionsList, transactionsFilter]);
 
   return (
@@ -114,9 +107,7 @@ const Transactions = () => {
       <View style={styles.container}>
         {!loadingUserDetails ? (
           <SafeAreaView style={styles.transactionContainer}>
-            {filtering ? (
-              <Skeleton loaderColor={loaderColor} />
-            ) : transactions?.length > 0 ? (
+            {transactions?.length > 0 ? (
               transactions.map((transaction: Transaction, index: number) => {
                 const {
                   _id,
