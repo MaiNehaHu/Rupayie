@@ -106,7 +106,7 @@ const Transactions = () => {
       setTransactions(filteredTransactions);
 
       setFiltering(false);
-    }, 100);
+    }, 50);
   }, [clickedTransCategory, transactionsList, transactionsFilter]);
 
   return (
@@ -211,7 +211,7 @@ const Transactions = () => {
 
 const Skeleton = ({ loaderColor }: { loaderColor: string }) => {
   return (
-    <SafeAreaView style={{ marginTop: 10 }}>
+    <SafeAreaView style={{ marginTop: 0 }}>
       {Array.from({ length: 5 }).map((_, index) => (
         <View
           key={index}
@@ -356,6 +356,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     backgroundColor: "transparent",
+    marginTop: 0
   },
   heading: {
     fontWeight: 600,

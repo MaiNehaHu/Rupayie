@@ -47,6 +47,7 @@ const Filter = ({ tabTwoFlag }: { tabTwoFlag: boolean }) => {
 
   const { setTransactionsFilter, setDonutTransactionsFilter } =
     useTransactionFilter();
+  const { transactionsList } = useUserData()
 
   const buttonsName: Option[] = [
     { title: "All Time", from: new Date(1999, 11, 31), to: new Date() },
@@ -68,6 +69,10 @@ const Filter = ({ tabTwoFlag }: { tabTwoFlag: boolean }) => {
 
   const flatListRef = useRef<FlatList>(null);
   const slideModalAnim = useRef(new Animated.Value(200)).current; // Start position off-screen
+
+  useEffect(() => {
+    handleOptionSelect(selectedOption, buttonsName.findIndex(btn => btn.title === selectedOption.title));
+  }, [transactionsList]);
 
   const handleCloseModal = () => {
     Animated.timing(slideModalAnim, {
