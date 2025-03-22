@@ -40,7 +40,6 @@ export default [
     "#2a1b3d", // Dark Plum
     "#313133", // Almost Black Gray
     "#828282", // Dark Gray
-    "#4d4d4d", // Charcoal Gray
     "#472c38", // Deep Brown
     "#1f1f1f", // True Black  
 

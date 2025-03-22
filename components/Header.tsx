@@ -1,7 +1,9 @@
 import {
   Image,
+  Platform,
   Pressable,
   SafeAreaView,
+  StatusBar,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
@@ -11,6 +13,7 @@ import { Link } from "expo-router";
 import { FontAwesome, FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { useUserData } from "@/context/user";
 import { useProfile } from "@/context/profilePhoto";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
 const girl1 = require("@/assets/profile/g1.png");
 const girl2 = require("@/assets/profile/g2.png");
@@ -40,14 +43,17 @@ const Header = ({ showSlider }: { showSlider: any }) => {
     if (userDetails) setProfilePhoto(matchedImage);
   }, [userDetails, loadingUserDetails]);
 
+  const statusBarHeight = Platform.OS === "ios" ? getStatusBarHeight() : StatusBar.currentHeight || 36;
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { marginTop: statusBarHeight }]}>
       <TouchableOpacity activeOpacity={0.5} onPress={() => showSlider()}>
         <FontAwesome
           name="bars"
           size={22}
           style={{
             color: "#fff",
+            padding: 10
           }}
         />
       </TouchableOpacity>
@@ -59,6 +65,7 @@ const Header = ({ showSlider }: { showSlider: any }) => {
             size={22}
             style={{
               color: "#fff",
+              padding: 10
             }}
           />
         </Link>
@@ -68,6 +75,7 @@ const Header = ({ showSlider }: { showSlider: any }) => {
             size={22}
             style={{
               color: "#fff",
+              padding: 10
             }}
           />
         </Link>
@@ -91,6 +99,7 @@ const Header = ({ showSlider }: { showSlider: any }) => {
                     styles.imageContainer,
                     {
                       borderColor: "#fff",
+                      marginHorizontal: 10
                     },
                   ]}
                 />
@@ -101,6 +110,7 @@ const Header = ({ showSlider }: { showSlider: any }) => {
                       styles.imageContainer,
                       {
                         borderColor: "#fff",
+                        marginHorizontal: 10
                       },
                     ]}
                   >
@@ -124,8 +134,8 @@ export default Header;
 
 const styles = StyleSheet.create({
   container: {
-    margin: 15,
-    marginTop: 45,
+    marginHorizontal: 5,
+    marginBottom: 5,
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
@@ -133,7 +143,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
   },
   flex_row: {
-    gap: 20,
+    gap: 0,
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
