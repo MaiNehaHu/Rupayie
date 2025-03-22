@@ -7,15 +7,13 @@ export default function Greeting() {
   const { userDetails, loadingUserDetails } = useUserData();
 
   const greeting = () => {
-    const time = new Date();
-    const h = time.getHours();
+    const h = new Date().getHours();
 
-    return `${h < 12
+    return h < 12
       ? "Good Morning :)"
-      : h >= 12 && h >= 15
+      : h < 18
         ? "Good Afternoon :)"
-        : "Good Evening :)"
-      }`;
+        : "Good Evening :)";
   };
 
   return (
