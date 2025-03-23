@@ -111,13 +111,23 @@ const AllTypesDonut: React.FC = () => {
           ))}
         </Svg>
       ) : (
-        <SafeAreaView style={{ marginVertical: 80 }}>
-          <Text style={{ fontStyle: "italic", textAlign: "center", lineHeight: 22 }}>
-            No Transaction Data Available
-            {"\n"}
-            Add a new transaction to visualize your records
-          </Text>
-        </SafeAreaView>
+        <Svg
+          viewBox={`0 0 ${size} ${size}`}
+          width={size + strokeWidth}
+          height={size}
+        >
+          <OneDonut
+            center={center}
+            radius={radius}
+            circum={circum}
+            percentage={100}
+            angle={90}
+            strokeWidth={strokeWidth}
+            color={placeholderColor}
+            loadingUserDetails={loadingUserDetails}
+            noData={true}
+          />
+        </Svg>
       )}
     </SafeAreaView>
   );
@@ -132,6 +142,7 @@ interface OneDonutProps {
   percentage: number;
   angle: number;
   loadingUserDetails: boolean;
+  noData?: boolean
 }
 
 // const formatDateTimeSimple = (dateString: string | Date) => {
@@ -152,6 +163,7 @@ const OneDonut: React.FC<OneDonutProps> = ({
   percentage,
   angle,
   loadingUserDetails,
+  noData
 }) => {
   const { donutTransactionsFilter } = useTransactionFilter();
 
@@ -189,36 +201,34 @@ const OneDonut: React.FC<OneDonutProps> = ({
         fill="none"
       />
 
-      {!loadingUserDetails && (
-        <>
-          <SvgText
-            x={center}
-            y={center + 2}
-            fontSize="16"
-            fill={textColor}
-            textAnchor="middle"
-            fontWeight="400"
-          >
-            {donutTransactionsFilter.title}
-          </SvgText>
-          <SvgText
-            x={center}
-            y={center + 22}
-            fontSize="12"
-            fill={textColor}
-            textAnchor="middle"
-            fontWeight="400"
-          >
-            {donutTransactionsFilter.title === "Custom Range" ?
-              `${formatDate(donutTransactionsFilter.from)} - ${formatDate(donutTransactionsFilter.to)}`
-              :
-              ""
-            }
-          </SvgText>
-        </>
-      )}
+      <>
+        <SvgText
+          x={center}
+          y={center + 2}
+          fontSize="16"
+          fill={textColor}
+          textAnchor="middle"
+          fontWeight="400"
+        >
+          {loadingUserDetails ? "Loading..." : noData ? "No Data" : donutTransactionsFilter.title}
+        </SvgText>
+        <SvgText
+          x={center}
+          y={center + 22}
+          fontSize="12"
+          fill={textColor}
+          textAnchor="middle"
+          fontWeight="400"
+        >
+          {donutTransactionsFilter.title === "Custom Range" ?
+            `${formatDate(donutTransactionsFilter.from)} - ${formatDate(donutTransactionsFilter.to)}`
+            :
+            ""
+          }
+        </SvgText>
+      </>
 
-      {!loadingUserDetails && percentage > 5 && (
+      {!loadingUserDetails && percentage > 5 && !noData && (
         <>
           <Rect
             x={textX - textWidth / 2 + 5}
@@ -238,7 +248,7 @@ const OneDonut: React.FC<OneDonutProps> = ({
             textAnchor="middle"
             fontWeight="bold"
           >
-            {percentage.toFixed(1)}%
+            {percentage == 100 ? percentage : percentage.toFixed(1)}%
           </SvgText>
         </>
       )}

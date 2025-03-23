@@ -56,8 +56,8 @@ function Balance() {
                   item === "Balance"
                     ? "#2A2C38"
                     : item === "Spent"
-                    ? "#4588DF"
-                    : "#4FB92D",
+                      ? "#4588DF"
+                      : "#4FB92D",
               },
             ]}
           >
@@ -74,8 +74,8 @@ function Balance() {
               {clicked === "Balance"
                 ? formatAmount(balance, currencyObj)
                 : clicked === "Spent"
-                ? formatAmount(totalSpent, currencyObj)
-                : formatAmount(totalEarned, currencyObj)}
+                  ? formatAmount(totalSpent, currencyObj)
+                  : formatAmount(totalEarned, currencyObj)}
             </Text>
           ) : (
             <View
@@ -130,7 +130,7 @@ const DonutChart: React.FC<DonutChartProps> = React.memo(({ amounts }) => {
     [amounts]
   );
 
-  return (
+  return totalAmount > 0 ? (
     <Svg
       viewBox={`0 0 ${size} ${size}`}
       width={size + strokeWidth}
@@ -148,9 +148,28 @@ const DonutChart: React.FC<DonutChartProps> = React.memo(({ amounts }) => {
           color={loadingUserDetails ? placeholderColor : item.color}
           loadingUserDetails={loadingUserDetails}
         />
-      ))}
+      ))
+      }
     </Svg>
-  );
+  ) :
+    <Svg
+      viewBox={`0 0 ${size} ${size}`}
+      width={size + strokeWidth}
+      height={size}
+    >
+      <OneDonut
+        center={center}
+        radius={radius}
+        circum={circum}
+        percentage={100}
+        angle={90}
+        strokeWidth={strokeWidth}
+        color={placeholderColor}
+        loadingUserDetails={loadingUserDetails}
+        noData={true}
+      />
+    </Svg>
+    ;
 }, arePropsEqual);
 
 // ✅ Custom Comparison Function for React.memo()
@@ -169,6 +188,7 @@ const OneDonut = ({
   percentage,
   angle,
   loadingUserDetails,
+  noData
 }: {
   color: string;
   radius: number;
@@ -178,6 +198,7 @@ const OneDonut = ({
   percentage: number;
   angle: number;
   loadingUserDetails?: boolean;
+  noData?: boolean
 }) => {
   const colorScheme = useColorScheme();
   const textColor = colorScheme === "dark" ? "#fff" : "#000";
@@ -214,7 +235,7 @@ const OneDonut = ({
         strokeLinecap="butt"
       />
 
-      {!loadingUserDetails && percentage > 5 && (
+      {!loadingUserDetails && percentage > 5 && !noData && (
         <>
           <Rect
             x={textX - textWidth / 2}
@@ -234,7 +255,7 @@ const OneDonut = ({
             textAnchor="middle"
             fontWeight="400"
           >
-            {`${percentage?.toFixed(1)}%`}
+            {`${percentage == 100 ? percentage : percentage?.toFixed(1)}%`}
           </SvgText>
         </>
       )}
