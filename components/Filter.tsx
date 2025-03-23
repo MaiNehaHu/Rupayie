@@ -71,7 +71,9 @@ const Filter = ({ tabTwoFlag }: { tabTwoFlag: boolean }) => {
   const slideModalAnim = useRef(new Animated.Value(200)).current; // Start position off-screen
 
   useEffect(() => {
-    handleOptionSelect(selectedOption, buttonsName.findIndex(btn => btn.title === selectedOption.title));
+    if (selectedOption.title !== "Custom Range") { // doesn't open calendar modal on every change
+      handleOptionSelect(selectedOption, buttonsName.findIndex(btn => btn.title === selectedOption.title));
+    }
   }, [transactionsList]);
 
   const handleCloseModal = () => {
