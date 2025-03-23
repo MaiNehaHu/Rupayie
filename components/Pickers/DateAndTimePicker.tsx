@@ -20,31 +20,41 @@ import moment from "moment";
 
 const DateAndTimePicker = ({
   date,
-  handleConfirm: setDate,
+  handleConfirm: handleDateAndTimeConfirm,
 }: {
   date: Date;
-  handleConfirm: any;
+  handleConfirm: (value: Date) => void;
 }) => {
   const colorScheme = useColorScheme();
 
-  const [showPicker, setShowPicker] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
 
   // States for manual selection
   const [selectedDay, setSelectedDay] = useState(date.getDate());
   const [selectedMonth, setSelectedMonth] = useState(date.getMonth());
   const [selectedYear, setSelectedYear] = useState(date.getFullYear());
+  const [selectedHour, setSelectedHour] = useState(
+    date.getHours() % 12 || 12 // Convert to 12-hour format
+  );
+  const [selectedMinute, setSelectedMinute] = useState(date.getMinutes());
+  const [selectedAmPm, setSelectedAmPm] = useState(
+    selectedHour >= 12 ? "PM" : "AM"
+  );
+
   const [formatedDate, formatedTime] = formatDateTimeSimple(date).split(",");
 
-  const slideModalAnim = useRef(new Animated.Value(200)).current; // Start position off-screen
+  const slideDateModalAnim = useRef(new Animated.Value(200)).current; // Start position off-screen
+  const slideTimeModalAnim = useRef(new Animated.Value(200)).current; // Start position off-screen
 
   const inputBg = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
   const textColor = colorScheme === "dark" ? "#FFF" : "#000";
 
   const openDateModal = () => {
-    setShowPicker(true);
+    setShowDatePicker(true);
 
     setTimeout(() => {
-      Animated.timing(slideModalAnim, {
+      Animated.timing(slideDateModalAnim, {
         toValue: 0, // Slide up
         duration: 200,
         easing: Easing.out(Easing.ease),
@@ -53,29 +63,75 @@ const DateAndTimePicker = ({
     }, 100);
   };
 
-  const handleCloseModal = () => {
-    Animated.timing(slideModalAnim, {
+  const closeDateModal = () => {
+    Animated.timing(slideDateModalAnim, {
       toValue: 700, // Move back down off-screen
       duration: 200,
       easing: Easing.in(Easing.ease),
       useNativeDriver: true,
     }).start(() => {
-      setShowPicker(false);
-      setDate(date ? date : new Date());
+      setShowDatePicker(false);
+      handleDateAndTimeConfirm(date ? date : new Date());
     });
   };
 
-  const handleConfirm = () => {
-    Animated.timing(slideModalAnim, {
+  const openTimeModal = () => {
+    setShowTimePicker(true);
+
+    setTimeout(() => {
+      Animated.timing(slideTimeModalAnim, {
+        toValue: 0, // Slide up
+        duration: 200,
+        easing: Easing.out(Easing.ease),
+        useNativeDriver: true,
+      }).start();
+    }, 100);
+  };
+
+  const closeTimeModal = () => {
+    Animated.timing(slideTimeModalAnim, {
       toValue: 700, // Move back down off-screen
       duration: 200,
       easing: Easing.in(Easing.ease),
       useNativeDriver: true,
     }).start(() => {
-      const newDate = new Date(selectedYear, selectedMonth, selectedDay);
+      setShowTimePicker(false);
+      handleDateAndTimeConfirm(date ? date : new Date());
+    });
+  };
 
-      setDate(newDate);
-      setShowPicker(false);
+  const handleDateConfirm = () => {
+    Animated.timing(slideDateModalAnim, {
+      toValue: 700, // Move back down off-screen
+      duration: 200,
+      easing: Easing.in(Easing.ease),
+      useNativeDriver: true,
+    }).start(() => {
+      setShowDatePicker(false);
+      openTimeModal();
+    });
+  };
+
+  const handleTimeConfirm = () => {
+    Animated.timing(slideTimeModalAnim, {
+      toValue: 700, // Move back down off-screen
+      duration: 200,
+      easing: Easing.in(Easing.ease),
+      useNativeDriver: true,
+    }).start(() => {
+      const finalHour =
+        selectedAmPm === "PM"
+          ? selectedHour === 12
+            ? 12
+            : selectedHour + 12
+          : selectedHour === 12
+            ? 0
+            : selectedHour;
+
+      const newDate = new Date(selectedYear, selectedMonth, selectedDay, finalHour, selectedMinute, 0, 0);
+
+      handleDateAndTimeConfirm(newDate);
+      setShowTimePicker(false);
     });
   };
 
@@ -86,18 +142,18 @@ const DateAndTimePicker = ({
         activeOpacity={0.7}
         style={[styles.smallBox, { backgroundColor: inputBg }]}
       >
-        <Text>{formatedDate}</Text>
+        <Text>{formatedDate}, {formatedTime}</Text>
       </TouchableOpacity>
 
-      {showPicker && (
-        <Modal visible={showPicker} transparent animationType="fade" onRequestClose={handleCloseModal}>
-          <Pressable style={styles.modalContainer} onPress={handleCloseModal}>
+      {showDatePicker && (
+        <Modal visible={showDatePicker} transparent animationType="fade" onRequestClose={closeDateModal}>
+          <Pressable style={styles.modalContainer} onPress={closeDateModal}>
             <Pressable
               onPress={(e) => e.stopPropagation()}
               style={styles.modalContent}
             >
               <Animated.View
-                style={[{ transform: [{ translateY: slideModalAnim }] }]}
+                style={[{ transform: [{ translateY: slideDateModalAnim }] }]}
               >
                 <View style={styles.pickerContainer}>
                   <SafeAreaView
@@ -105,7 +161,7 @@ const DateAndTimePicker = ({
                   >
                     <Text style={styles.title}>Pick a Date</Text>
 
-                    <TouchableOpacity onPress={handleCloseModal}>
+                    <TouchableOpacity onPress={closeDateModal}>
                       <FontAwesome6 name="xmark" size={20} color={textColor} />
                     </TouchableOpacity>
                   </SafeAreaView>
@@ -144,7 +200,58 @@ const DateAndTimePicker = ({
                   <View style={[styles.doneButton]}>
                     <TouchableOpacity
                       activeOpacity={0.8}
-                      onPress={handleConfirm}
+                      onPress={handleDateConfirm}
+                    >
+                      <Text style={styles.doneText}>DONE</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </Animated.View>
+            </Pressable>
+          </Pressable>
+        </Modal>
+      )}
+
+      {showTimePicker && (
+        <Modal visible={showTimePicker} transparent animationType="fade" onRequestClose={closeTimeModal}>
+          <Pressable style={styles.modalContainer} onPress={closeTimeModal}>
+            <Pressable
+              onPress={(e) => e.stopPropagation()}
+              style={styles.modalContent}
+            >
+              <Animated.View
+                style={[{ transform: [{ translateY: slideTimeModalAnim }] }]}
+              >
+                <View style={styles.pickerContainer}>
+                  <View style={styles.pickerRow}>
+                    <SafeAreaView style={[styles.scrollPicker]}>
+                      <CarouselPicker
+                        data={Array.from({ length: 12 }, (_, i) => i + 1)} // Hours of the year (1-12)
+                        setSelectedDay={setSelectedHour}
+                        selectedDay={selectedHour}
+                      />
+                    </SafeAreaView>
+                    <SafeAreaView style={[styles.scrollPicker]}>
+                      <CarouselPicker
+                        data={Array.from({ length: 60 }, (_, i) => i)} // Hours of the year (0-59)
+                        setSelectedDay={setSelectedMinute}
+                        selectedDay={selectedMinute}
+                      />
+                    </SafeAreaView>
+                    <SafeAreaView style={[styles.scrollPicker]}>
+                      <CarouselPicker
+                        data={selectedAmPm === "AM" ? ["AM", "PM"] : ["PM", "AM"]} // AM/PM selector
+                        setSelectedDay={setSelectedAmPm}
+                        selectedDay={selectedAmPm}
+                        ampmPicker={true} // Enable AM/PM picker
+                      />
+                    </SafeAreaView>
+                  </View>
+
+                  <View style={[styles.doneButton]}>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      onPress={handleTimeConfirm}
                     >
                       <Text style={styles.doneText}>DONE</Text>
                     </TouchableOpacity>
@@ -169,7 +276,7 @@ export const CarouselPicker = ({
 }: {
   data: any;
   selectedDay: any;
-  setSelectedDay: any;
+  setSelectedDay: (value: any) => void;
   monthPicker?: boolean;
   weekPicker?: boolean;
   ampmPicker?: boolean;
@@ -231,10 +338,10 @@ export const CarouselPicker = ({
             {monthPicker
               ? moment().month(item).format("MMMM")
               : weekPicker
-              ? moment().day(item).format("dddd")
-              : ampmPicker
-              ? item
-              : item.toString().padStart(2, "0")}
+                ? moment().day(item).format("dddd")
+                : ampmPicker
+                  ? item
+                  : item.toString().padStart(2, "0")}
           </Text>
         </TouchableOpacity>
       </View>

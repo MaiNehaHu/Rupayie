@@ -33,7 +33,7 @@ export const AnalyticsProvider = ({ children }) => {
 
       setLoadingAnalytics(false);
       setAnalytics(data);
-      console.log("Fetched Analytics");
+      // console.log("Fetched Analytics");
     } catch (error) {
       console.log("Error Fetching Analytics Data: ", error);
       throw new Error("Error Fetching Analytics Data");

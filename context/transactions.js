@@ -31,7 +31,7 @@ export const TransactionsProvider = ({ children }) => {
             }
 
             setProcessing(false);
-            console.log("Transaction Added Successfully");
+            // console.log("Transaction Added Successfully");
         } catch (error) {
             setProcessing(false);
             console.log("Error Adding Transaction:", error);
@@ -60,7 +60,7 @@ export const TransactionsProvider = ({ children }) => {
             }
 
             setProcessing(false);
-            console.log("Transaction Editting Successfully");
+            // console.log("Transaction Editting Successfully");
         } catch (error) {
             setProcessing(false);
             console.log("Error Editting Transaction:", error);
@@ -88,7 +88,7 @@ export const TransactionsProvider = ({ children }) => {
             }
 
             setProcessingDelete(false);
-            console.log("Transaction Delete Successfully");
+            // console.log("Transaction Delete Successfully");
         } catch (error) {
             setProcessingDelete(false);
             console.log("Error Delete Transaction:", error);

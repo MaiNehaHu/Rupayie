@@ -88,7 +88,7 @@ export const UserDetailsProvider = ({ children }) => {
       setAutoCleanTrash(data.settings.autoCleanTrash);
       setBiometricFlag(data.biometric);
 
-      console.log("Fetched User Details");
+      // console.log("Fetched User Details");
     } catch (error) {
       console.log("Error Fetching User Details Data: ", error);
       throw new Error("Error Fetching User Details Data");
@@ -117,7 +117,7 @@ export const UserDetailsProvider = ({ children }) => {
 
       setSavingUserName(false)
       setSavingUserProfile(false)
-      console.log("User Details Updated Successfully");
+      // console.log("User Details Updated Successfully");
     } catch (error) {
       setSavingUserName(false)
       setSavingUserProfile(false)
@@ -146,7 +146,7 @@ export const UserDetailsProvider = ({ children }) => {
 
       const data = await response.json();
 
-      console.log("Sucessfully Toggled Biometric to: ", data.settings.autoCleanTrash)
+      // console.log("Sucessfully Toggled Biometric to: ", data.settings.autoCleanTrash)
     } catch (error) {
       console.log("Error Turning Switching Biometric:", error);
       throw new Error("Error Turning Switching Biometric");

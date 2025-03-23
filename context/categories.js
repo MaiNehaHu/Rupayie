@@ -33,7 +33,7 @@ export const CategoryProvider = ({ children }) => {
 
       const data = await response.json();
 
-      console.log("Category Added Successfully");
+      // console.log("Category Added Successfully");
 
       return data.category;
     } catch (error) {
@@ -64,7 +64,7 @@ export const CategoryProvider = ({ children }) => {
         throw new Error(errorData.message || "Failed to edit category");
       }
 
-      console.log("Category Editting Successfully");
+      // console.log("Category Editting Successfully");
     } catch (error) {
       console.log("Error Editting Category:", error);
       throw new Error("Error Editting Category");
@@ -92,7 +92,7 @@ export const CategoryProvider = ({ children }) => {
         throw new Error(errorData.message || "Failed to delete category");
       }
 
-      console.log("Category Delete Successfully");
+      // console.log("Category Delete Successfully");
     } catch (error) {
       console.log("Error Delete Category:", error);
       throw new Error("Error Delete Category");

@@ -59,7 +59,7 @@ export const RecurringTransProvider = ({ children }) => {
         throw new Error(errorData.message || "Failed to edit transaction");
       }
 
-      console.log("Recurring Transaction Editting Successfully");
+      // console.log("Recurring Transaction Editting Successfully");
     } catch (error) {
       console.log("Error Editting Recurring Transaction:", error);
       throw new Error("Error Editting Recurring Transaction");
@@ -87,7 +87,7 @@ export const RecurringTransProvider = ({ children }) => {
         throw new Error(errorData.message || "Failed to delete transaction");
       }
 
-      console.log("Recurring Transaction Delete Successfully");
+      // console.log("Recurring Transaction Delete Successfully");
     } catch (error) {
       console.log("Error Delete Recurring Transaction:", error);
       throw new Error("Error Delete Recurring Transaction");

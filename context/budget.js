@@ -29,7 +29,7 @@ export const BudgetProvider = ({ children }) => {
       }
 
       setBudgetProcessing(false);
-      console.log("Budget Added Successfully");
+      // console.log("Budget Added Successfully");
     } catch (error) {
       setBudgetProcessing(false);
       console.log("Error Adding Budget:", error);
@@ -55,7 +55,7 @@ export const BudgetProvider = ({ children }) => {
       }
 
       setBudgetProcessing(false);
-      console.log("Budget Edited Successfully");
+      // console.log("Budget Edited Successfully");
     } catch (error) {
       setBudgetProcessing(false);
       console.log("Error Editing Budget:", error);
@@ -80,7 +80,7 @@ export const BudgetProvider = ({ children }) => {
       }
 
       setBudgetDeleting(false);
-      console.log("Budget Deleted Successfully");
+      // console.log("Budget Deleted Successfully");
     } catch (error) {
       setBudgetDeleting(false);
       console.log("Error Deleting Budget:", error);

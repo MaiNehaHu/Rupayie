@@ -32,7 +32,7 @@ export const PeopleProvider = ({ children }) => {
       const data = await response.json();
 
       setSavingPerson(false);
-      console.log("Person Added Successfully");
+      // console.log("Person Added Successfully");
 
       return data.person;
     } catch (error) {
@@ -63,7 +63,7 @@ export const PeopleProvider = ({ children }) => {
       }
 
       setSavingPerson(false);
-      console.log("Person Editting Successfully");
+      // console.log("Person Editting Successfully");
     } catch (error) {
       console.log("Error Editting Person: ", error);
       throw new Error("Error Editting Person");
@@ -91,7 +91,7 @@ export const PeopleProvider = ({ children }) => {
       }
 
       setDeletingPerson(false);
-      console.log("Person Delete Successfully");
+      // console.log("Person Delete Successfully");
     } catch (error) {
       console.log("Error Delete Person: ", error);
       throw new Error("Error Delete Person");

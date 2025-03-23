@@ -26,7 +26,7 @@ export const EditNotificationProvider = ({ children }) => {
         throw new Error(errorData.message || "Failed to set read transaction");
       }
 
-      console.log("Transaction Set Read Successfully");
+      // console.log("Transaction Set Read Successfully");
     } catch (error) {
       console.log("Error Setting Read Transaction: ", error);
       throw new Error("Error Setting Read Transaction");

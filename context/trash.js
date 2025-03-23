@@ -33,7 +33,7 @@ export const TranshProvider = ({ children }) => {
       }
 
       setIsTransDeleting(false);
-      console.log("Transaction Deleted from Trash Successfully");
+      // console.log("Transaction Deleted from Trash Successfully");
     } catch (error) {
       console.log("Error Delete Transaction from Trash: ", error)
       throw new Error("Error Delete Transaction from Trash")
@@ -60,7 +60,7 @@ export const TranshProvider = ({ children }) => {
       }
 
       setIsTrashCleaning(false);
-      console.log("Trash Cleaned Successfully");
+      // console.log("Trash Cleaned Successfully");
     } catch (error) {
       console.log("Error Cleaning Trash: ", error);
       throw new Error("Error Cleaning Trash");
@@ -88,7 +88,7 @@ export const TranshProvider = ({ children }) => {
       }
 
       setIsReverting(false);
-      console.log("Transaction Reverted from Trash Successfully");
+      // console.log("Transaction Reverted from Trash Successfully");
     } catch (error) {
       console.log("Error Delete Transaction from Trash:", error);
       throw new Error("Error Delete Transaction from Trash");
@@ -115,7 +115,7 @@ export const TranshProvider = ({ children }) => {
 
       const data = await response.json();
 
-      console.log("Sucessfully Turned On Trash Clean After a Week to: ", data.settings.autoCleanTrash)
+      // console.log("Sucessfully Turned On Trash Clean After a Week to: ", data.settings.autoCleanTrash)
     } catch (error) {
       console.log("Error Turning On Trash Clean After a Week:", error);
       throw new Error("Error Turning On Trash Clean After a Week");
