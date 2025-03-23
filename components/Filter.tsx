@@ -47,7 +47,7 @@ const Filter = ({ tabTwoFlag }: { tabTwoFlag: boolean }) => {
 
   const { setTransactionsFilter, setDonutTransactionsFilter } =
     useTransactionFilter();
-  const { transactionsList } = useUserData()
+  const { loadingUserDetails } = useUserData()
 
   const buttonsName: Option[] = [
     { title: "All Time", from: new Date(1999, 11, 31), to: new Date() },
@@ -74,7 +74,7 @@ const Filter = ({ tabTwoFlag }: { tabTwoFlag: boolean }) => {
     if (selectedOption.title !== "Custom Range") { // doesn't open calendar modal on every change
       handleOptionSelect(selectedOption, buttonsName.findIndex(btn => btn.title === selectedOption.title));
     }
-  }, [transactionsList]);
+  }, [loadingUserDetails]);
 
   const handleCloseModal = () => {
     Animated.timing(slideModalAnim, {
