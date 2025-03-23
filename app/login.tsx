@@ -301,6 +301,7 @@ const EmailInput = (
         placeholder="yourname@gmail.com"
         placeholderTextColor={placeholderColor}
         numberOfLines={1}
+        onEndEditing={sendOtp}
       />
 
       <TouchableOpacity
