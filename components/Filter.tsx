@@ -37,7 +37,7 @@ const getYearRange = (yearsAgo: number) => {
   return { from: start, to: end };
 };
 
-const Filter = ({ tabTwoFlag }: { tabTwoFlag: boolean }) => {
+const Filter = ({ tabTwoFlag, exportExcelFlag }: { tabTwoFlag?: boolean, exportExcelFlag?: boolean }) => {
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === "dark";
   const textColor = isDarkMode ? "#FFF" : "#000";
@@ -45,7 +45,7 @@ const Filter = ({ tabTwoFlag }: { tabTwoFlag: boolean }) => {
   const backgroundColor = isDarkMode ? "#1C1C1C" : "#EDEDED";
   const highlightColor = isDarkMode ? "#4588DF" : "#4FB92D";
 
-  const { setTransactionsFilter, setDonutTransactionsFilter } =
+  const { setTransactionsFilter, setDonutTransactionsFilter, setExportTransactionsFilter } =
     useTransactionFilter();
   const { loadingUserDetails } = useUserData()
 
@@ -106,8 +106,10 @@ const Filter = ({ tabTwoFlag }: { tabTwoFlag: boolean }) => {
     setSelectedOption(btn);
     if (tabTwoFlag) {
       setTransactionsFilter(btn);
-    } else {
+    } else if (!exportExcelFlag) {
       setDonutTransactionsFilter(btn);
+    } else {
+      setExportTransactionsFilter(btn)
     }
 
     flatListRef.current?.scrollToIndex({
@@ -142,15 +144,17 @@ const Filter = ({ tabTwoFlag }: { tabTwoFlag: boolean }) => {
     setSelectedOption(customRange);
     if (tabTwoFlag) {
       setTransactionsFilter(customRange);
-    } else {
+    } else if (!exportExcelFlag) {
       setDonutTransactionsFilter(customRange);
+    } else {
+      setExportTransactionsFilter(customRange)
     }
 
     setModalVisible(false);
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { paddingHorizontal: exportExcelFlag ? 0 : 20 }]}>
       <Ionicons name="calendar" size={24} color={textColor} style={{ marginRight: 10 }} />
       <FlatList
         ref={flatListRef}
@@ -266,7 +270,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 20,
+    // paddingHorizontal: 20,
   },
   optionButton: {
     paddingRight: 10,

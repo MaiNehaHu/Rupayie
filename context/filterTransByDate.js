@@ -13,6 +13,11 @@ export const FilterByDateProvider = ({ children }) => {
         from: new Date(2000, 0, 1),
         to: new Date(),
     });
+    const [exportTransactionsFilter, setExportTransactionsFilter] = useState({
+        title: "All Time",
+        from: new Date(2000, 0, 1),
+        to: new Date(),
+    });
 
     return (
         <FilterByDateContext.Provider
@@ -20,7 +25,9 @@ export const FilterByDateProvider = ({ children }) => {
                 transactionsFilter,
                 setTransactionsFilter,
                 donutTransactionsFilter,
-                setDonutTransactionsFilter
+                setDonutTransactionsFilter,
+                exportTransactionsFilter, 
+                setExportTransactionsFilter
             }}
         >
             {children}

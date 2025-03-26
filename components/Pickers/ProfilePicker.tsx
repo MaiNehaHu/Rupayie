@@ -40,7 +40,7 @@ const ProfilePicker = ({
 
       <SafeAreaView style={styles.flex}>
         {[
-          girl1, girl2, girl3, girl4, girl5, girl6, girl7, girl8, boy1, boy2, boy3, boy4, boy5, boy6, boy7, boy10,]
+          girl1, girl2, girl3, girl4, girl5, girl6, boy1, boy2, boy3, boy4, boy6, boy7,]
           .map((pf) => (
             <TouchableOpacity
               key={pf}

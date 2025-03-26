@@ -6,6 +6,8 @@ import { useUserData } from "@/context/user";
 import { useTrash } from "@/context/trash";
 import { Text, View } from "@/components/Themed";
 import * as LocalAuthentication from "expo-local-authentication";
+import ExportExcel from "@/components/Settings/ExportExcel";
+import Filter from "@/components/Filter";
 
 const Settings = () => {
   const colorScheme = useColorScheme();
@@ -80,6 +82,13 @@ const Settings = () => {
             setIsOn={handleBiometricToggleSwitch}
           />
         </View>
+      </SafeAreaView>
+
+      <SafeAreaView style={[styles.container, { backgroundColor: oppBgColor }]}>
+        <Text style={styles.title}>Export Your Transactions</Text>
+
+        <Filter exportExcelFlag />
+        <ExportExcel />
       </SafeAreaView>
     </ScrollView>
   );

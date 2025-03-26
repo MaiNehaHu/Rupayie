@@ -28,6 +28,7 @@ import { FilterByDateProvider } from "@/context/filterTransByDate";
 import { LoginProvider } from "@/context/login";
 import { AuthProvider } from "@/context/auth";
 import { MessagesProvider } from "@/context/messages";
+import { ExportTransactionsProvider } from "@/context/exportTransactions";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -88,83 +89,85 @@ function RootLayoutNav() {
                                   <LoginProvider>
                                     <AuthProvider>
                                       <MessagesProvider>
-                                        <Stack
-                                          screenOptions={{
-                                            animation: "fade_from_bottom",
-                                          }}
-                                        >
-                                          <Stack.Screen
-                                            name="(tabs)"
-                                            options={{ headerShown: false }}
-                                          />
-                                          <Stack.Screen
-                                            name="modal"
-                                            options={{ presentation: "modal" }}
-                                          />
-                                          <Stack.Screen
-                                            name="categories"
-                                            options={{ title: "Your Categories" }}
-                                          />
-                                          <Stack.Screen
-                                            name="recurrings"
-                                            options={{ title: "Your Recurrings" }}
-                                          />
-                                          <Stack.Screen
-                                            name="trash"
-                                            options={{ title: "Your Trash" }}
-                                          />
-                                          <Stack.Screen
-                                            name="search"
-                                            options={{
-                                              title: "Search Transaction",
+                                        <ExportTransactionsProvider>
+                                          <Stack
+                                            screenOptions={{
+                                              animation: "fade_from_bottom",
                                             }}
-                                          />
-                                          <Stack.Screen
-                                            name="notification"
-                                            options={{
-                                              title: "Your Notifications",
-                                            }}
-                                          />
-                                          <Stack.Screen
-                                            name="people"
-                                            options={{ title: "Your People" }}
-                                          />
-                                          <Stack.Screen
-                                            name="profile"
-                                            options={{ title: "Your Profile" }}
-                                          />
-                                          <Stack.Screen
-                                            name="login"
-                                            options={{ headerShown: false }}
-                                          />
-                                          <Stack.Screen
-                                            name="addBudget"
-                                            options={{ title: "Add Budget" }}
-                                          />
-                                          <Stack.Screen
-                                            name="readBudget"
-                                            options={{ title: "Budget Analysis" }}
-                                          />
-                                          <Stack.Screen
-                                            name="editBudget"
-                                            options={{
-                                              title: "Edit Budget",
-                                              // headerShown: false,
-                                            }}
-                                          />
-                                          <Stack.Screen
-                                            name="categoryTransactions"
-                                            options={{ title: "Your Transactions" }}
-                                          />
-                                          <Stack.Screen
-                                            name="typeDonut"
-                                            options={{ title: "Your Transactions" }}
-                                          />
-                                          <Stack.Screen
-                                            name="settings"
-                                            options={{ title: "Settings" }}
-                                          />
-                                        </Stack>
+                                          >
+                                            <Stack.Screen
+                                              name="(tabs)"
+                                              options={{ headerShown: false }}
+                                            />
+                                            <Stack.Screen
+                                              name="modal"
+                                              options={{ presentation: "modal" }}
+                                            />
+                                            <Stack.Screen
+                                              name="categories"
+                                              options={{ title: "Your Categories" }}
+                                            />
+                                            <Stack.Screen
+                                              name="recurrings"
+                                              options={{ title: "Your Recurrings" }}
+                                            />
+                                            <Stack.Screen
+                                              name="trash"
+                                              options={{ title: "Your Trash" }}
+                                            />
+                                            <Stack.Screen
+                                              name="search"
+                                              options={{
+                                                title: "Search Transaction",
+                                              }}
+                                            />
+                                            <Stack.Screen
+                                              name="notification"
+                                              options={{
+                                                title: "Your Notifications",
+                                              }}
+                                            />
+                                            <Stack.Screen
+                                              name="people"
+                                              options={{ title: "Your People" }}
+                                            />
+                                            <Stack.Screen
+                                              name="profile"
+                                              options={{ title: "Your Profile" }}
+                                            />
+                                            <Stack.Screen
+                                              name="login"
+                                              options={{ headerShown: false }}
+                                            />
+                                            <Stack.Screen
+                                              name="addBudget"
+                                              options={{ title: "Add Budget" }}
+                                            />
+                                            <Stack.Screen
+                                              name="readBudget"
+                                              options={{ title: "Budget Analysis" }}
+                                            />
+                                            <Stack.Screen
+                                              name="editBudget"
+                                              options={{
+                                                title: "Edit Budget",
+                                                // headerShown: false,
+                                              }}
+                                            />
+                                            <Stack.Screen
+                                              name="categoryTransactions"
+                                              options={{ title: "Your Transactions" }}
+                                            />
+                                            <Stack.Screen
+                                              name="typeDonut"
+                                              options={{ title: "Your Transactions" }}
+                                            />
+                                            <Stack.Screen
+                                              name="settings"
+                                              options={{ title: "Settings" }}
+                                            />
+                                          </Stack>
+                                        </ExportTransactionsProvider>
                                       </MessagesProvider>
                                     </AuthProvider>
                                   </LoginProvider>
