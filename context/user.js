@@ -159,6 +159,7 @@ export const UserDetailsProvider = ({ children }) => {
         userDetails,
         setUserDetailsDetails,
         loadingUserDetails,
+        setLoadingUserDetails,
         savingUserName,
         savingUserProfile,
         fetchUserDetails,

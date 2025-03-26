@@ -15,6 +15,7 @@ export const AnalyticsProvider = ({ children }) => {
     totalAmount: 0,
   });
   const [loadingAnalytics, setLoadingAnalytics] = useState(true);
+  const [failedFetching, setFailedFetching] = useState(false);
 
   const fetchAnalytics = async () => {
     const storedUserId = await AsyncStorage.getItem("loggedUserId");
@@ -23,6 +24,7 @@ export const AnalyticsProvider = ({ children }) => {
       const response = await fetch(`${Server_API}/analytics/${storedUserId}`);
 
       if (!response.ok) {
+        setFailedFetching(true);
         const errorData = await response.json();
         throw new Error(
           errorData.message || `HTTP error! status: ${response.status}`
@@ -32,9 +34,11 @@ export const AnalyticsProvider = ({ children }) => {
       const data = await response.json();
 
       setLoadingAnalytics(false);
+      setFailedFetching(false);
       setAnalytics(data);
       // console.log("Fetched Analytics");
     } catch (error) {
+      setFailedFetching(true);
       console.log("Error Fetching Analytics Data: ", error);
       throw new Error("Error Fetching Analytics Data");
     }
@@ -42,7 +46,7 @@ export const AnalyticsProvider = ({ children }) => {
 
   return (
     <AnalyticsContext.Provider
-      value={{ analytics, setAnalytics, loadingAnalytics, fetchAnalytics }}
+      value={{ analytics, setAnalytics, loadingAnalytics, setLoadingAnalytics, fetchAnalytics, failedFetching }}
     >
       {children}
     </AnalyticsContext.Provider>

@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { View } from "@/components/Themed";
-import { useColorScheme } from "@/components/useColorScheme";
+
+import Login from "../login";
 import FingerprintAuth from "../biometric";
+import { Text, View } from "@/components/Themed";
+import { useColorScheme } from "@/components/useColorScheme";
+import { useLogin } from "@/context/login";
 import { useUserData } from "@/context/user";
 import { useAnalytics } from "@/context/analytics";
-import { useLogin } from "@/context/login";
-import Login from "../login";
+import { useConnection } from "@/context/connection";
+import NoInternet from "@/components/NoInternet";
 
 // TabBarIcon Component
 function TabBarIcon(props: {
@@ -21,8 +24,8 @@ function TabBarIcon(props: {
 export default function TabLayout() {
   const { loggedIn, loggedUserId } = useLogin();
 
-  const { biometricFlag, fetchUserDetails, userDetails } = useUserData();
-  const { fetchAnalytics, analytics } = useAnalytics();
+  const { biometricFlag, fetchUserDetails, userDetails, setLoadingUserDetails } = useUserData();
+  const { fetchAnalytics, analytics, failedFetching, setLoadingAnalytics } = useAnalytics();
 
   const colorScheme = useColorScheme();
   const bgColor = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
@@ -33,12 +36,21 @@ export default function TabLayout() {
     if (loggedIn && loggedUserId) fetchData();
   }, [loggedIn, loggedUserId]);
 
+  useEffect(() => {
+    if (failedFetching) {
+      setLoadingUserDetails(false);
+      setLoadingAnalytics(false);
+    }
+  }, [failedFetching]);
+
   async function fetchData() {
     if (!userDetails) await fetchAnalytics();
     if (!analytics.totalSpent && !analytics.totalEarned && !analytics.totalAmount) await fetchUserDetails();
   }
 
-  return !loggedIn ? (
+  return failedFetching ? (
+    <NoInternet />
+  ) : !loggedIn ? (
     <Login />
   ) : biometricFlag && !isAuthenticated ? ( // If biometric is required but not yet authenticated
     <FingerprintAuth onAuthSuccess={() => setIsAuthenticated(true)} />
