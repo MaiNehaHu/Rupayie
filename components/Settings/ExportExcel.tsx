@@ -2,7 +2,7 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import { Text, View } from "../Themed";
 import { useTransactionFilter } from "@/context/filterTransByDate";
-import { formatDate } from "@/utils/formatDateTimeSimple";
+import formatDateTimeSimple, { formatDate } from "@/utils/formatDateTimeSimple";
 import { useUserData } from "@/context/user";
 import XLSX from "xlsx";
 import * as FileSystem from "expo-file-system";
@@ -49,7 +49,7 @@ const ExportExcel = () => {
     try {
       // Prepare data for Excel
       const data = filteredTransactions.map((tx: Transaction) => ({
-        Date: formatDate(tx.createdAt),
+        Date: formatDateTimeSimple(tx.createdAt),
         Amount: tx.amount,
         // Status: tx.status,
         Category: tx.category.name,
