@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Text, View } from "@/components/Themed";
@@ -110,6 +111,24 @@ const profile = () => {
     navigation.goBack();
   }
 
+  async function handleLogoutPress() {
+    Alert.alert(
+      "Confirm Logout",
+      "Are you sure you want to Logout?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Yes, I'm Sure.",
+          onPress: () => handleLogout(),
+          style: "destructive",
+        },
+      ]
+    );
+  }
+
   useEffect(() => {
     setUserName(userDetails?.name);
     setUserProfile(userDetails?.userImage);
@@ -163,7 +182,7 @@ const profile = () => {
                 { backgroundColor: textColor, alignSelf: "flex-end" },
               ]}
               activeOpacity={0.7}
-              onPress={handleLogout}
+              onPress={handleLogoutPress}
             >
               <Text style={{ color: oppColor, fontWeight: 500 }} >Logout</Text>
 
