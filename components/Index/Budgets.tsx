@@ -14,6 +14,7 @@ import { useColorScheme } from "@/components/useColorScheme";
 import { formatAmount } from "@/utils/formatAmount";
 import DonutChart from "../Budget/LeftPercentDonutChart";
 import { FontAwesome6 } from "@expo/vector-icons";
+import moment from "moment";
 
 const icon = require("@/assets/pages/addBudget.png");
 
@@ -58,10 +59,10 @@ export default function Budgets({
   const placeholderColor = colorScheme === "dark" ? "#3D3D3D" : "#c4c4c4";
 
   const monthlyBudget = budgetList.find(
-    (budget: Budget) => budget.type === "month"
+    (budget: Budget) => budget.type === "month" && budget.period.monthAndYear?.month === moment().format("MMMM")
   );
   const yearlyBudget = budgetList.find(
-    (budget: Budget) => budget.type === "year"
+    (budget: Budget) => budget.type === "year" && budget.period.year?.toString() === moment().format("YYYY")
   );
 
   const [showMonthlyBudget, setShowMonthlyBudget] =
@@ -123,7 +124,9 @@ export default function Budgets({
 
   return (
     <>
-      {!loadingUserDetails && budgetList.length > 0 ? (
+      {!loadingUserDetails &&
+        budgetList.length > 0 &&
+        (monthlyBudget || yearlyBudget) ? (
         <>
           <SafeAreaView style={[styles.flex_row_btw, { marginBottom: 12 }]}>
             <Text
@@ -133,7 +136,7 @@ export default function Budgets({
             </Text>
 
             {/* Switch Buttons */}
-            {clickable && budgetList.length >= 2 && (
+            {clickable && budgetList.length >= 2 && monthlyBudget && yearlyBudget && (
               <View style={[styles.flex_row, styles.switchContainer]}>
                 <TouchableOpacity
                   style={[
@@ -191,9 +194,8 @@ export default function Budgets({
               <SafeAreaView style={styles.flex_row_btw}>
                 <Text style={styles.header}>
                   {showBudget?.type == "month"
-                    ? `${showBudget?.period.monthAndYear?.month ?? "Unknown"} ${
-                        showBudget?.period.monthAndYear?.year ?? ""
-                      }`
+                    ? `${showBudget?.period.monthAndYear?.month ?? "Unknown"} ${showBudget?.period.monthAndYear?.year ?? ""
+                    }`
                     : `Year: ${showBudget?.period.year ?? "Unknown"}`}
                 </Text>
 
@@ -236,7 +238,7 @@ export default function Budgets({
                     0,
                     ((showBudget?.totalBudget - showBudget?.totalSpent) /
                       (showBudget?.totalBudget + showBudget?.totalSpent)) *
-                      100
+                    100
                   )}
                 />
               </SafeAreaView>
@@ -312,6 +314,7 @@ export default function Budgets({
         )
       )}
 
+      {/* Skeletons */}
       {loadingUserDetails && !monthlyBudget && !yearlyBudget ? (
         <View
           style={[styles.smallSkelton, { backgroundColor: placeholderColor }]}
