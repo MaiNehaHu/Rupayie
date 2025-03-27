@@ -22,22 +22,19 @@ const girl4 = require("@/assets/profile/g4.png");
 const girl5 = require("@/assets/profile/g5.png");
 const girl6 = require("@/assets/profile/g6.png");
 const girl7 = require("@/assets/profile/g7.png");
-const girl8 = require("@/assets/profile/g8.png");
 const boy1 = require("@/assets/profile/b1.png");
 const boy2 = require("@/assets/profile/b2.png");
 const boy3 = require("@/assets/profile/b3.png");
 const boy4 = require("@/assets/profile/b4.png");
-const boy5 = require("@/assets/profile/b5.png");
 const boy6 = require("@/assets/profile/b6.png");
 const boy7 = require("@/assets/profile/b7.png");
-const boy10 = require("@/assets/profile/b10.png");
 
 const Header = ({ showSlider }: { showSlider: any }) => {
   const { userDetails, loadingUserDetails } = useUserData();
   const { profilePhoto, setProfilePhoto } = useProfile();
 
   useEffect(() => {
-    const matchedImage = [girl1, girl2, girl3, girl4, girl5, girl6, girl7, girl8, boy1, boy2, boy3, boy4, boy5, boy6, boy7, boy10]
+    const matchedImage = [girl1, girl2, girl3, girl4, girl5, girl6, girl7, boy1, boy2, boy3, boy4, boy6, boy7]
       .find((img) => img == userDetails?.userImage);
 
     if (userDetails) setProfilePhoto(matchedImage);
