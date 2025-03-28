@@ -119,7 +119,7 @@ const ReadBudget = () => {
                   <View key={_id} style={styles.cat_box}>
                     <SafeAreaView style={styles.flex_row_btw}>
                       <View>
-                        <View style={[styles.flex_row, { maxWidth: "70%" }]}>
+                        <View style={[styles.flex_row, { maxWidth: "80%" }]}>
                           <View
                             style={[
                               styles.catCircle,

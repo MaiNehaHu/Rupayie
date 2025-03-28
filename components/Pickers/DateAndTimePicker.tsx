@@ -1,9 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   TouchableOpacity,
   Modal,
-  Button,
-  ScrollView,
   StyleSheet,
   Pressable,
   Animated,
@@ -14,9 +12,7 @@ import formatDateTimeSimple from "@/utils/formatDateTimeSimple";
 import { Easing } from "react-native";
 import { SafeAreaView } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
-import { FlatList } from "react-native";
-
-import moment from "moment";
+import NumbersCarousel from "@/components/Pickers/NumbersCarousel";
 
 const DateAndTimePicker = ({
   date,
@@ -169,7 +165,7 @@ const DateAndTimePicker = ({
                   {/* Pickers */}
                   <View style={styles.pickerRow}>
                     <SafeAreaView style={[styles.scrollPicker]}>
-                      <CarouselPicker
+                      <NumbersCarousel
                         data={Array.from({ length: 31 }, (_, i) => i + 1)} // Days of the month (1-31)
                         setSelectedDay={setSelectedDay}
                         selectedDay={selectedDay}
@@ -177,7 +173,7 @@ const DateAndTimePicker = ({
                     </SafeAreaView>
 
                     <SafeAreaView style={[styles.scrollPicker]}>
-                      <CarouselPicker
+                      <NumbersCarousel
                         data={Array.from({ length: 12 }, (_, i) => i)} // Months of the year (0-11)
                         setSelectedDay={setSelectedMonth}
                         selectedDay={selectedMonth}
@@ -186,7 +182,7 @@ const DateAndTimePicker = ({
                     </SafeAreaView>
 
                     <SafeAreaView style={[styles.scrollPicker]}>
-                      <CarouselPicker
+                      <NumbersCarousel
                         data={Array.from(
                           { length: 50 },
                           (_, i) => new Date().getFullYear() - i
@@ -225,21 +221,21 @@ const DateAndTimePicker = ({
                 <View style={styles.pickerContainer}>
                   <View style={styles.pickerRow}>
                     <SafeAreaView style={[styles.scrollPicker]}>
-                      <CarouselPicker
+                      <NumbersCarousel
                         data={Array.from({ length: 12 }, (_, i) => i + 1)} // Hours of the year (1-12)
                         setSelectedDay={setSelectedHour}
                         selectedDay={selectedHour}
                       />
                     </SafeAreaView>
                     <SafeAreaView style={[styles.scrollPicker]}>
-                      <CarouselPicker
+                      <NumbersCarousel
                         data={Array.from({ length: 60 }, (_, i) => i)} // Hours of the year (0-59)
                         setSelectedDay={setSelectedMinute}
                         selectedDay={selectedMinute}
                       />
                     </SafeAreaView>
                     <SafeAreaView style={[styles.scrollPicker]}>
-                      <CarouselPicker
+                      <NumbersCarousel
                         data={selectedAmPm === "AM" ? ["AM", "PM"] : ["PM", "AM"]} // AM/PM selector
                         setSelectedDay={setSelectedAmPm}
                         selectedDay={selectedAmPm}
@@ -266,109 +262,6 @@ const DateAndTimePicker = ({
   );
 };
 
-export const CarouselPicker = ({
-  data,
-  setSelectedDay,
-  selectedDay,
-  monthPicker,
-  weekPicker,
-  ampmPicker,
-}: {
-  data: any;
-  selectedDay: any;
-  setSelectedDay: (value: any) => void;
-  monthPicker?: boolean;
-  weekPicker?: boolean;
-  ampmPicker?: boolean;
-}) => {
-  const colorScheme = useColorScheme();
-  const [currentIndex, setCurrentIndex] = useState(
-    data.includes(selectedDay) ? data.indexOf(selectedDay) : 0
-  );
-
-  const textColor = colorScheme === "dark" ? "#FFF" : "#000";
-  const flatListRef = useRef<any>(null);
-  const height = 40;
-
-  const handleScroll = (event: any) => {
-    const offsetY = event.nativeEvent.contentOffset.y;
-    const index = Math.round(offsetY / height);
-    setCurrentIndex(index);
-
-    // Delay state update to prevent flickering issues
-    setSelectedDay(data[index]);
-  };
-
-  useEffect(() => {
-    if (flatListRef.current) {
-      setTimeout(() => {
-        flatListRef.current.scrollToIndex({
-          index: currentIndex,
-          animated: false,
-        });
-      }, 200);
-    }
-  }, []);
-
-  const renderItem = ({ item }: any) => {
-    const isActive = item === selectedDay;
-
-    return (
-      <View
-        style={{
-          alignItems: "center",
-          justifyContent: "center",
-          height: height,
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => setSelectedDay(item)}
-          disabled={ampmPicker && item == "" ? true : false}
-        >
-          <Text
-            style={[
-              isActive ? styles.selected : styles.pickerItem,
-              {
-                backgroundColor: isActive ? "#4588DF" : "transparent",
-                color: isActive ? "#FFF" : textColor,
-                paddingHorizontal: 10,
-              },
-            ]}
-          >
-            {monthPicker
-              ? moment().month(item).format("MMMM")
-              : weekPicker
-                ? moment().day(item).format("dddd")
-                : ampmPicker
-                  ? item
-                  : item.toString().padStart(2, "0")}
-          </Text>
-        </TouchableOpacity>
-      </View>
-    );
-  };
-
-  return (
-    <FlatList
-      ref={flatListRef}
-      data={data}
-      keyExtractor={(item: any) => item.toString()}
-      renderItem={renderItem}
-      showsVerticalScrollIndicator={false}
-      snapToInterval={height}
-      decelerationRate="fast"
-      onScroll={handleScroll}
-      scrollEventThrottle={16}
-      initialScrollIndex={currentIndex}
-      getItemLayout={(data, index) => ({
-        length: height,
-        offset: height * index,
-        index,
-      })}
-      contentContainerStyle={{ alignItems: "center" }}
-    />
-  );
-};
 
 export default DateAndTimePicker;
 
@@ -444,21 +337,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginHorizontal: 5,
     paddingVertical: 10,
-  },
-  pickerItem: {
-    fontSize: 14,
-    padding: 5,
-    marginVertical: 5,
-    textAlign: "center",
-  },
-  selected: {
-    fontSize: 16,
-    padding: 5,
-    width: "auto",
-    fontWeight: "bold",
-    marginVertical: 5,
-    borderRadius: 10,
-    textAlign: "center",
   },
   doneButton: {
     padding: 10,
