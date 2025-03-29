@@ -172,7 +172,7 @@ const NotificationsFlatList = () => {
 
       {/* Circle Indicators */}
       <SafeAreaView style={[styles.flex_row, { marginTop: 15 }]}>
-        {!loadingUserDetails && dataToShow.length > 1 ?
+        {!loadingUserDetails && dataToShow.length > 0 ?
           dataToShow.map((_: any, index: number) => (
             <Pressable key={index} onPress={() => handleCirclePress(index)}>
               <View
