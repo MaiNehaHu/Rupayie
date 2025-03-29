@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "column",
         gap: 10,
-        marginBottom: 20
+        marginBottom: 50
     },
     flex_row_btw: {
         display: "flex",
