@@ -69,10 +69,11 @@ export const UserDetailsProvider = ({ children }) => {
           )
       );
       setNotificationsList(
-        data.notifications.sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        )
+        data.notifications
+        // .sort(
+        //   (a, b) =>
+        //     new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        // )
       );
       setTrashTransactions(
         data.trash.sort(
