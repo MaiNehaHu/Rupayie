@@ -37,7 +37,7 @@ const profile = () => {
   } = useUserData();
   const { setProfilePhoto } = useProfile();
   const { setLoggedIn, setLoggedUserId } = useLogin();
-  const { setUserDetailsDetails } = useUserData();
+  const { setUserDetails } = useUserData();
   const { setAnalytics } = useAnalytics();
   const { error, setError, messageText, setMessageText } = useMessages()
 
@@ -98,7 +98,7 @@ const profile = () => {
     setLoggedUserId("");
 
     // Clear User Data
-    setUserDetailsDetails(null);
+    setUserDetails(null);
     setAnalytics({
       totalSpent: 0,
       totalEarned: 0,

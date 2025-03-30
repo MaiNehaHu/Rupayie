@@ -24,6 +24,7 @@ import moment from "moment";
 import { useBudget } from "@/context/budget";
 import MessagePopUp from "@/components/MessagePopUp";
 import { useMessages } from "@/context/messages";
+import EndText from "@/components/Index/EndText";
 
 const GradientImage = require("@/assets/pages/gradientBg.png");
 
@@ -254,6 +255,8 @@ export default function TabOne() {
           <RecentTransFlatList />
 
           <Budgets clickable />
+
+          <EndText />
         </ScrollView>
       </View>
     </View>

@@ -289,7 +289,7 @@ const EmailInput = (
   const colorScheme = useColorScheme();
   const textColor = colorScheme === "dark" ? "#fff" : "#000";
   const oppColor = colorScheme === "light" ? "#fff" : "#000";
-  const placeholderColor = colorScheme === "dark" ? "#888888" : "#b8b8b8";
+  const placeholderColor = colorScheme === "dark" ? "#888888" : "#7d7d7d";
 
   return (
     <View style={[styles.inputContainer, { backgroundColor: oppColor }]}>
@@ -322,7 +322,7 @@ const OTPInput = ({ length = 6, onComplete }: { length: number, onComplete: any 
   const colorScheme = useColorScheme();
   const bgColor = colorScheme === "dark" ? "#000" : "#fff";
   const textColor = colorScheme === "dark" ? "#fff" : "#000";
-  const placeholderColor = colorScheme === "dark" ? "#888888" : "#b8b8b8";
+  const placeholderColor = colorScheme === "dark" ? "#888888" : "#7d7d7d";
 
   const [otp, setOtp] = useState(new Array(length).fill(""));
   const inputs = useRef<TextInput[]>([]);

@@ -7,7 +7,7 @@ const Server_API = "https://expense-trackerr-server.vercel.app/api";
 const UserContext = createContext();
 
 export const UserDetailsProvider = ({ children }) => {
-  const [userDetails, setUserDetailsDetails] = useState();
+  const [userDetails, setUserDetails] = useState();
   const [transactionsList, setTransactionsList] = useState();
   const [recentTransactions, setRecentTransactions] = useState([]);
   const [recurringTransactions, setRecurringTransactions] = useState([]);
@@ -28,6 +28,7 @@ export const UserDetailsProvider = ({ children }) => {
   const [loadingUserDetails, setLoadingUserDetails] = useState(true);
   const [savingUserName, setSavingUserName] = useState(false);
   const [savingUserProfile, setSavingUserProfile] = useState(false);
+  const [deletingUser, setDeletingUser] = useState(false);
 
   const fetchUserDetails = async () => {
     const storedUserId = await AsyncStorage.getItem("loggedUserId");
@@ -44,7 +45,7 @@ export const UserDetailsProvider = ({ children }) => {
 
       const data = await response.json();
 
-      setUserDetailsDetails(data);
+      setUserDetails(data);
       setLoadingUserDetails(false);
 
       setTransactionsList(
@@ -127,7 +128,7 @@ export const UserDetailsProvider = ({ children }) => {
     }
   }
 
-  async function handleBiometricToggle(biometricFlag) {    
+  async function handleBiometricToggle(biometricFlag) {
     const storedUserId = await AsyncStorage.getItem("loggedUserId");
 
     try {
@@ -154,17 +155,44 @@ export const UserDetailsProvider = ({ children }) => {
     }
   }
 
+  async function deletAccount() {
+    const storedUserId = await AsyncStorage.getItem("loggedUserId");
+
+    try {
+      setDeletingUser(true);
+
+      const response = await fetch(
+        `${Server_API}/users/${storedUserId}/`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        setDeletingUser(false);
+        throw new Error("Failed to delete user: ", response.status);
+      }
+
+      setDeletingUser(false);
+    } catch (error) {
+      setDeletingUser(false);
+      console.error("Error Deleting User: ", error);
+    }
+  }
+
   return (
     <UserContext.Provider
       value={{
         userDetails,
-        setUserDetailsDetails,
+        setUserDetails,
         loadingUserDetails,
         setLoadingUserDetails,
         savingUserName,
         savingUserProfile,
         fetchUserDetails,
         updateUserDetails,
+        deletingUser,
+        deletAccount,
         transactionsList,
         recentTransactions,
         recurringTransactions,

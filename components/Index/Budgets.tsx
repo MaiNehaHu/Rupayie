@@ -280,7 +280,7 @@ export default function Budgets({
         </>
       ) : (
         !loadingUserDetails && (
-          <View style={[styles.container, { marginBottom: 25 }]}>
+          <View style={[styles.container, { marginBottom: 15 }]}>
             <SafeAreaView style={styles.flex_row_btw}>
               <SafeAreaView style={styles.flex_col}>
                 <Text style={styles.header}>No budget for this month ?</Text>
@@ -343,7 +343,7 @@ export default function Budgets({
               />
             </SafeAreaView>
 
-            <SafeAreaView style={{ marginBottom: 30 }}>
+            <SafeAreaView style={{ marginBottom: 15 }}>
               <View
                 style={{
                   height: 220,
