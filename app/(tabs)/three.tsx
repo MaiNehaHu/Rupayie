@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, RefreshControl } from "react-native";
+import { ScrollView, StyleSheet, RefreshControl, Platform } from "react-native";
 import React, { useState } from "react";
 import { useColorScheme } from "@/components/useColorScheme";
 
@@ -6,13 +6,14 @@ import { Text, View } from "@/components/Themed";
 // import Header from "@/components/Header";
 
 import { useAnalytics } from "@/context/analytics";
-import { StatusBar } from "expo-status-bar";
+import { StatusBar } from "react-native";
 import { useUserData } from "@/context/user";
 import Slider from "../slider";
 import Filter from "@/components/Filter";
 import AllTypesDonut from "@/components/Three/AllTypesDonut";
 import TypesIndicator from "@/components/Three/TypesIndicators";
 import TypesSquares from "@/components/Three/TypesSquares";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
 // const GradientImage = require("@/assets/pages/gradientBg.png");
 
@@ -46,6 +47,8 @@ export default function TabThreeScreen() {
     setSliderVisible(false);
   }
 
+  const statusBarHeight = Platform.OS === "ios" ? getStatusBarHeight() : StatusBar.currentHeight || 36;
+
   return (
     <View
       style={[
@@ -67,7 +70,7 @@ export default function TabThreeScreen() {
       <View style={styles.bodyContainer}>
         {/* <Header showSlider={showSlider} /> */}
 
-        <Text style={styles.headerText}>Analytics</Text>
+        <Text style={[styles.headerText, { marginTop: statusBarHeight + 10 }]}>Analytics</Text>
 
         <Slider isVisible={sliderVisible} hideSlider={hideSlider} />
 
@@ -114,7 +117,6 @@ const styles = StyleSheet.create({
   headerText: {
     fontWeight: 600,
     fontSize: 22,
-    marginTop: 45,
     marginHorizontal: 20,
     marginBottom: 15,
   },

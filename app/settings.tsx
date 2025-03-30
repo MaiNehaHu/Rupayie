@@ -93,7 +93,7 @@ const Settings = () => {
       </SafeAreaView>
 
       <SafeAreaView style={[styles.container, { backgroundColor: oppBgColor }]}>
-        <Text style={styles.title}>Request Account Deletion</Text>
+        <Text style={styles.title}>Account Deletion</Text>
 
         <DeleteAccount />
       </SafeAreaView>
