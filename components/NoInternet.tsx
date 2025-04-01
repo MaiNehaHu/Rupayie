@@ -28,7 +28,7 @@ const NoInternet = () => {
         setRefresh(true);
 
         try {
-            if (count <= 3) {
+            if (count <= 2) {
                 setCount((prev) => prev + 1);
 
                 await fetchAnalytics();
@@ -66,7 +66,7 @@ const NoInternet = () => {
             }
             style={{ flex: 1, backgroundColor: bgColor, padding: 20 }}
         >
-            <StatusBar backgroundColor={"transparent"} />
+            <StatusBar backgroundColor={bgColor} />
 
             <SafeAreaView style={[{ minHeight: "100%" }, styles.center]}>
                 <Ionicons name="cloud-offline" size={50} color={textColor} />
