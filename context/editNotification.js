@@ -8,6 +8,8 @@ const Server_API = "https://expense-trackerr-server.vercel.app/api";
 const EditNotificationContext = createContext();
 
 export const EditNotificationProvider = ({ children }) => {
+  const [cleaning, setCleaning] = useState(false);
+
   async function setNotificationRead(notificationId, values) {
     const storedUserId = await AsyncStorage.getItem("loggedUserId");
 
@@ -33,8 +35,32 @@ export const EditNotificationProvider = ({ children }) => {
     }
   }
 
+  async function deleteAllNotifications() {
+    const storedUserId = await AsyncStorage.getItem("loggedUserId");
+
+    try {
+      setCleaning(true);
+      const response = await fetch(
+        `${Server_API}/notifications/${storedUserId}`,
+        { method: "DELETE" }
+      );
+
+      if (!response.ok) {
+        setCleaning(false);
+        throw new Error("Failed to delete notifications");
+      }
+
+      setCleaning(false);
+      // console.log("Transaction Set Read Successfully");
+    } catch (error) {
+      setCleaning(false);
+      console.log("Error Deleting Notifications: ", error);
+      throw new Error("Error Deleting Notifications");
+    }
+  }
+
   return (
-    <EditNotificationContext.Provider value={{ setNotificationRead }}>
+    <EditNotificationContext.Provider value={{ cleaning, setNotificationRead, deleteAllNotifications }}>
       {children}
     </EditNotificationContext.Provider>
   );

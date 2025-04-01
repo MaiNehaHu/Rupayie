@@ -15,6 +15,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { Easing } from "react-native";
 import ReadTrash from "@/components/Modals/ReadTrash";
 import { useEditNotifications } from "@/context/editNotification";
+import { useMessages } from "@/context/messages";
+import MessagePopUp from "@/components/MessagePopUp";
 
 interface Transaction {
   _id: string;
@@ -49,10 +51,13 @@ interface Notification {
 
 const Notification = () => {
   const { notificationsList, fetchUserDetails } = useUserData();
-  const { setNotificationRead } = useEditNotifications();
+  const { setNotificationRead, deleteAllNotifications, cleaning } = useEditNotifications();
+  const { error, setError, messageText, setMessageText } = useMessages()
 
   const colorScheme = useColorScheme();
   const bgCOlor = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
+  const textColor = colorScheme === "dark" ? "#FFF" : "#000";
+  const opptTextColor = colorScheme === "light" ? "#FFF" : "#000";
 
   const [showTransaction, setShowTransaction] = useState<boolean>(false);
   const [modalTransaction, setModalTransaction] = useState<Transaction>(
@@ -83,6 +88,17 @@ const Notification = () => {
       await fetchUserDetails();
     }
   }
+  async function handleDeletePress() {
+    try {
+      await deleteAllNotifications();
+
+      // refetch
+      await fetchUserDetails();
+      setMessageText("Cleared Notifications :)")
+    } catch (error) {
+      setError("Failed Cleaning Notifications :(")
+    }
+  }
 
   const openModal = () => {
     setShowTransaction(true);
@@ -109,42 +125,65 @@ const Notification = () => {
   };
 
   return (
-    <ScrollView style={{ flex: 1 }}>
-      <>
-        <View style={[styles.conatiner, { backgroundColor: bgCOlor }]}>
-          {notificationsList.length > 0 ? (
-            notificationsList.map((not: Notification, index: number) => (
-              <TouchableOpacity
-                activeOpacity={0.7}
-                key={index}
-                onPress={() => handleModalOpen(not)}
+    <ScrollView style={{ flex: 1, }}>
+      <View style={{ minHeight: "100%" }}>
+        <>
+          <View style={[styles.conatiner, { backgroundColor: bgCOlor }]}>
+            {notificationsList.length > 0 ? (
+              notificationsList.map((not: Notification, index: number) => (
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  key={index}
+                  onPress={() => handleModalOpen(not)}
+                >
+                  <NotificationCard notification={not} />
+                </TouchableOpacity>
+              ))
+            ) : (
+              <Text
+                style={{
+                  textAlign: "center",
+                  marginTop: 20,
+                  fontStyle: "italic",
+                }}
               >
-                <NotificationCard notification={not} />
-              </TouchableOpacity>
-            ))
-          ) : (
-            <Text
-              style={{
-                textAlign: "center",
-                marginTop: 20,
-                fontStyle: "italic",
-              }}
-            >
-              No Notifications
-            </Text>
-          )}
-        </View>
-      </>
+                No Notifications
+              </Text>
+            )}
 
-      {showTransaction && (
-        <ReadTrash
-          visible={showTransaction}
-          slideModalAnim={slideModalAnim}
-          handleCloseModal={handleCloseModal}
-          transaction={modalTransaction}
-          showActionButtons={false}
+          </View>
+        </>
+
+        {notificationsList.length > 0 &&
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={handleDeletePress}
+            disabled={cleaning}
+            style={{ position: "absolute", bottom: 0, width: "100%", padding: 10, backgroundColor: textColor }}
+          >
+            <Text style={{ textAlign: "center", fontWeight: 500, color: opptTextColor }}>
+              {cleaning ? "Cleaning..." : "Clear Notifications"}
+            </Text>
+          </TouchableOpacity>
+        }
+
+        <MessagePopUp
+          error={error}
+          messageText={messageText}
+          setError={setError}
+          setMessageText={setMessageText}
         />
-      )}
+
+        {showTransaction && (
+          <ReadTrash
+            visible={showTransaction}
+            slideModalAnim={slideModalAnim}
+            handleCloseModal={handleCloseModal}
+            transaction={modalTransaction}
+            showActionButtons={false}
+          />
+        )}
+      </View>
     </ScrollView>
   );
 };
