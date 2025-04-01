@@ -113,7 +113,7 @@ const SetCategoryLimit = ({
             `All Categories Included in Budget`}
       </Text>
 
-      <SafeAreaView style={styles.flex_col}>
+      <SafeAreaView style={[styles.flex_col, { marginBottom: 30 }]}>
         {includedCategories
           .filter((cat: IncludedCategory) => !!cat.included) // Only show included ones
           .map((category: IncludedCategory) => (
