@@ -8,7 +8,7 @@ const EndText = () => {
     const placeholderColor = colorScheme === "dark" ? "#d6d6d6" : "#575757";
 
     return (
-        <SafeAreaView style={{ marginVertical: 10, marginBottom: 40, marginLeft: 5 }}>
+        <SafeAreaView style={{ marginVertical: 10, marginBottom: 30, marginLeft: 5 }}>
             <Text style={{ color: placeholderColor, fontSize: 20, fontWeight: 500 }}>
                 Track, plan, and grow.
             </Text>
