@@ -191,6 +191,11 @@ const ReadRecurring = ({
       setErrorText("Enter Amount");
       return false;
     }
+    if (!category) {
+      setShowError(true);
+      setErrorText("Add a category");
+      return false;
+    }
 
     return true;
   }

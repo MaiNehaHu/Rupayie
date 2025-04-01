@@ -156,6 +156,11 @@ const ReadTransaction = ({
       setErrorText("Can't select a future date");
       return false;
     }
+    if (!category) {
+      setShowError(true);
+      setErrorText("Add a category");
+      return false;
+    }
 
     return true;
   }

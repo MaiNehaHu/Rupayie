@@ -24,9 +24,7 @@ import CategoryPicker from "../Pickers/CategoryPicker";
 import { useTransactions } from "@/context/transactions";
 import { useCategory } from "@/context/categories";
 import { useAnalytics } from "@/context/analytics";
-import { Alert } from "react-native";
 import PersonPicker from "../Pickers/PersonPicker";
-import formatDateTimeSimple from "@/utils/formatDateTimeSimple";
 import { useMessages } from "@/context/messages";
 
 interface Category {
