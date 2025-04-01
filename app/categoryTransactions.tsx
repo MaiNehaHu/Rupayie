@@ -45,7 +45,7 @@ const categoryTransactions = () => {
 
     const { donutCategory } = useTransactionsCategory();
     const { loadingUserDetails, currencyObj, transactionsList } = useUserData();
-    const { donutTransactionsFilter } = useTransactionFilter()
+    const { donutTransactionsFilter, setTransactionsFilter } = useTransactionFilter()
 
     const [categoryTransactionsList, setCategoryTransactionsList] = useState<Transaction[]>([]);
 
@@ -85,6 +85,10 @@ const categoryTransactions = () => {
             setShowClickedTransaction(false);
         });
     };
+
+    useEffect(() => {
+        setTransactionsFilter("Spent");
+    }, []);
 
     useEffect(() => {
         // Filter transactions based on category and date range
