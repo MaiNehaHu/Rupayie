@@ -8,6 +8,7 @@ import { useUserData } from '@/context/user';
 import { useMessages } from '@/context/messages';
 import MessagePopUp from './MessagePopUp';
 import { useLogin } from '@/context/login';
+import { StatusBar } from 'react-native';
 
 const NoInternet = () => {
     const { failedFetching, fetchAnalytics, setAnalytics } = useAnalytics();
@@ -65,6 +66,8 @@ const NoInternet = () => {
             }
             style={{ flex: 1, backgroundColor: bgColor, padding: 20 }}
         >
+            <StatusBar backgroundColor={"transparent"} />
+
             <SafeAreaView style={[{ minHeight: "100%" }, styles.center]}>
                 <Ionicons name="cloud-offline" size={50} color={textColor} />
                 <Text style={styles.boldText}>
