@@ -9,16 +9,35 @@ const EndText = () => {
 
     return (
         <SafeAreaView style={{ marginVertical: 10, marginBottom: 30, marginLeft: 5 }}>
-            <Text style={{ color: placeholderColor, fontSize: 20, fontWeight: 500 }}>
+            <Text style={{ color: placeholderColor, fontSize: 18, fontWeight: 500 }}>
                 Track, plan, and grow.
             </Text>
-            <Text style={{ color: placeholderColor, fontSize: 30, fontWeight: 500 }}>
-                Your money, your rules
-            </Text>
+
+            <SafeAreaView style={styles.flex_row}>
+                <Text numberOfLines={1} style={{ color: placeholderColor, fontSize: 28, fontWeight: 500, maxWidth: "90%" }}>
+                    Your money, your rules
+                </Text>
+
+                <View style={styles.circle} />
+            </SafeAreaView>
         </SafeAreaView>
     )
 }
 
 export default EndText
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    circle: {
+        width: 10,
+        height: 10,
+        borderRadius: 20,
+        marginBottom: 6,
+        backgroundColor: "#4FB92D"
+    },
+    flex_row: {
+        gap: 5,
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "flex-end",
+    }
+})
