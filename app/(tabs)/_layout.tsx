@@ -48,10 +48,10 @@ export default function TabLayout() {
     if (!analytics.totalSpent && !analytics.totalEarned && !analytics.totalAmount) await fetchUserDetails();
   }
 
-  return failedFetching ? (
-    <NoInternet />
-  ) : !loggedIn ? (
+  return !loggedIn ? (
     <Login />
+  ) : failedFetching ? (
+    <NoInternet />
   ) : biometricFlag && !isAuthenticated ? ( // If biometric is required but not yet authenticated
     <FingerprintAuth onAuthSuccess={() => setIsAuthenticated(true)} />
   ) : (

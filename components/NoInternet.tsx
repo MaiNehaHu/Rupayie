@@ -7,13 +7,16 @@ import { useAnalytics } from '@/context/analytics';
 import { useUserData } from '@/context/user';
 import { useMessages } from '@/context/messages';
 import MessagePopUp from './MessagePopUp';
+import { useLogin } from '@/context/login';
 
 const NoInternet = () => {
-    const { failedFetching, fetchAnalytics } = useAnalytics();
-    const { fetchUserDetails } = useUserData();
+    const { failedFetching, fetchAnalytics, setAnalytics } = useAnalytics();
+    const { fetchUserDetails, setUserDetails } = useUserData();
     const { error, setError, messageText, setMessageText } = useMessages()
+    const { setLoggedIn, setLoggedUserId } = useLogin();
 
     const [refresh, setRefresh] = useState(false);
+    const [count, setCount] = useState(0)
 
     const colorScheme = useColorScheme();
     const bgColor = colorScheme === "dark" ? "#121212" : "#EDEDED";
@@ -24,11 +27,25 @@ const NoInternet = () => {
         setRefresh(true);
 
         try {
-            console.log("Fetching on Reload");
+            if (count <= 5) {
+                setCount((prev) => prev + 1);
 
-            await fetchAnalytics();
-            await fetchUserDetails();
-            setMessageText("Welcome Back!")
+                await fetchAnalytics();
+                await fetchUserDetails();
+                setMessageText("Welcome Back!");
+            } else {
+                setLoggedIn(false);
+                setLoggedUserId("");
+
+                setUserDetails(null);
+                setAnalytics({
+                    totalSpent: 0,
+                    totalEarned: 0,
+                    totalAmount: 0,
+                });
+
+                sessionStorage.clear();
+            }
         } catch (error) {
             console.error("Error Refreshing: ", error);
             setError("Something Went Wrong!")

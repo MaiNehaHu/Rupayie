@@ -11,8 +11,8 @@ import { useColorScheme } from "@/components/useColorScheme";
 import { Text, View } from "../Themed";
 import { Animated } from "react-native";
 import { SafeAreaView } from "react-native";
-import { CarouselPicker } from "./DateAndTimePicker";
 import { FontAwesome6 } from "@expo/vector-icons";
+import NumbersCarousel from "./NumbersCarousel";
 
 const CountPicker = ({
   count,
@@ -101,7 +101,7 @@ const CountPicker = ({
                   </SafeAreaView>
 
                   <SafeAreaView style={[styles.scrollPicker]}>
-                    <CarouselPicker
+                    <NumbersCarousel
                       data={Array.from({ length: 24 }, (_, i) => i + 1)}
                       setSelectedDay={setCountCopy}
                       selectedDay={countCopy}

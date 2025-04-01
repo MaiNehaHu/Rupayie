@@ -13,8 +13,8 @@ import { Animated } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
 
 import moment from "moment";
-import { CarouselPicker } from "./DateAndTimePicker";
 import intervalName from "@/constants/intervalName";
+import NumbersCarousel from "./NumbersCarousel";
 
 interface When {
   everyDay: string;
@@ -426,21 +426,21 @@ const WhenSelector = ({
       {interval === intervalName.everyDay && (
         <View style={styles.pickerRow}>
           <SafeAreaView style={[styles.scrollPicker]}>
-            <CarouselPicker
+            <NumbersCarousel
               data={Array.from({ length: 12 }, (_, i) => i + 1)} // Hours of the year (1-12)
               setSelectedDay={setHour}
               selectedDay={hour}
             />
           </SafeAreaView>
           <SafeAreaView style={[styles.scrollPicker]}>
-            <CarouselPicker
+            <NumbersCarousel
               data={Array.from({ length: 60 }, (_, i) => i)} // Hours of the year (0-59)
               setSelectedDay={setMinute}
               selectedDay={minute}
             />
           </SafeAreaView>
           <SafeAreaView style={[styles.scrollPicker]}>
-            <CarouselPicker
+            <NumbersCarousel
               data={amPm === "AM" ? ["AM", "PM"] : ["PM", "AM"]} // AM/PM selector
               setSelectedDay={setAmPm}
               selectedDay={amPm}
@@ -452,7 +452,7 @@ const WhenSelector = ({
 
       {interval === intervalName.everyWeek && (
         <SafeAreaView style={[styles.scrollPicker, { width: "100%" }]}>
-          <CarouselPicker
+          <NumbersCarousel
             data={["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]}
             setSelectedDay={setWeekName}
             selectedDay={weekName}
@@ -464,7 +464,7 @@ const WhenSelector = ({
 
       {interval === intervalName.everyMonth && (
         <SafeAreaView style={[styles.scrollPicker, { width: "100%" }]}>
-          <CarouselPicker
+          <NumbersCarousel
             data={Array.from({ length: 31 }, (_, i) => i + 1)} // Days of the month (1-31)
             setSelectedDay={setMonthDate}
             selectedDay={monthDate}
@@ -475,14 +475,14 @@ const WhenSelector = ({
       {interval === intervalName.everyYear && (
         <View style={styles.pickerRow}>
           <SafeAreaView style={[styles.scrollPicker, { width: "40%" }]}>
-            <CarouselPicker
+            <NumbersCarousel
               data={Array.from({ length: 31 }, (_, i) => i + 1)} // Days of the month (1-31)
               setSelectedDay={setYearDate}
               selectedDay={fullYear.everyYear.date}
             />
           </SafeAreaView>
           <SafeAreaView style={[styles.scrollPicker, { width: "40%" }]}>
-            <CarouselPicker
+            <NumbersCarousel
               data={Array.from({ length: 12 }, (_, i) => i)} // Months of the year (0-11)
               setSelectedDay={setYearMonth}
               selectedDay={fullYear.everyYear.month}
