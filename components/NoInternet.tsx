@@ -28,7 +28,7 @@ const NoInternet = () => {
         setRefresh(true);
 
         try {
-            if (count <= 5) {
+            if (count <= 3) {
                 setCount((prev) => prev + 1);
 
                 await fetchAnalytics();
