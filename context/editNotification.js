@@ -8,12 +8,12 @@ const Server_API = "https://expense-trackerr-server.vercel.app/api";
 const EditNotificationContext = createContext();
 
 export const EditNotificationProvider = ({ children }) => {
-  async function setNotificationRead(transactionId, values) {
+  async function setNotificationRead(notificationId, values) {
     const storedUserId = await AsyncStorage.getItem("loggedUserId");
 
     try {
       const response = await fetch(
-        `${Server_API}/notifications/${storedUserId}/${transactionId}`,
+        `${Server_API}/notifications/${storedUserId}/${notificationId}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

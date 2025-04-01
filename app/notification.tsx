@@ -40,6 +40,7 @@ interface Transaction {
 }
 
 interface Notification {
+  _id: string;
   header: string;
   read: boolean;
   transaction: Transaction;
@@ -73,7 +74,7 @@ const Notification = () => {
 
   async function markNotificationRead(txn: Notification) {
     if (!txn.read) {
-      await setNotificationRead(txn.transaction._id, {
+      await setNotificationRead(txn._id, {
         ...txn.transaction,
         read: true,
       });
