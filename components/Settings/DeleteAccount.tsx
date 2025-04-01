@@ -30,7 +30,7 @@ const DeleteAccount = () => {
 
     async function handleDeletePress() {
         Alert.alert(
-            "Deleting a account is irreversible",
+            "Deleting account is irreversible",
             "This will remove the account and all associated data.",
             [
                 {
