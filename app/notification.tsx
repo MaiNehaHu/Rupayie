@@ -128,7 +128,7 @@ const Notification = () => {
     <ScrollView style={{ flex: 1, }}>
       <View style={{ minHeight: "100%" }}>
         <>
-          <View style={[styles.conatiner, { backgroundColor: bgCOlor }]}>
+          <View style={[styles.conatiner, { backgroundColor: bgCOlor, marginBottom: 50 }]}>
             {notificationsList.length > 0 ? (
               notificationsList.map((not: Notification, index: number) => (
                 <TouchableOpacity
