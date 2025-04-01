@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, RefreshControl, Platform } from "react-native";
+import { ScrollView, StyleSheet, RefreshControl, Platform, SafeAreaView, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { useColorScheme } from "@/components/useColorScheme";
 
@@ -14,6 +14,7 @@ import AllTypesDonut from "@/components/Three/AllTypesDonut";
 import TypesIndicator from "@/components/Three/TypesIndicators";
 import TypesSquares from "@/components/Three/TypesSquares";
 import { getStatusBarHeight } from "react-native-status-bar-height";
+import { FontAwesome } from "@expo/vector-icons";
 
 // const GradientImage = require("@/assets/pages/gradientBg.png");
 
@@ -48,6 +49,7 @@ export default function TabThreeScreen() {
   }
 
   const statusBarHeight = Platform.OS === "ios" ? getStatusBarHeight() : StatusBar.currentHeight || 36;
+  const textColor = colorScheme === "dark" ? "#fff" : "#000";
 
   return (
     <View
@@ -58,19 +60,22 @@ export default function TabThreeScreen() {
     >
       <StatusBar backgroundColor={"transparent"} />
 
-      {/* <Image
-        source={GradientImage}
-        style={{
-          position: "absolute",
-          zIndex: 0,
-          height: 85,
-          objectFit: "cover",
-        }}
-      /> */}
       <View style={styles.bodyContainer}>
         {/* <Header showSlider={showSlider} /> */}
 
-        <Text style={[styles.headerText, { marginTop: statusBarHeight + 10 }]}>Analytics</Text>
+        <SafeAreaView style={[styles.flex_row, { marginTop: statusBarHeight + 10, marginBottom: 15 }]}>
+          <TouchableOpacity activeOpacity={0.5} onPress={() => showSlider()}>
+            <FontAwesome
+              name="bars"
+              size={22}
+              style={{
+                color: textColor,
+                marginHorizontal: 15,
+              }}
+            />
+          </TouchableOpacity>
+          <Text style={styles.headerText}>Analytics</Text>
+        </SafeAreaView>
 
         <Slider isVisible={sliderVisible} hideSlider={hideSlider} />
 
@@ -117,7 +122,11 @@ const styles = StyleSheet.create({
   headerText: {
     fontWeight: 600,
     fontSize: 22,
-    marginHorizontal: 20,
-    marginBottom: 15,
+    marginTop: -5,
   },
+  flex_row: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 15
+  }
 });
