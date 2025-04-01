@@ -47,10 +47,10 @@ const Filter = ({ tabTwoFlag, exportExcelFlag }: { tabTwoFlag?: boolean, exportE
 
   const { setTransactionsFilter, setDonutTransactionsFilter, setExportTransactionsFilter } =
     useTransactionFilter();
-  const { loadingUserDetails } = useUserData()
+  const { loadingUserDetails } = useUserData();
 
   const buttonsName: Option[] = [
-    { title: "All Time", from: new Date(1999, 11, 31), to: new Date() },
+    { title: "All Time", from: new Date(1999, 11, 31), to: new Date(new Date().setDate(new Date().getDate() + 1)) }, // tomorrow
     { title: "This Month", ...getMonthRange(0) },
     { title: "Last Month", ...getMonthRange(1) },
     { title: "Last 3 Months", from: getMonthRange(2).from, to: getMonthRange(0).to },

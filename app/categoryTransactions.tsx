@@ -43,9 +43,9 @@ const categoryTransactions = () => {
 
     const colorScheme = useColorScheme();
 
-    const { donutCategory } = useTransactionsCategory();
+    const { donutCategory, setClickedTransCategory } = useTransactionsCategory();
     const { loadingUserDetails, currencyObj, transactionsList } = useUserData();
-    const { donutTransactionsFilter, setTransactionsFilter } = useTransactionFilter()
+    const { donutTransactionsFilter } = useTransactionFilter();
 
     const [categoryTransactionsList, setCategoryTransactionsList] = useState<Transaction[]>([]);
 
@@ -87,7 +87,7 @@ const categoryTransactions = () => {
     };
 
     useEffect(() => {
-        setTransactionsFilter("Spent");
+        setClickedTransCategory(donutCategory);
     }, []);
 
     useEffect(() => {
