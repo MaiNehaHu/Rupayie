@@ -102,7 +102,7 @@ const CountPicker = ({
 
                   <SafeAreaView style={[styles.scrollPicker]}>
                     <NumbersCarousel
-                      data={Array.from({ length: 24 }, (_, i) => i + 1)}
+                      data={Array.from({ length: 36 }, (_, i) => i + 1)}
                       setSelectedDay={setCountCopy}
                       selectedDay={countCopy}
                     />

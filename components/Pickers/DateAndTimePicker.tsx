@@ -166,7 +166,7 @@ const DateAndTimePicker = ({
                   <View style={styles.pickerRow}>
                     <SafeAreaView style={[styles.scrollPicker]}>
                       <NumbersCarousel
-                        data={Array.from({ length: 31 }, (_, i) => i + 1)} // Days of the month (1-31)
+                        data={Array.from({ length: 28 }, (_, i) => i + 1)} // Days of the month (1-31)
                         setSelectedDay={setSelectedDay}
                         selectedDay={selectedDay}
                       />

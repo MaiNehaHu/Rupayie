@@ -71,15 +71,35 @@ const TypesSquares = () => {
     return Array.from(spendingMap.values());
   }, [filteredTransactions]);
 
+  const totalBalance = typeSpending.reduce((sum, txn) => {
+    if (txn.type == "Spent" || txn.type == "Lend") {
+      sum = sum - txn.total
+    } else {
+      sum = sum + txn.total
+    }
+
+    return sum;
+  }, 0)
+
   const handleShowCategory = (type: string) => {
     setDonutCategory(type);
     router.push({ pathname: "/typeDonut" });
   };
 
   return (
-    <SafeAreaView style={styles.conatiner}>
-      {!loadingUserDetails
-        ? typeSpending.map((type) => (
+    <>
+      {!loadingUserDetails ?
+        <View style={[styles.balanceCard, { backgroundColor: bgColor }]}>
+          <Text style={styles.title}>Total Balance:</Text>
+          <Text style={styles.balanceAmount}>{formatAmount(totalBalance, currencyObj)}</Text>
+        </View>
+        :
+        <View style={[styles.balanceCard, { backgroundColor: bgColor, paddingVertical: 30 }]} />
+      }
+
+      <SafeAreaView style={styles.conatiner}>
+        {!loadingUserDetails
+          ? typeSpending.map((type) => (
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => handleShowCategory(type.type)}
@@ -108,13 +128,14 @@ const TypesSquares = () => {
               </SafeAreaView>
             </TouchableOpacity>
           ))
-        : [...Array(4)].map((_, index) => (
+          : [...Array(4)].map((_, index) => (
             <View
               key={index}
               style={[styles.card, { height: 160, backgroundColor: bgColor }]}
             />
           ))}
-    </SafeAreaView>
+      </SafeAreaView>
+    </>
   );
 };
 
@@ -122,7 +143,7 @@ export default TypesSquares;
 
 const styles = StyleSheet.create({
   conatiner: {
-    rowGap: 10,
+    rowGap: 15,
     columnGap: 7,
     display: "flex",
     flexDirection: "row",
@@ -137,6 +158,17 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     width: "48%",
   },
+  balanceCard: {
+    padding: 15,
+    paddingVertical: 20,
+    borderRadius: 12,
+    marginBottom: 10,
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between"
+  },
   title: {
     fontSize: 16,
     fontWeight: 500,
@@ -147,6 +179,10 @@ const styles = StyleSheet.create({
     fontWeight: 500,
     textAlign: "center",
     marginVertical: 25,
+  },
+  balanceAmount: {
+    fontSize: 16,
+    fontWeight: 500
   },
   viewMore: {
     alignSelf: "center",

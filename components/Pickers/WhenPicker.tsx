@@ -465,7 +465,7 @@ const WhenSelector = ({
       {interval === intervalName.everyMonth && (
         <SafeAreaView style={[styles.scrollPicker, { width: "100%" }]}>
           <NumbersCarousel
-            data={Array.from({ length: 31 }, (_, i) => i + 1)} // Days of the month (1-31)
+            data={Array.from({ length: 28 }, (_, i) => i + 1)} // Days of the month (1-28)
             setSelectedDay={setMonthDate}
             selectedDay={monthDate}
           />
@@ -476,7 +476,7 @@ const WhenSelector = ({
         <View style={styles.pickerRow}>
           <SafeAreaView style={[styles.scrollPicker, { width: "40%" }]}>
             <NumbersCarousel
-              data={Array.from({ length: 31 }, (_, i) => i + 1)} // Days of the month (1-31)
+              data={Array.from({ length: 28 }, (_, i) => i + 1)} // Days of the month (1-28)
               setSelectedDay={setYearDate}
               selectedDay={fullYear.everyYear.date}
             />
