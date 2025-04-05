@@ -182,8 +182,6 @@ export const UserDetailsProvider = ({ children }) => {
     }
   }
 
-  console.log(userDetails);
-
   return (
     <UserContext.Provider
       value={{
