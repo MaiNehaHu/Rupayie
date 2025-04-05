@@ -37,7 +37,7 @@ const profile = () => {
   } = useUserData();
   const { setProfilePhoto } = useProfile();
   const { setLoggedIn, setLoggedUserId } = useLogin();
-  const { setUserDetails } = useUserData();
+  const { setUserDetails, loadingUserDetails } = useUserData();
   const { setAnalytics } = useAnalytics();
   const { error, setError, messageText, setMessageText } = useMessages()
 
@@ -132,11 +132,11 @@ const profile = () => {
   useEffect(() => {
     setUserName(userDetails?.name);
     setUserProfile(userDetails?.userImage);
-  }, [userDetails]);
+  }, [userDetails, loadingUserDetails]);
 
   useEffect(() => {
     setShowUserNameSaveBtn(userName === userDetails?.name ? false : true);
-  }, [userName]);
+  }, [userName, loadingUserDetails]);
 
   return (
     <View style={{ flex: 1 }}>

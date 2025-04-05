@@ -19,7 +19,7 @@ import { useNavigation } from "expo-router";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useColorScheme } from "@/components/useColorScheme";
 import { StatusBar } from "expo-status-bar";
-import { FontAwesome6 } from "@expo/vector-icons";
+import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { supabase } from '@/utils/supabaseClient';
 import { useLogin } from "@/context/login";
 import { useAuth } from "@/context/auth";
@@ -41,6 +41,7 @@ const Login = () => {
   const textColor = colorScheme === "dark" ? "#fff" : "#000";
   const oppColor = colorScheme === "light" ? "#fff" : "#000";
   const loadingBg = colorScheme === "light" ? "#fff" : "#1C1C1C";
+  const placeholderColor = colorScheme === "dark" ? "#888888" : "#7d7d7d";
 
   const [emailID, setEmailID] = useState<string>("");
   const [otp, setOtp] = useState<string>("");
@@ -51,8 +52,11 @@ const Login = () => {
   const [sendLoading, setSendLoading] = useState<boolean>(false);
   const [verifyLoading, setVerifyLoading] = useState<boolean>(false);
   const [loginingIn, setLoginingIn] = useState<boolean>(false);
+  const [otpReceived, setOtpReceived] = useState<boolean>(false);
 
   const [currentScreen, setCurrentScreen] = useState<"welcome" | "login">("welcome");
+
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
 
   const sendOtp = async () => {
     // Regular expression to validate email format
@@ -72,8 +76,10 @@ const Login = () => {
     setSendLoading(false);
 
     if (result.success) {
-      setMessageText("OTP Sent Successfully");
+      // setMessageText("OTP Sent Successfully");
+      setOtpReceived(true);
       startResendTimer();
+      handleLogin();
     } else {
       setError(`Error Sending OTP!`)
     }
@@ -107,7 +113,7 @@ const Login = () => {
     setVerifyLoading(false);
 
     if (result.success) {
-      setMessageText("OTP Verified Successfully!");
+      // setMessageText("OTP Verified Successfully!");
       redirectUserToHome();
     } else {
       setError(`${result.message}`);
@@ -174,6 +180,23 @@ const Login = () => {
   function handleLogin() {
     setCurrentScreen("login");
   }
+  function handleChangeMail() {
+    setCurrentScreen("welcome");
+  }
+
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardVisible(true);
+    });
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardVisible(false);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
 
   const screenWidth = Dimensions.get("window").width;
 
@@ -203,30 +226,6 @@ const Login = () => {
               </Text>
             </SafeAreaView>
 
-            <TouchableOpacity
-              style={[styles.button, { backgroundColor: textColor }]}
-              onPress={handleLogin}
-              activeOpacity={0.7}
-            >
-              <Text style={[styles.buttonText, { color: oppColor }]}>
-                Let's Get Started 🤑
-              </Text>
-            </TouchableOpacity>
-          </SafeAreaView>
-        )}
-
-        {currentScreen === "login" && (
-          <SafeAreaView
-            style={[styles.bottomContainer, { borderBottomWidth: 0 }]}
-          >
-            <Messages
-              error={error}
-              messageText={messageText}
-              setError={setError}
-              setMessageText={setMessageText}
-            />
-
-            {/* Email Input */}
             <EmailInput
               emailID={emailID}
               setEmailID={setEmailID}
@@ -236,24 +235,69 @@ const Login = () => {
               sendOtp={sendOtp}
             />
 
-            {/* OTP Input */}
+            <View style={{ justifyContent: "flex-end", flexDirection: "row" }}>
+              {otpReceived &&
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={handleLogin}
+                  disabled={sendLoading}
+                  style={[styles.otpButton, { backgroundColor: textColor }]}
+                >
+                  <Text style={{ color: oppColor, fontWeight: 500 }}>
+                    {"Next "} <FontAwesome6 name="arrow-right" color={oppColor} size={12} />
+                  </Text>
+                </TouchableOpacity>}
+            </View>
+          </SafeAreaView>
+        )}
+
+        {currentScreen === "login" && (
+          <SafeAreaView
+            style={[styles.bottomContainer, { borderBottomWidth: 0, justifyContent: "space-evenly" }]}
+          >
+            <SafeAreaView>
+              <Text style={styles.header}>Welcome!</Text>
+              <Text style={{ fontSize: 16 }}>
+                Take control of your finances—track, plan, and grow. Your money, your rules.
+              </Text>
+            </SafeAreaView>
+
+            <Messages
+              error={error}
+              messageText={messageText}
+              setError={setError}
+              setMessageText={setMessageText}
+            />
+
             <OTPInput length={6} onComplete={verifyUserOtp} />
 
-            <SafeAreaView style={[styles.flex_center, { marginTop: 20 }]}>
-              <TouchableOpacity
-                onPress={() => verifyUserOtp(Number(otp))}
-                disabled={verifyLoading || sendLoading}
-                activeOpacity={0.5}
-                style={[styles.otpButton, { backgroundColor: textColor }]}
-              >
-                <Text style={{ color: oppColor, fontWeight: "500" }}>{verifyLoading ? "Verifing..." : "Verify OTP"}</Text>
-              </TouchableOpacity>
-            </SafeAreaView>
+            {!keyboardVisible &&
+              <SafeAreaView style={[styles.flex_row_btw, { marginTop: 5 }]}>
+                <TouchableOpacity
+                  onPress={handleChangeMail}
+                  disabled={verifyLoading || sendLoading}
+                  activeOpacity={0.5}
+                  style={[styles.otpButton, { backgroundColor: textColor }]}
+                >
+                  <Text style={{ color: oppColor, fontWeight: "500" }}>Change Email</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() => verifyUserOtp(Number(otp))}
+                  disabled={verifyLoading || sendLoading}
+                  activeOpacity={0.5}
+                  style={[styles.otpButton, { backgroundColor: textColor }]}
+                >
+                  <Text style={{ color: oppColor, fontWeight: "500" }}>{verifyLoading ? "Verifing..." : "Verify OTP"}</Text>
+                </TouchableOpacity>
+              </SafeAreaView>
+            }
           </SafeAreaView>
         )}
       </SafeAreaView>
 
-      {loginingIn &&
+      {
+        loginingIn &&
         <Modal
           animationType="none"
           transparent={true}
@@ -267,7 +311,7 @@ const Login = () => {
           </SafeAreaView>
         </Modal>
       }
-    </ScrollView>
+    </ScrollView >
   );
 };
 
@@ -492,7 +536,7 @@ const styles = StyleSheet.create({
     padding: 5,
     borderWidth: 1,
     borderRadius: 10,
-    marginVertical: 10,
+    // marginVertical: 10,
     borderColor: "#888",
     alignItems: "center",
     flexDirection: "row",

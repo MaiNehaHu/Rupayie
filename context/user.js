@@ -174,11 +174,15 @@ export const UserDetailsProvider = ({ children }) => {
       }
 
       setDeletingUser(false);
+      return true;
     } catch (error) {
       setDeletingUser(false);
       console.error("Error Deleting User: ", error);
+      return false;
     }
   }
+
+  console.log(userDetails);
 
   return (
     <UserContext.Provider

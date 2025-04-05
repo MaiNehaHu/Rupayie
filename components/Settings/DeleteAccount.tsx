@@ -6,22 +6,31 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useNavigation } from 'expo-router'
 import { useMessages } from '@/context/messages'
 import { useLogin } from '@/context/login'
+import { useAnalytics } from '@/context/analytics'
 
 const DeleteAccount = () => {
     const navigation = useNavigation();
+    const { setAnalytics } = useAnalytics();
     const { deletAccount, deletingUser, setUserDetails } = useUserData();
     const { setLoggedIn, setLoggedUserId } = useLogin();
 
     async function handleAccountDelete() {
         try {
-            await deletAccount();
-            setLoggedIn(false);
-            setLoggedUserId("");
-            setUserDetails([]);
+            const success = await deletAccount();
 
-            await AsyncStorage.clear();
+            if (success) {
+                setLoggedIn(false);
+                setLoggedUserId("");
+                setUserDetails(null);
+                setAnalytics({
+                    totalSpent: 0,
+                    totalEarned: 0,
+                    totalAmount: 0,
+                });
 
-            navigation.goBack();
+                await AsyncStorage.clear();
+                navigation.goBack();
+            }
         } catch (error) {
             // Alert.alert("Failed to Delete");
             Alert.prompt("Failed to Delete");
