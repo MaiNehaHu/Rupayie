@@ -159,7 +159,7 @@ const Notification = () => {
             activeOpacity={0.7}
             onPress={handleDeletePress}
             disabled={cleaning}
-            style={{ position: "absolute", bottom: 0, width: "100%", padding: 10, backgroundColor: textColor }}
+            style={{ position: "absolute", bottom: 0, width: "100%", padding: 15, backgroundColor: textColor }}
           >
             <Text style={{ textAlign: "center", fontWeight: 500, color: opptTextColor }}>
               {cleaning ? "Cleaning..." : "Clear Notifications"}

@@ -204,7 +204,7 @@ const ReadTrash = ({
                     styles.smallBox,
                     {
                       backgroundColor: inputBg,
-                      marginBottom: note ? 12 : !showActionButtons ? 0 : 12,
+                      marginBottom: note || people || deletedAt || showActionButtons ? 12 : 0,
                     },
                   ]}
                 >
@@ -225,26 +225,26 @@ const ReadTrash = ({
                       styles.smallBox,
                       {
                         backgroundColor: inputBg,
-                        marginBottom: !showActionButtons ? 0 : 12,
+                        marginBottom: note || deletedAt || showActionButtons ? 12 : 0,
                       },
                     ]}
                   >
                     <Ionicons name="person" color={textColor} size={14} />
-
                     <Text numberOfLines={1}>
                       {people?.name} : {people?.relation}
                     </Text>
                   </View>
                 )}
 
+                {/* Note */}
                 {note && (
                   <View
                     style={[
                       styles.inputField,
                       {
                         backgroundColor: inputBg,
-                        marginBottom: deletedAt ? 12 : 0,
-                        marginTop: people || category ? 0 : 12,
+                        marginBottom: deletedAt || showActionButtons ? 12 : 0,
+                        marginTop: !people && !category ? 12 : 0,
                       },
                     ]}
                   >
@@ -252,28 +252,22 @@ const ReadTrash = ({
                   </View>
                 )}
 
+                {/* Deleted At */}
                 {deletedAt && (
                   <SafeAreaView
                     style={[
                       styles.inputField,
                       {
                         backgroundColor: inputBg,
+                        marginTop: !note && !people && !category ? 12 : 0,
                         marginBottom: 0,
                       },
                     ]}
                   >
                     <Text>
                       Deleted: {7 - calculateDaysFrom(deletedAt)}{" "}
-                      {7 - calculateDaysFrom(deletedAt) > 1
-                        ? "Days Back "
-                        : "Day Back "}
+                      {7 - calculateDaysFrom(deletedAt) > 1 ? "Days Back" : "Day Back"}
                     </Text>
-                  </SafeAreaView>
-                )}
-
-                {image && (
-                  <SafeAreaView style={styles.imageContainer}>
-                    <Image source={{ uri: image }} style={styles.image} />
                   </SafeAreaView>
                 )}
               </View>

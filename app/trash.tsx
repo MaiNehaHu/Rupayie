@@ -269,7 +269,7 @@ const TransactionCard = ({
         ]}
       >
         {/* Note */}
-        <SafeAreaView style={{ width: "40%" }}>
+        <SafeAreaView style={{ width: "45%" }}>
           {deletedAt && (
             <Text numberOfLines={1} style={styles.smallText}>
               {formatDateTimeSimple(deletedAt)}
@@ -290,13 +290,6 @@ const TransactionCard = ({
           </Text>
         )}
       </SafeAreaView>
-
-      {/* Image */}
-      {image && (
-        <SafeAreaView style={styles.imageContainer}>
-          <Image source={{ uri: image }} style={styles.image} />
-        </SafeAreaView>
-      )}
 
       {/* Auto added */}
       {isRecurring && (
