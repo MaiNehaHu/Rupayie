@@ -66,4 +66,16 @@ export default [
     "#d4c2fc", // Lavender
     "#ffc2e2", // Light Pink
     "#ffd9e8", // Soft Rose  
+
+    // 🔥 10 Bold & Vibrant New Colors
+    "#e60073", // Hot Pink
+    "#ff3c38", // Vivid Red
+    "#e67e22", // Rich Orange
+    "#f39c12", // Saffron Yellow
+    "#27ae60", // Bold Emerald
+    "#17a589", // Teal Green
+    "#1abc9c", // Aqua Green
+    "#2980b9", // Ocean Blue
+    "#8e44ad", // Grape Purple
+    "#c0392b", // Blood Red
 ];
