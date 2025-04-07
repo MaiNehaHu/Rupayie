@@ -64,19 +64,35 @@ const DonutTransactions = () => {
         setFilteredTransactions(filtered);
     }, [donutCategory, transactionsList, donutTransactionsFilter]);
 
-    // Aggregate total amount spent per category
+    // Aggregate total amount spent per category (sign-aware)
     const categorySpending: CategorySpent[] = useMemo(() => {
         const spendingMap = new Map<string, CategorySpent>();
 
         filteredTransactions?.forEach((txn: Transaction) => {
-            const { _id, name, hexColor } = txn.category;
+            const { _id, name, hexColor, sign, type } = txn.category;
+
             if (!spendingMap.has(_id)) {
                 spendingMap.set(_id, { _id, name, hexColor, spent: 0 });
             }
-            spendingMap.get(_id)!.spent += txn.amount;
+
+            const current = spendingMap.get(_id)!;
+
+            if (type === "Borrowed") {
+                current.spent += sign === "+" ? txn.amount : -txn.amount;
+            } else if (type === "Lend") {
+                current.spent += sign === "+" ? txn.amount : -txn.amount;
+            } else if (type === "Spent") {
+                current.spent -= txn.amount;
+            } else if (type === "Earned") {
+                current.spent += txn.amount;
+            }
         });
 
-        return Array.from(spendingMap.values());
+        // ✅ Ensure values are always positive for graph display
+        return Array.from(spendingMap.values()).map((entry) => ({
+            ...entry,
+            spent: Math.abs(entry.spent),
+        }));
     }, [filteredTransactions]);
 
     // Compute the total amount spent across all categories

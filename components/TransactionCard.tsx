@@ -91,21 +91,8 @@ export const TransactionCard = ({
                         }}
                     >
                         <Text numberOfLines={1} style={styles.smallText}>
-                            {people?.name}
+                            {`${category.sign == "+" ? "From" : " To"} ${people?.name}`}
                         </Text>
-                        {/* 
-              <Text>{" - "}</Text>
-              <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={() => Linking.openURL(`tel:${people?.contact}`)}
-              >
-                <Text
-                  style={[styles.smallText, { textDecorationLine: "underline" }]}
-                >
-                  {people?.contact}
-                </Text>
-              </TouchableOpacity>
-             */}
                     </SafeAreaView>
                 ) : (
                     <SafeAreaView style={{ width: "60%" }}>

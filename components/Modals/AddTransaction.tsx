@@ -101,7 +101,7 @@ const AddTransaction = ({
     setAmount(undefined);
     setNote("");
     setCategory(filteredCategories[0]);
-    setStatus(filteredCategories[0]?.sign);
+    setStatus(clickedTransCategory == "Borrowed" ? "+" : "-");
     setDate(new Date());
 
     // error text
@@ -294,7 +294,7 @@ const AddTransaction = ({
                       />
 
                       <SafeAreaView style={{ marginBottom: 10, marginHorizontal: 10 }}>
-                        <Text numberOfLines={1}>{formatAmount(amount ? amount : 0, currencyObj)} {status == "+" ? `Received from ${person.name}` : `Transfered to ${person.name}`} </Text>
+                        <Text numberOfLines={1}>{formatAmount(amount ? amount : 0, currencyObj)} {status == "+" ? `Received from ${person?.name}` : `Transfered to ${person?.name}`} </Text>
                       </SafeAreaView>
                     </>
                   )}
@@ -318,25 +318,7 @@ const AddTransaction = ({
                     value={note}
                     onChangeText={(text) => setNote(text)}
                   />
-
-                  {/* Upload image */}
-                  {/* <ImagePicker image={localImage} setImage={setLocalImage} /> */}
                 </SafeAreaView>
-
-                {/* {localImage && (
-                  <SafeAreaView style={styles.imageContainer}>
-                    <Image source={{ uri: localImage }} style={styles.image} />
-
-                    <TouchableOpacity
-                      activeOpacity={0.7}
-                      onPress={handleDeleteImage}
-                      style={styles.removeButton}
-                    >
-                      <Text style={styles.removeText}>Remove</Text>
-                      <FontAwesome6 name="xmark" color={"#FFF"} size={16} />
-                    </TouchableOpacity>
-                  </SafeAreaView>
-                )} */}
 
                 <SafeAreaView>
                   {showError && (
