@@ -4,11 +4,11 @@ import { Text, View } from '@/components/Themed'
 import { useLocalSearchParams, useNavigation } from 'expo-router'
 import { useUserData } from '@/context/user'
 import { useColorScheme } from "@/components/useColorScheme";
-import { TransactionCard } from '@/components/Two/Transactions'
 import ReadTransaction from '@/components/Modals/ReadTransaction'
 import { formatAmount } from '@/utils/formatAmount'
 import { useTransactionsCategory } from '@/context/transCategory'
 import { useTransactionFilter } from '@/context/filterTransByDate'
+import { TransactionCard } from '@/components/TransactionCard'
 
 interface Transaction {
     _id: string;

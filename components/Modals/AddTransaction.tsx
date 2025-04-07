@@ -26,12 +26,14 @@ import { useCategory } from "@/context/categories";
 import { useAnalytics } from "@/context/analytics";
 import PersonPicker from "../Pickers/PersonPicker";
 import { useMessages } from "@/context/messages";
+import { formatAmount } from "@/utils/formatAmount";
 
 interface Category {
   name: string;
   hexColor: string;
   _id: any;
   type: string;
+  sign: string;
 }
 
 interface Person {
@@ -51,7 +53,7 @@ const AddTransaction = ({
   handleCloseModal: any;
 }) => {
   const colorScheme = useColorScheme();
-  const { categoriesList, peopleList, fetchUserDetails, loadingUserDetails } = useUserData();
+  const { categoriesList, peopleList, fetchUserDetails, loadingUserDetails, currencyObj } = useUserData();
   const { fetchAnalytics } = useAnalytics();
   const { loadingCategories } = useCategory();
   const { clickedTransCategory } = useTransactionsCategory();
@@ -63,12 +65,13 @@ const AddTransaction = ({
     (cat: Category) => cat.type === clickedTransCategory
   );
 
-  const [amount, setAmount] = useState<number | undefined>();
+  const [amount, setAmount] = useState<number>();
   const [note, setNote] = useState<string>("");
   const [date, setDate] = useState(new Date());
   const [category, setCategory] = useState<Category>(filteredCategories[0]);
   const [person, setPerson] = useState<Person>(peopleList[0]);
-  const [status, setStatus] = useState("In Progress");
+  const [status, setStatus] = useState(clickedTransCategory == "Borrowed" ? "+" : "-");
+
   // const [imageURL, setImageURL] = useState(null);
   // const [localImage, setLocalImage] = useState(null);
 
@@ -98,12 +101,8 @@ const AddTransaction = ({
     setAmount(undefined);
     setNote("");
     setCategory(filteredCategories[0]);
-    setStatus("In Progress");
+    setStatus(clickedTransCategory == "Borrowed" ? "+" : "-");
     setDate(new Date());
-
-    // delete imageURL
-    // setImageURL(null);
-    // setLocalImage(null);
 
     // error text
     setShowError(false);
@@ -113,10 +112,6 @@ const AddTransaction = ({
   const handleConfirm = (selectedDate: Date) => {
     setDate(selectedDate);
   };
-
-  // function handleDeleteImage() {
-  //   setLocalImage(null);
-  // }
 
   function ValidateFields() {
     if (!amount) {
@@ -154,27 +149,18 @@ const AddTransaction = ({
       const flag = ValidateFields();
       if (!flag) return;
 
-      // let updatedImage = imageURL;
-
-      // if (localImage) {
-      //   updatedImage = await uploadImage(localImage);
-      //   setImageURL(updatedImage);
-      // } else if (imageURL) {
-      //   deleteImage(imageURL);
-      //   setImageURL(null);
-      // }
-
       const values = {
         amount,
         note,
         createdAt: date,
-        category,
         status,
-        // image: !updatedImage ? "" : updatedImage,
         ...(clickedTransCategory === "Borrowed" ||
           clickedTransCategory === "Lend"
-          ? { people: person }
-          : {}),
+          ? {
+            people: person,
+            category: { ...category, sign: status }
+          }
+          : { category }),
       };
 
       await addNewTransaction(values);
@@ -253,21 +239,42 @@ const AddTransaction = ({
                 <DateAndTimePicker date={date} handleConfirm={handleConfirm} />
 
                 {/* Amount */}
-                <TextInput
-                  style={[
-                    styles.inputField,
-                    { backgroundColor: inputBg, color: textColor },
-                  ]}
-                  placeholder="Amount"
-                  keyboardType="numeric"
-                  placeholderTextColor={placeholderColor}
-                  value={amount !== undefined ? amount.toString() : ""}
-                  onChangeText={(text) => {
-                    const numericValue =
-                      parseInt(text.replace(/[^0-9]/g, ""), 10) || 0;
-                    setAmount(numericValue);
-                  }}
-                />
+                <SafeAreaView style={styles.flex_row}>
+                  <TextInput
+                    style={[
+                      styles.inputField,
+                      { backgroundColor: inputBg, color: textColor, flex: 1 },
+                    ]}
+                    placeholder="Amount"
+                    keyboardType="numeric"
+                    placeholderTextColor={placeholderColor}
+                    value={amount !== undefined ? amount.toString() : ""}
+                    onChangeText={(text) => {
+                      const numericValue =
+                        parseInt(text.replace(/[^0-9]/g, ""), 10) || 0;
+                      setAmount(numericValue);
+                    }}
+                  />
+
+                  {(clickedTransCategory === "Borrowed" ||
+                    clickedTransCategory === "Lend") &&
+                    <SafeAreaView style={styles.flex_row}>
+                      {["+", "-"].map((sign) => (
+                        <TouchableOpacity
+                          onPress={() => setStatus(sign)}
+                          key={sign}
+                          style={[styles.statusButton, {
+                            backgroundColor: status == "+" ? sign == "+" ? "#4FB92D" : "transparent" : sign == "-" ? "#DE0B24" : "transparent",
+                          }]}
+                        >
+                          <Text>
+                            <FontAwesome6 name={sign == "+" ? "arrow-down" : "arrow-up"} color={textColor} size={14} />
+                          </Text>
+                        </TouchableOpacity>
+                      ))}
+                    </SafeAreaView>
+                  }
+                </SafeAreaView>
 
                 {/* Category */}
                 <CategoryPicker
@@ -279,11 +286,17 @@ const AddTransaction = ({
 
                 {(clickedTransCategory === "Borrowed" ||
                   clickedTransCategory === "Lend") && (
-                    <PersonPicker
-                      person={person}
-                      setPerson={setPerson}
-                      peopleList={peopleList}
-                    />
+                    <>
+                      <PersonPicker
+                        person={person}
+                        setPerson={setPerson}
+                        peopleList={peopleList}
+                      />
+
+                      <SafeAreaView style={{ marginBottom: 10, marginHorizontal: 10 }}>
+                        <Text numberOfLines={1}>{formatAmount(amount ? amount : 0, currencyObj)} {status == "+" ? `Received from ${person?.name}` : `Transfered to ${person?.name}`} </Text>
+                      </SafeAreaView>
+                    </>
                   )}
 
                 {/* Note */}
@@ -305,25 +318,7 @@ const AddTransaction = ({
                     value={note}
                     onChangeText={(text) => setNote(text)}
                   />
-
-                  {/* Upload image */}
-                  {/* <ImagePicker image={localImage} setImage={setLocalImage} /> */}
                 </SafeAreaView>
-
-                {/* {localImage && (
-                  <SafeAreaView style={styles.imageContainer}>
-                    <Image source={{ uri: localImage }} style={styles.image} />
-
-                    <TouchableOpacity
-                      activeOpacity={0.7}
-                      onPress={handleDeleteImage}
-                      style={styles.removeButton}
-                    >
-                      <Text style={styles.removeText}>Remove</Text>
-                      <FontAwesome6 name="xmark" color={"#FFF"} size={16} />
-                    </TouchableOpacity>
-                  </SafeAreaView>
-                )} */}
 
                 <SafeAreaView>
                   {showError && (
@@ -396,6 +391,13 @@ const styles = StyleSheet.create({
     height: 15,
     borderRadius: 20,
   },
+  flex_row: {
+    gap: 5,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "center",
+  },
   flex_row_btw: {
     gap: 5,
     display: "flex",
@@ -454,5 +456,12 @@ const styles = StyleSheet.create({
   doneText: {
     fontSize: 20,
     fontWeight: 500,
+  },
+  statusButton: {
+    padding: 10,
+    paddingHorizontal: 12,
+    borderRadius: 30,
+    borderWidth: 1,
+    borderColor: "#FFF"
   },
 });

@@ -23,6 +23,7 @@ import { useAnalytics } from "@/context/analytics";
 import { Alert } from "react-native";
 import PersonPicker from "../Pickers/PersonPicker";
 import { useMessages } from "@/context/messages";
+import { formatAmount } from "@/utils/formatAmount";
 
 interface Transaction {
   _id: string;
@@ -52,6 +53,7 @@ interface Category {
   hexColor: string;
   _id: any;
   type: string;
+  sign: string;
 }
 
 const ReadTransaction = ({
@@ -67,7 +69,7 @@ const ReadTransaction = ({
 }) => {
   const colorScheme = useColorScheme();
   const { fetchAnalytics } = useAnalytics();
-  const { categoriesList, peopleList, fetchUserDetails, loadingUserDetails } = useUserData();
+  const { categoriesList, peopleList, fetchUserDetails, loadingUserDetails, currencyObj } = useUserData();
   const { clickedTransCategory } = useTransactionsCategory();
   const { deleteTransaction, saveEditedTransaction, processing, processingDelete, } = useTransactions();
   const { setError, setMessageText } = useMessages()
@@ -82,7 +84,8 @@ const ReadTransaction = ({
   const [note, setNote] = useState<string>(transaction?.note || "");
   const [category, setCategory] = useState(transaction?.category);
   const [people, setPeople] = useState(transaction?.people);
-  const [status, setStatus] = useState(transaction?.status);
+  const [status, setStatus] = useState(transaction?.category.sign);
+
   // const [imageURI, setImageURI] = useState<string | null>(transaction?.image);
   // const [localImage, setLocalImage] = useState<string | null>(
   //   transaction?.image
@@ -117,7 +120,7 @@ const ReadTransaction = ({
     setAmount(null);
     setNote("");
     setCategory(categoriesList[0]);
-    setStatus("In Progress");
+    setStatus(categoriesList[0].sign);
     setDate(new Date());
 
     // delete image
@@ -186,33 +189,18 @@ const ReadTransaction = ({
       const flag = ValidateFields();
       if (!flag) return;
 
-      // let uploadedImg = transaction.image;
-
-      // if (localImage && localImage !== transaction.image) {
-      //   // If a new image is selected, upload it
-      //   uploadedImg = await uploadExistingTransImage(
-      //     transaction._id,
-      //     localImage
-      //   );
-      //   setImageURI(uploadedImg);
-      // } else if (imageRemoved && !localImage) {
-      //   // If the user removed the image and saved, delete it
-      //   await deleteExistingTransImage(transaction._id, transaction.image);
-      //   uploadedImg = null;
-      //   setImageURI(null);
-      // }
-
       const values = {
         amount,
         note,
         createdAt: date,
-        category,
         status,
-        // image: uploadedImg || "",
         ...(clickedTransCategory === "Borrowed" ||
           clickedTransCategory === "Lend"
-          ? { people: people }
-          : {}),
+          ? {
+            people,
+            category: { ...category, sign: status }
+          }
+          : { category }),
         pushedIntoTransactions: transaction?.pushedIntoTransactions,
       };
 
@@ -262,9 +250,9 @@ const ReadTransaction = ({
     setNote(transaction.note);
     // setImageURI(transaction.image);
 
-    setStatus(transaction.status);
     setAmount(transaction.amount);
     setCategory(transaction.category);
+    setStatus(transaction.category.sign);
     setDate(new Date(transaction.createdAt));
     setPeople(transaction.people);
   }, []);
@@ -351,21 +339,43 @@ const ReadTransaction = ({
                 <DateAndTimePicker date={date} handleConfirm={handleConfirm} />
 
                 {/* Amount */}
-                <TextInput
-                  style={[
-                    styles.inputField,
-                    { backgroundColor: inputBg, color: textColor },
-                  ]}
-                  placeholder="Amount"
-                  keyboardType="numeric"
-                  placeholderTextColor={placeholderColor}
-                  value={amount !== null ? amount.toString() : ""}
-                  onChangeText={(text) => {
-                    const numericValue =
-                      parseInt(text.replace(/[^0-9]/g, ""), 10) || 0;
-                    setAmount(numericValue);
-                  }}
-                />
+                <SafeAreaView style={styles.flex_row}>
+                  <TextInput
+                    style={[
+                      styles.inputField,
+                      { backgroundColor: inputBg, color: textColor, flex: 1 },
+                    ]}
+                    placeholder="Amount"
+                    keyboardType="numeric"
+                    placeholderTextColor={placeholderColor}
+                    value={amount !== null ? amount.toString() : ""}
+                    onChangeText={(text) => {
+                      const numericValue =
+                        parseInt(text.replace(/[^0-9]/g, ""), 10) || 0;
+                      setAmount(numericValue);
+                    }}
+                  />
+
+                  {(clickedTransCategory === "Borrowed" ||
+                    clickedTransCategory === "Lend") &&
+                    <SafeAreaView style={styles.flex_row}>
+                      {["+", "-"].map((sign) => (
+                        <TouchableOpacity
+                          key={sign}
+                          onPress={() => setStatus(sign)}
+                          style={[styles.statusButton, {
+                            marginTop: -10,
+                            backgroundColor: status == "+" ? sign == "+" ? "#4FB92D" : "transparent" : sign == "-" ? "#DE0B24" : "transparent",
+                          }]}
+                        >
+                          <Text>
+                            <FontAwesome6 name={sign == "+" ? "arrow-down" : "arrow-up"} color={textColor} size={14} />
+                          </Text>
+                        </TouchableOpacity>
+                      ))}
+                    </SafeAreaView>
+                  }
+                </SafeAreaView>
 
                 {/* Category */}
                 <CategoryPicker
@@ -384,10 +394,9 @@ const ReadTransaction = ({
                         peopleList={peopleList}
                       />
 
-                      {/* Status */}
-                      {/* <SafeAreaView>
-                      <StatusBar textColor={textColor} />
-                    </SafeAreaView> */}
+                      <SafeAreaView style={{ marginBottom: 10, marginHorizontal: 10 }}>
+                        <Text numberOfLines={1}>{formatAmount(amount ? amount : 0, currencyObj)} {status == "+" ? `was received from ${people.name}` : `was transfered to ${people.name}`} </Text>
+                      </SafeAreaView>
                     </>
                   )}
 
@@ -501,6 +510,13 @@ const styles = StyleSheet.create({
     height: 15,
     borderRadius: 20,
   },
+  flex_row: {
+    gap: 5,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   flex_row_btw: {
     gap: 5,
     display: "flex",
@@ -559,5 +575,12 @@ const styles = StyleSheet.create({
   doneText: {
     fontSize: 20,
     fontWeight: 500,
+  },
+  statusButton: {
+    padding: 10,
+    paddingHorizontal: 12,
+    borderRadius: 30,
+    borderWidth: 1,
+    borderColor: "#FFF",
   },
 });

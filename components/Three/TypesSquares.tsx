@@ -15,6 +15,7 @@ interface Transaction {
   category: {
     type: "Spent" | "Earned" | "Borrowed" | "Lend";
     hexColor: string;
+    sign: "+" | "-";
   };
 }
 
@@ -51,24 +52,40 @@ const TypesSquares = () => {
   }, [transactionsList, donutTransactionsFilter]);
 
   const typeSpending: TypeSpent[] = useMemo(() => {
-    const spendingMap = new Map<Transaction["category"]["type"], TypeSpent>();
+    const spendingMap = new Map<Transaction["category"]["type"], { positive: number; negative: number; color: string }>();
 
-    // Initialize all types with 0 total
-    Object.keys(typeColors).forEach((type) => {
+    // Initialize map
+    Object.entries(typeColors).forEach(([type, color]) => {
       spendingMap.set(type as Transaction["category"]["type"], {
-        type: type as Transaction["category"]["type"],
-        color: typeColors[type as Transaction["category"]["type"]],
-        total: 0,
+        positive: 0,
+        negative: 0,
+        color,
       });
     });
 
     filteredTransactions?.forEach((txn: Transaction) => {
-      const typeKey = txn.category.type;
+      const { type, sign } = txn.category;
 
-      spendingMap.get(typeKey)!.total += txn.amount;
+      const current = spendingMap.get(type)!;
+
+      if (sign === "+") {
+        current.positive += txn.amount;
+      } else if (sign === "-") {
+        current.negative += txn.amount;
+      }
     });
 
-    return Array.from(spendingMap.values());
+    // Convert to TypeSpent array with net totals (allow negative)
+    return Array.from(spendingMap.entries()).map(([type, { positive, negative, color }]) => ({
+      type,
+      color,
+      total:
+        type === "Borrowed"
+          ? positive - negative
+          : type === "Lend"
+            ? -(positive - negative)
+            : positive + negative,
+    }));
   }, [filteredTransactions]);
 
   const totalBalance = typeSpending.reduce((sum, txn) => {
@@ -104,7 +121,7 @@ const TypesSquares = () => {
               activeOpacity={0.8}
               onPress={() => handleShowCategory(type.type)}
               key={type.color}
-              disabled={type.total == 0}
+              disabled={type.total <= 0}
               style={[styles.card, { backgroundColor: bgColor }]}
             >
               <Text style={styles.title}>{type.type}</Text>
@@ -117,8 +134,8 @@ const TypesSquares = () => {
                 style={[
                   styles.viewMore,
                   {
-                    backgroundColor:
-                      type.total == 0 ? `${type.color}90` : type.color,
+                    backgroundColor: type.total <= 0 ? `${type.color}90` : type.color,
+                    opacity: type.total <= 0 ? 0.6 : 1,
                   },
                 ]}
               >
@@ -134,7 +151,7 @@ const TypesSquares = () => {
               style={[styles.card, { height: 160, backgroundColor: bgColor }]}
             />
           ))}
-      </SafeAreaView>
+      </SafeAreaView >
     </>
   );
 };
