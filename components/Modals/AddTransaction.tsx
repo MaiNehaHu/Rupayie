@@ -293,7 +293,7 @@ const AddTransaction = ({
                         peopleList={peopleList}
                       />
 
-                      <SafeAreaView style={{ marginBottom: 10, marginHorizontal: 10 }}>
+                      <SafeAreaView style={{ marginBottom: 12, marginHorizontal: 10 }}>
                         <Text numberOfLines={1}>{formatAmount(amount ? amount : 0, currencyObj)} {status == "+" ? `Received from ${person?.name}` : `Transfered to ${person?.name}`} </Text>
                       </SafeAreaView>
                     </>
