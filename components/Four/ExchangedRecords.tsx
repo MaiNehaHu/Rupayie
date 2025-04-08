@@ -37,15 +37,17 @@ const ExchangedRecords = () => {
                                 key={button}
                                 onPress={() => setActiveButton(button)}
                                 activeOpacity={0.7}
-                                style={[styles.flex_row_btw, styles.button, { width: "48%", backgroundColor: activeButton == button ? "#4588DF" : "#00000000", borderColor: textColor }]}
+                                style={[
+                                    styles.flex_row_btw, styles.button,
+                                    { width: "48%", backgroundColor: activeButton == button ? "#4588DF" : "#00000000", borderColor: activeButton === button ? "#4a99ff" : textColor }
+                                ]}
                             >
-                                <Text numberOfLines={1} style={{ fontSize: 16, fontWeight: 500 }}>{button}</Text>
+                                <Text numberOfLines={1} style={{ fontSize: 16, fontWeight: 500, color: activeButton === button ? "#FFF" : textColor }}>{button}</Text>
                                 <FontAwesome6
-                                    name={button ===
-                                        "Borrowed"
+                                    name={button === "Borrowed"
                                         ? "credit-card"
                                         : "money-bills"}
-                                    color={textColor}
+                                    color={activeButton === button ? "#FFF" : textColor}
                                     size={24}
                                 />
                             </TouchableOpacity>
