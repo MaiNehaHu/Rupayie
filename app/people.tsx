@@ -196,20 +196,26 @@ const PersonCard = (person: Person) => {
 
   const colorScheme = useColorScheme();
   const textColor = colorScheme === "dark" ? "#fff" : "#000";
-  const oppTextColor = colorScheme === "dark" ? "#000" : "#FFF";
+  // const oppTextColor = colorScheme === "dark" ? "#000" : "#FFF";
 
   return (
-    <View style={styles.personCard}>
-      <SafeAreaView
-        style={[
-          styles.flex_row_btw,
-          { paddingHorizontal: 15, paddingBottom: 15 },
-        ]}
-      >
-        {/* Name */}
-        <SafeAreaView style={[styles.flex_row, { width: "60%" }]}>
-          <Text numberOfLines={1} style={styles.personName}>
-            {name.toLocaleUpperCase()}
+    <View style={[styles.personCard, { paddingHorizontal: 15, }]}>
+      {/* Name */}
+      <Text numberOfLines={1} style={styles.personName}>
+        {name.toLocaleUpperCase()}
+      </Text>
+
+      <SafeAreaView style={styles.flex_row_btw}>
+        {/* Relation */}
+        <SafeAreaView
+          style={[
+            styles.flex_row,
+            { marginTop: 10, maxWidth: "50%" }
+          ]}
+        >
+          <FontAwesome6 name="handshake-simple" color={textColor} size={14} />
+          <Text numberOfLines={1} style={[styles.smallText, { color: textColor }]}>
+            {relation}
           </Text>
         </SafeAreaView>
 
@@ -219,23 +225,9 @@ const PersonCard = (person: Person) => {
           style={styles.flex_row}
           onPress={() => Linking.openURL(`tel:${contact}`)}
         >
-          <Ionicons name="call" color={textColor} size={18} />
           <Text style={styles.personContact}>{contact.toString()}</Text>
+          <Ionicons name="call" color={textColor} size={14} />
         </TouchableOpacity>
-      </SafeAreaView>
-
-      {/* Relation */}
-      <SafeAreaView
-        style={[
-          { backgroundColor: "#4588DF" },
-          styles.flex_row,
-          styles.cardBottom,
-        ]}
-      >
-        <FontAwesome6 name="handshake-simple" color={oppTextColor} size={14} />
-        <Text numberOfLines={1} style={[styles.smallText, { color: oppTextColor }]}>
-          {relation}
-        </Text>
       </SafeAreaView>
     </View>
   );
@@ -266,7 +258,7 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     borderRadius: 15,
     marginBottom: 10,
-    paddingBottom: 0,
+    paddingBottom: 15,
   },
   cardBottom: {
     borderBottomLeftRadius: 15,
@@ -301,7 +293,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
+    gap: 8,
   },
   flex_row_btw: {
     display: "flex",

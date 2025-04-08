@@ -197,7 +197,7 @@ const Transactions = () => {
   );
 };
 
-const Skeleton = ({ loaderColor }: { loaderColor: string }) => {
+export const Skeleton = ({ loaderColor }: { loaderColor: string }) => {
   return (
     <SafeAreaView style={{ marginTop: 0 }}>
       {Array.from({ length: 5 }).map((_, index) => (

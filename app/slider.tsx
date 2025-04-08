@@ -7,7 +7,6 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-  View,
 } from "react-native";
 import React, { useEffect, useRef } from "react";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
