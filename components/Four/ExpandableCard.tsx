@@ -62,8 +62,8 @@ const ExpandableCard = ({ people, transactions }: { people: People, transactions
                 <SafeAreaView style={[styles.flex_col, styles.expndedCont]}>
                     <SafeAreaView style={styles.flex_row_btw}>
                         <Text style={[styles.tableHeader, { textAlign: "left" }]}>Date</Text>
-                        <Text style={[styles.tableHeader, { textAlign: "left" }]}>Category</Text>
                         <Text style={[styles.tableHeader, { textAlign: "right" }]}>Amount</Text>
+                        <Text style={[styles.tableHeader, { textAlign: "right" }]}>Balance</Text>
                     </SafeAreaView>
 
                     {transactions.reduce((acc: JSX.Element[], txn, idx) => {
@@ -93,8 +93,8 @@ const TableRow = ({ txn, balance }: { txn: Transaction, balance: number }) => {
     return (
         <SafeAreaView style={styles.flex_row_btw}>
             <Text style={{ width: "33%", textAlign: "left" }}>{formatDate(txn.createdAt)}</Text>
-            <Text numberOfLines={1} style={{ width: "33%", textAlign: "left" }}>{txn.category.name}</Text>
             <Text numberOfLines={1} style={{ width: "33%", textAlign: "right" }}>{txn.category.sign} {formatAmount(txn.amount, currencyObj)}</Text>
+            <Text numberOfLines={1} style={{ width: "33%", textAlign: "right" }}>{formatAmount(balance, currencyObj)}</Text>
         </SafeAreaView>
     )
 }
