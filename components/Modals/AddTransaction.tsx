@@ -264,11 +264,16 @@ const AddTransaction = ({
                           onPress={() => setStatus(sign)}
                           key={sign}
                           style={[styles.statusButton, {
+                            borderColor: status == "+" ? sign == "+" ? "#FFF" : textColor : sign == "-" ? "#FFF" : textColor,
                             backgroundColor: status == "+" ? sign == "+" ? "#4FB92D" : "transparent" : sign == "-" ? "#DE0B24" : "transparent",
                           }]}
                         >
                           <Text>
-                            <FontAwesome6 name={sign == "+" ? "arrow-down" : "arrow-up"} color={textColor} size={14} />
+                            <FontAwesome6
+                              name={sign == "+" ? "arrow-down" : "arrow-up"}
+                              color={status == "+" ? sign == "+" ? "#FFF" : textColor : sign == "-" ? "#FFF" : textColor}
+                              size={14}
+                            />
                           </Text>
                         </TouchableOpacity>
                       ))}
@@ -462,6 +467,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 30,
     borderWidth: 1,
-    borderColor: "#FFF"
+    // borderColor: "#FFF"
   },
 });
