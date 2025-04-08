@@ -59,7 +59,7 @@ const Four = () => {
                 style={{
                     position: "absolute",
                     zIndex: 0,
-                    height: 180,
+                    height: 160,
                     objectFit: "cover",
                 }}
             />

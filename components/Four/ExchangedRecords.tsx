@@ -48,7 +48,7 @@ const ExchangedRecords = () => {
                                         ? "credit-card"
                                         : "money-bills"}
                                     color={activeButton === button ? "#FFF" : textColor}
-                                    size={24}
+                                    size={20}
                                 />
                             </TouchableOpacity>
                         ))
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     },
     button: {
         padding: 10,
-        paddingHorizontal: 15,
+        // paddingHorizosntal: 15,
         borderRadius: 10,
         borderWidth: 1
     },

@@ -9,7 +9,6 @@ import { useColorScheme } from "@/components/useColorScheme";
 import { useLogin } from "@/context/login";
 import { useUserData } from "@/context/user";
 import { useAnalytics } from "@/context/analytics";
-import { useConnection } from "@/context/connection";
 import NoInternet from "@/components/NoInternet";
 
 // TabBarIcon Component
@@ -17,7 +16,7 @@ function TabBarIcon(props: {
   name: React.ComponentProps<typeof Ionicons>["name"];
   color: string;
 }) {
-  return <Ionicons size={26} style={{ marginBottom: -7 }} {...props} />;
+  return <Ionicons size={24} style={{ marginBottom: -7 }} {...props} />;
 }
 
 // TabLayout Component

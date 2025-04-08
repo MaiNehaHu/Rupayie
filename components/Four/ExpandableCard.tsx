@@ -35,7 +35,9 @@ const ExpandableCard = ({ people, transactions }: { people: People, transactions
 
     const [expand, setExpland] = useState(false);
 
-    const totalBalance = transactions.reduce((sum, curr) => sum += curr.amount, 0);
+    const totalBalance = transactions
+        .reduce((sum, curr) =>
+            sum += curr.category.sign === "+" ? curr.amount : -curr.amount, 0);
 
     return (
         <View style={styles.card}>
