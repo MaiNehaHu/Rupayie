@@ -70,7 +70,7 @@ const AddTransaction = ({
   const [date, setDate] = useState(new Date());
   const [category, setCategory] = useState<Category>(filteredCategories[0]);
   const [person, setPerson] = useState<Person>(peopleList[0]);
-  const [status, setStatus] = useState(clickedTransCategory == "Borrowed" ? "+" : "-");
+  const [status, setStatus] = useState("-");
 
   // const [imageURL, setImageURL] = useState(null);
   // const [localImage, setLocalImage] = useState(null);
@@ -192,6 +192,10 @@ const AddTransaction = ({
   useEffect(() => {
     setShowError(false);
   }, [amount, note]);
+
+  useEffect(() => {
+    setStatus(clickedTransCategory == "Borrowed" ? "+" : "-");
+  }, [clickedTransCategory]);
 
   return (
     <ScrollView style={{ flex: 1, position: "absolute" }}>
