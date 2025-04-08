@@ -93,24 +93,24 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="three"
-          options={{
-            title: "Graphs",
-            tabBarIcon: ({ focused }) => (
-              <TabBarIcon
-                name="pie-chart"
-                color={focused ? "#4FB92D" : "#4588DF"}
-              />
-            ),
-          }}
-        />
-        <Tabs.Screen
           name="four"
           options={{
             title: "Shared",
             tabBarIcon: ({ focused }) => (
               <TabBarIcon
                 name="cash"
+                color={focused ? "#4FB92D" : "#4588DF"}
+              />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="three"
+          options={{
+            title: "Graphs",
+            tabBarIcon: ({ focused }) => (
+              <TabBarIcon
+                name="pie-chart"
                 color={focused ? "#4FB92D" : "#4588DF"}
               />
             ),

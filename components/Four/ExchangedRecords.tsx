@@ -27,27 +27,31 @@ const ExchangedRecords = () => {
 
     return (
         <SafeAreaView>
-            <SafeAreaView style={[styles.flex_row_btw, { marginTop: 5, marginBottom: 15 }]}>
-                {["Borrowed", "Lend"]
-                    .map((button) => (
-                        <TouchableOpacity
-                            key={button}
-                            onPress={() => setActiveButton(button)}
-                            activeOpacity={0.7}
-                            style={[styles.flex_row_btw, styles.button, { width: "48%", backgroundColor: activeButton == button ? "#4588DF" : bgColor }]}
-                        >
-                            <Text style={{ fontSize: 16, fontWeight: 500 }}>{button}</Text>
-                            <FontAwesome6
-                                name={button ===
-                                    "Borrowed"
-                                    ? "credit-card"
-                                    : "money-bills"}
-                                color={textColor}
-                                size={24}
-                            />
-                        </TouchableOpacity>
-                    ))
-                }
+            <SafeAreaView style={[styles.buttonsBackground, { backgroundColor: bgColor }]}>
+                <Text style={styles.boldText}>Select Category</Text>
+
+                <SafeAreaView style={styles.flex_row_btw}>
+                    {["Borrowed", "Lend"]
+                        .map((button) => (
+                            <TouchableOpacity
+                                key={button}
+                                onPress={() => setActiveButton(button)}
+                                activeOpacity={0.7}
+                                style={[styles.flex_row_btw, styles.button, { width: "48%", backgroundColor: activeButton == button ? "#4588DF" : "#00000000", borderColor: textColor }]}
+                            >
+                                <Text numberOfLines={1} style={{ fontSize: 16, fontWeight: 500 }}>{button}</Text>
+                                <FontAwesome6
+                                    name={button ===
+                                        "Borrowed"
+                                        ? "credit-card"
+                                        : "money-bills"}
+                                    color={textColor}
+                                    size={24}
+                                />
+                            </TouchableOpacity>
+                        ))
+                    }
+                </SafeAreaView>
             </SafeAreaView>
 
             <SafeAreaView style={styles.flex_col}>
@@ -102,9 +106,21 @@ const styles = StyleSheet.create({
         alignContent: "center",
         justifyContent: "space-between",
     },
+    buttonsBackground: {
+        padding: 20,
+        borderRadius: 15,
+        marginBottom: 15
+    },
     button: {
         padding: 10,
         paddingHorizontal: 15,
-        borderRadius: 10
-    }
+        borderRadius: 10,
+        borderWidth: 1
+    },
+    boldText: {
+        fontSize: 18,
+        fontWeight: 600,
+        textAlign: "left",
+        marginBottom: 20,
+    },
 })

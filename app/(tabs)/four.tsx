@@ -1,4 +1,4 @@
-import { Platform, RefreshControl, StatusBar, StyleSheet, TouchableOpacity, } from 'react-native'
+import { Image, Platform, RefreshControl, StatusBar, StyleSheet, TouchableOpacity, } from 'react-native'
 import React, { useState } from 'react'
 import { Text, View } from '@/components/Themed'
 import { useColorScheme } from "@/components/useColorScheme";
@@ -10,6 +10,9 @@ import { ScrollView } from 'react-native';
 import ExchangedRecords from '@/components/Four/ExchangedRecords';
 import { useAnalytics } from '@/context/analytics';
 import { useUserData } from '@/context/user';
+import Header from '@/components/Header';
+
+const GradientImage = require("@/assets/pages/gradientBg.png");
 
 const Four = () => {
     const colorScheme = useColorScheme();
@@ -51,11 +54,22 @@ const Four = () => {
                 { backgroundColor: colorScheme === "dark" ? "#1C1C1C" : "#EDEDED" },
             ]}
         >
-            <StatusBar backgroundColor={"transparent"} />
-            <View style={styles.bodyContainer}>
-                {/* <Header showSlider={showSlider} /> */}
+            <Image
+                source={GradientImage}
+                style={{
+                    position: "absolute",
+                    zIndex: 0,
+                    height: 180,
+                    objectFit: "cover",
+                }}
+            />
 
-                <SafeAreaView style={[styles.flex_row, { marginTop: statusBarHeight + 10, marginBottom: 15 }]}>
+            <StatusBar backgroundColor={"transparent"} />
+
+            <View style={styles.bodyContainer}>
+                <Header showSlider={showSlider} />
+
+                {/* <SafeAreaView style={[styles.flex_row, { marginTop: statusBarHeight + 10, marginBottom: 15 }]}>
                     <TouchableOpacity activeOpacity={0.5} onPress={() => showSlider()}>
                         <FontAwesome
                             name="bars"
@@ -67,7 +81,7 @@ const Four = () => {
                         />
                     </TouchableOpacity>
                     <Text style={styles.headerText}>Shared Records</Text>
-                </SafeAreaView>
+                </SafeAreaView> */}
 
                 <Slider isVisible={sliderVisible} hideSlider={hideSlider} />
 

@@ -34,7 +34,7 @@ const ExpandableCard = ({ people, transactions }: { people: People, transactions
 
     const [expand, setExpland] = useState(false);
 
-    const totalBalance = transactions.reduce((sum, curr) => sum += curr.amount, 0)
+    const totalBalance = transactions.reduce((sum, curr) => sum += curr.amount, 0);
 
     return (
         <View style={styles.card}>
@@ -91,8 +91,8 @@ const TableRow = ({ txn, balance }: { txn: Transaction, balance: number }) => {
     return (
         <SafeAreaView style={styles.flex_row_btw}>
             <Text style={{ width: "33%", textAlign: "left" }}>{formatDate(txn.createdAt)}</Text>
-            <Text style={{ width: "33%", textAlign: "right" }}>{txn.category.sign} {formatAmount(txn.amount, currencyObj)}</Text>
-            <Text style={{ width: "33%", textAlign: "right" }}>{formatAmount(balance, currencyObj)}</Text>
+            <Text numberOfLines={1} style={{ width: "33%", textAlign: "right" }}>{txn.category.sign} {formatAmount(txn.amount, currencyObj)}</Text>
+            <Text numberOfLines={1} style={{ width: "33%", textAlign: "right" }}>{formatAmount(balance, currencyObj)}</Text>
         </SafeAreaView>
     )
 }
