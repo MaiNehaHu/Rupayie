@@ -1,5 +1,5 @@
 import { SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text } from '../Themed';
 import { useColorScheme } from "@/components/useColorScheme";
 
@@ -7,6 +7,7 @@ import { useUserData } from '@/context/user';
 import ExpandableCard from './ExpandableCard';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { Skeleton } from '../Two/Transactions';
+import { useTransactionsCategory } from '@/context/transCategory';
 
 interface People {
     name: string;
@@ -17,6 +18,7 @@ interface People {
 
 const ExchangedRecords = () => {
     const { transactionsList, peopleList, loadingUserDetails } = useUserData();
+    const { setClickedTransCategory } = useTransactionsCategory()
 
     const colorScheme = useColorScheme();
     const textColor = colorScheme === "dark" ? "#FFF" : "#000";
@@ -24,6 +26,10 @@ const ExchangedRecords = () => {
     const loaderColor = colorScheme === "dark" ? "#2e2e2e" : "#e3e3e3";
 
     const [activeButton, setActiveButton] = useState<string>("Borrowed");
+
+    useEffect(() => {
+        setClickedTransCategory(activeButton);
+    }, [activeButton]);
 
     return (
         <SafeAreaView>

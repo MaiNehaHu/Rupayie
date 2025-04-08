@@ -1,5 +1,5 @@
-import { Image, Platform, RefreshControl, StatusBar, StyleSheet, TouchableOpacity, } from 'react-native'
-import React, { useState } from 'react'
+import { Easing, Image, Platform, RefreshControl, StatusBar, StyleSheet, TouchableOpacity, } from 'react-native'
+import React, { useRef, useState } from 'react'
 import { Text, View } from '@/components/Themed'
 import { useColorScheme } from "@/components/useColorScheme";
 import { SafeAreaView } from 'react-native';
@@ -11,6 +11,11 @@ import ExchangedRecords from '@/components/Four/ExchangedRecords';
 import { useAnalytics } from '@/context/analytics';
 import { useUserData } from '@/context/user';
 import Header from '@/components/Header';
+import AddTransactionButton from '@/components/Two/AddButton';
+import AddTransaction from '@/components/Modals/AddTransaction';
+import { Animated } from 'react-native';
+import MessagePopUp from '@/components/MessagePopUp';
+import { useMessages } from '@/context/messages';
 
 const GradientImage = require("@/assets/pages/gradientBg.png");
 
@@ -18,9 +23,11 @@ const Four = () => {
     const colorScheme = useColorScheme();
     const { fetchAnalytics } = useAnalytics();
     const { fetchUserDetails } = useUserData();
+    const { error, setError, messageText, setMessageText } = useMessages()
 
     const [sliderVisible, setSliderVisible] = useState(false);
     const [refresh, setRefresh] = useState(false);
+    const [showAddModal, setShowAddModal] = useState(false);
 
     async function refreshPage() {
         setRefresh(true);
@@ -44,8 +51,28 @@ const Four = () => {
         setSliderVisible(false);
     }
 
-    const statusBarHeight = Platform.OS === "ios" ? getStatusBarHeight() : StatusBar.currentHeight || 36;
-    const textColor = colorScheme === "dark" ? "#fff" : "#000";
+    const slideModalAnim = useRef(new Animated.Value(200)).current; // Start position off-screen
+
+    const handleCloseModal = () => {
+        Animated.timing(slideModalAnim, {
+            toValue: 700, // Move back down off-screen
+            duration: 200,
+            easing: Easing.in(Easing.ease),
+            useNativeDriver: true,
+        }).start(() => {
+            setShowAddModal(false);
+        });
+    };
+
+    const openModal = () => {
+        setShowAddModal(true);
+        Animated.timing(slideModalAnim, {
+            toValue: 0, // Slide up to show the modal
+            duration: 300,
+            easing: Easing.out(Easing.ease),
+            useNativeDriver: true,
+        }).start();
+    };
 
     return (
         <View
@@ -54,6 +81,13 @@ const Four = () => {
                 { backgroundColor: colorScheme === "dark" ? "#1C1C1C" : "#EDEDED" },
             ]}
         >
+            <MessagePopUp
+                error={error}
+                messageText={messageText}
+                setError={setError}
+                setMessageText={setMessageText}
+            />
+
             <Image
                 source={GradientImage}
                 style={{
@@ -96,6 +130,14 @@ const Four = () => {
                     style={styles.paddings}>
                     <ExchangedRecords />
                 </ScrollView>
+
+                <AddTransactionButton handleClick={openModal} />
+
+                <AddTransaction
+                    isVisible={showAddModal}
+                    slideModalAnim={slideModalAnim}
+                    handleCloseModal={handleCloseModal}
+                />
             </View>
         </View>
     )
