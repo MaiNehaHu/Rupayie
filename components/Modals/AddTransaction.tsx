@@ -187,7 +187,7 @@ const AddTransaction = ({
   useEffect(() => {
     setCategory(filteredCategories[0]);
     setPerson(peopleList[0])
-  }, [clickedTransCategory, loadingCategories]);
+  }, [clickedTransCategory, loadingCategories, loadingUserDetails]);
 
   useEffect(() => {
     setShowError(false);

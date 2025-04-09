@@ -1,6 +1,6 @@
 import { Easing, Image, RefreshControl, StatusBar, StyleSheet } from 'react-native'
 import { Animated } from 'react-native';
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Text, View } from '@/components/Themed'
 import { useColorScheme } from "@/components/useColorScheme";
 
@@ -15,6 +15,7 @@ import AddTransaction from '@/components/Modals/AddTransaction';
 import { useUserData } from '@/context/user';
 import { useMessages } from '@/context/messages';
 import { useAnalytics } from '@/context/analytics';
+import { useTransactionsCategory } from '@/context/transCategory';
 
 const GradientImage = require("@/assets/pages/gradientBg.png");
 
@@ -22,6 +23,7 @@ const Four = () => {
     const colorScheme = useColorScheme();
     const { fetchAnalytics } = useAnalytics();
     const { fetchUserDetails } = useUserData();
+    const { setClickedTransCategory, sharedCategory } = useTransactionsCategory()
     const { error, setError, messageText, setMessageText } = useMessages()
 
     const [sliderVisible, setSliderVisible] = useState(false);
@@ -64,6 +66,8 @@ const Four = () => {
     };
 
     const openModal = () => {
+        setClickedTransCategory(sharedCategory);
+
         setShowAddModal(true);
         Animated.timing(slideModalAnim, {
             toValue: 0, // Slide up to show the modal

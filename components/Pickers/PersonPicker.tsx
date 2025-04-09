@@ -119,7 +119,7 @@ const PersonPicker = ({
           ]}
         >
           <Ionicons name="person" color={textColor} size={14} />
-          <Text numberOfLines={1}>{person.name} : {person.relation}</Text>
+          <Text numberOfLines={1}>{person?.name} : {person?.relation}</Text>
         </TouchableOpacity>
       ) : (
         <TouchableOpacity
