@@ -177,7 +177,7 @@ const ReadTransaction = ({
       new Date(transaction.createdAt).toISOString() &&
       JSON.stringify(people) === JSON.stringify(transaction.people) &&
       JSON.stringify(category) === JSON.stringify(transaction.category)
-      // && imageURI === transaction.image
+      && category.sign === status
     )
       return true;
 
