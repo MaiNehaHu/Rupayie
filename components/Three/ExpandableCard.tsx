@@ -39,6 +39,14 @@ const ExpandableCard = ({ people, transactions }: { people: People, transactions
         .reduce((sum, curr) =>
             sum += curr.category.sign === "+" ? curr.amount : -curr.amount, 0);
 
+    const totalTaken = transactions
+        .reduce((sum: number, acc: Transaction) =>
+            sum += acc.category.sign == "+" ? acc.amount : 0, 0);
+
+    const totalGiven = transactions
+        .reduce((sum: number, acc: Transaction) =>
+            sum += acc.category.sign == "-" ? acc.amount : 0, 0)
+
     return (
         <View style={styles.card}>
             <TouchableOpacity
@@ -84,6 +92,12 @@ const ExpandableCard = ({ people, transactions }: { people: People, transactions
 
                         return acc;
                     }, [])}
+
+                    <SafeAreaView style={[styles.flex_row_btw, { borderTopColor: "#888", borderTopWidth: 0.5, paddingTop: 5 }]}>
+                        <Text style={[styles.tableHeader, { textAlign: "left" }]}>Total</Text>
+                        <Text style={[styles.tableHeader, { textAlign: "right" }]}>{formatAmount(totalTaken, currencyObj)}</Text>
+                        <Text style={[styles.tableHeader, { textAlign: "right" }]}>{formatAmount(totalGiven, currencyObj)}</Text>
+                    </SafeAreaView>
                 </SafeAreaView>
             }
         </View>

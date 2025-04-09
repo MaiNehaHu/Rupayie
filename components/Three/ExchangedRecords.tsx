@@ -24,7 +24,7 @@ const ExchangedRecords = () => {
     const loaderColor = colorScheme === "dark" ? "#2e2e2e" : "#e3e3e3";
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{ marginBottom: 30 }}>
             <SafeAreaView style={styles.flex_col}>
                 {loadingUserDetails ?
                     <Skeleton loaderColor={loaderColor} />
