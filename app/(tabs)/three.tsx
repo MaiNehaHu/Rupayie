@@ -1,132 +1,176 @@
-import { ScrollView, StyleSheet, RefreshControl, Platform, SafeAreaView, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import { Easing, Image, RefreshControl, StatusBar, StyleSheet } from 'react-native'
+import { Animated } from 'react-native';
+import React, { useRef, useState } from 'react'
+import { Text, View } from '@/components/Themed'
 import { useColorScheme } from "@/components/useColorScheme";
 
-import { Text, View } from "@/components/Themed";
-// import Header from "@/components/Header";
+import Slider from '../slider';
+import { ScrollView } from 'react-native';
+import Header from '@/components/Header';
+import MessagePopUp from '@/components/MessagePopUp';
+import AddTransactionButton from '@/components/Two/AddButton';
+import ExchangedRecords from '@/components/Three/ExchangedRecords';
+import CategorySelector from '@/components/Three/CategorySelector';
+import AddTransaction from '@/components/Modals/AddTransaction';
+import { useUserData } from '@/context/user';
+import { useMessages } from '@/context/messages';
+import { useAnalytics } from '@/context/analytics';
 
-import { useAnalytics } from "@/context/analytics";
-import { StatusBar } from "react-native";
-import { useUserData } from "@/context/user";
-import Slider from "../slider";
-import Filter from "@/components/Filter";
-import AllTypesDonut from "@/components/Three/AllTypesDonut";
-import TypesIndicator from "@/components/Three/TypesIndicators";
-import TypesSquares from "@/components/Three/TypesSquares";
-import { getStatusBarHeight } from "react-native-status-bar-height";
-import { FontAwesome } from "@expo/vector-icons";
+const GradientImage = require("@/assets/pages/gradientBg.png");
 
-// const GradientImage = require("@/assets/pages/gradientBg.png");
+const Four = () => {
+    const colorScheme = useColorScheme();
+    const { fetchAnalytics } = useAnalytics();
+    const { fetchUserDetails } = useUserData();
+    const { error, setError, messageText, setMessageText } = useMessages()
 
-export default function TabThreeScreen() {
-  const colorScheme = useColorScheme();
-  const { fetchAnalytics } = useAnalytics();
-  const { fetchUserDetails } = useUserData();
+    const [sliderVisible, setSliderVisible] = useState(false);
+    const [refresh, setRefresh] = useState(false);
+    const [showAddModal, setShowAddModal] = useState(false);
 
-  const [refresh, setRefresh] = useState(false);
-  const [sliderVisible, setSliderVisible] = useState(false);
+    async function refreshPage() {
+        setRefresh(true);
 
-  async function refreshPage() {
-    setRefresh(true);
+        try {
+            console.log("Fetching on Reload");
 
-    try {
-      console.log("Fetching on Reload");
-
-      await fetchUserDetails();
-      await fetchAnalytics();
-    } catch (error) {
-      console.error("Error Refreshing: ", error);
-    } finally {
-      setRefresh(false);
+            await fetchUserDetails();
+            await fetchAnalytics();
+        } catch (error) {
+            console.error("Error Refreshing: ", error);
+        } finally {
+            setRefresh(false);
+        }
     }
-  }
 
-  function showSlider() {
-    setSliderVisible(true);
-  }
-  function hideSlider() {
-    setSliderVisible(false);
-  }
+    function showSlider() {
+        setSliderVisible(true);
+    }
+    function hideSlider() {
+        setSliderVisible(false);
+    }
 
-  const statusBarHeight = Platform.OS === "ios" ? getStatusBarHeight() : StatusBar.currentHeight || 36;
-  const textColor = colorScheme === "dark" ? "#fff" : "#000";
+    const slideModalAnim = useRef(new Animated.Value(200)).current; // Start position off-screen
 
-  return (
-    <View
-      style={[
-        styles.conatiner,
-        { backgroundColor: colorScheme === "dark" ? "#1C1C1C" : "#EDEDED" },
-      ]}
-    >
-      <StatusBar backgroundColor={"transparent"} />
+    const handleCloseModal = () => {
+        Animated.timing(slideModalAnim, {
+            toValue: 700, // Move back down off-screen
+            duration: 200,
+            easing: Easing.in(Easing.ease),
+            useNativeDriver: true,
+        }).start(() => {
+            setShowAddModal(false);
+        });
+    };
 
-      <View style={styles.bodyContainer}>
-        {/* <Header showSlider={showSlider} /> */}
+    const openModal = () => {
+        setShowAddModal(true);
+        Animated.timing(slideModalAnim, {
+            toValue: 0, // Slide up to show the modal
+            duration: 300,
+            easing: Easing.out(Easing.ease),
+            useNativeDriver: true,
+        }).start();
+    };
 
-        <SafeAreaView style={[styles.flex_row, { marginTop: statusBarHeight + 10, marginBottom: 15 }]}>
-          <TouchableOpacity activeOpacity={0.5} onPress={() => showSlider()}>
-            <FontAwesome
-              name="bars"
-              size={22}
-              style={{
-                color: textColor,
-                marginHorizontal: 15,
-              }}
-            />
-          </TouchableOpacity>
-          <Text style={styles.headerText}>Analytics</Text>
-        </SafeAreaView>
-
-        <Slider isVisible={sliderVisible} hideSlider={hideSlider} />
-
-        <Filter tabTwoFlag={false} />
-
-        <ScrollView
-          refreshControl={
-            <RefreshControl
-              refreshing={refresh}
-              onRefresh={() => refreshPage()}
-              colors={["#000"]}
-            />
-          }
-          style={styles.paddings}
+    return (
+        <View
+            style={[
+                styles.conatiner,
+                { backgroundColor: colorScheme === "dark" ? "#1C1C1C" : "#EDEDED" },
+            ]}
         >
-          <AllTypesDonut />
+            <MessagePopUp
+                error={error}
+                messageText={messageText}
+                setError={setError}
+                setMessageText={setMessageText}
+            />
 
-          <TypesIndicator />
+            <Image
+                source={GradientImage}
+                style={{
+                    position: "absolute",
+                    zIndex: 0,
+                    height: 160,
+                    objectFit: "cover",
+                }}
+            />
 
-          <TypesSquares />
-        </ScrollView>
-      </View>
-    </View>
-  );
+            <StatusBar backgroundColor={"transparent"} />
+
+            <View style={styles.bodyContainer}>
+                <Header showSlider={showSlider} />
+
+                {/* <SafeAreaView style={[styles.flex_row, { marginTop: statusBarHeight + 10, marginBottom: 15 }]}>
+                    <TouchableOpacity activeOpacity={0.5} onPress={() => showSlider()}>
+                        <FontAwesome
+                            name="bars"
+                            size={22}
+                            style={{
+                                color: textColor,
+                                marginHorizontal: 15,
+                            }}
+                        />
+                    </TouchableOpacity>
+                    <Text style={styles.headerText}>Shared Records</Text>
+                </SafeAreaView> */}
+
+                <Slider isVisible={sliderVisible} hideSlider={hideSlider} />
+
+                <CategorySelector />
+
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refresh}
+                            onRefresh={() => refreshPage()}
+                            colors={["#000"]}
+                        />
+                    }
+                    style={styles.paddings}>
+                    <ExchangedRecords />
+                </ScrollView>
+
+                <AddTransactionButton handleClick={openModal} />
+
+                <AddTransaction
+                    isVisible={showAddModal}
+                    slideModalAnim={slideModalAnim}
+                    handleCloseModal={handleCloseModal}
+                />
+            </View>
+        </View>
+    )
 }
 
+export default Four
+
 const styles = StyleSheet.create({
-  conatiner: {
-    flex: 1,
-  },
-  bodyContainer: {
-    flex: 1,
-    position: "relative",
-    backgroundColor: "transparent",
-  },
-  paddings: {
-    padding: 15,
-    paddingTop: 0,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  headerText: {
-    fontWeight: 600,
-    fontSize: 22,
-    marginTop: -5,
-  },
-  flex_row: {
-    display: "flex",
-    flexDirection: "row",
-    gap: 15
-  }
-});
+    conatiner: {
+        flex: 1,
+    },
+    bodyContainer: {
+        flex: 1,
+        position: "relative",
+        backgroundColor: "transparent",
+    },
+    paddings: {
+        padding: 15,
+        paddingTop: 0,
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: "bold",
+    },
+    headerText: {
+        fontWeight: 600,
+        fontSize: 22,
+        marginTop: -5,
+    },
+    flex_row: {
+        display: "flex",
+        flexDirection: "row",
+        gap: 15
+    }
+})

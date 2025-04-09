@@ -92,7 +92,7 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="four"
+          name="three"
           options={{
             title: "Shared",
             tabBarIcon: ({ focused }) => (
@@ -104,7 +104,7 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="three"
+          name="four"
           options={{
             title: "Graphs",
             tabBarIcon: ({ focused }) => (

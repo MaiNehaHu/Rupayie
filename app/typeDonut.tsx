@@ -1,8 +1,8 @@
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useEffect } from "react";
-import CategoryChart from "@/components/Three/CategoryChart";
-import CategoryIndicators from "@/components/Three/CategoryIndicators";
-import CategoryTransactions from "@/components/Three/CategoryTransactions";
+import CategoryChart from "@/components/Four/CategoryChart";
+import CategoryIndicators from "@/components/Four/CategoryIndicators";
+import CategoryTransactions from "@/components/Four/CategoryTransactions";
 import { useColorScheme } from "@/components/useColorScheme";
 import { useNavigation } from "expo-router";
 import { useTransactionsCategory } from "@/context/transCategory";
