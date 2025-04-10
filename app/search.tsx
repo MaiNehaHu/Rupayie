@@ -187,7 +187,7 @@ const Search = () => {
             {searchResultList
               .map((txn: Transaction) => (
                 <TouchableOpacity
-                  key={txn.createdAt.toString()}
+                  key={`${txn.createdAt.toString()}-${txn._id}`}
                   activeOpacity={0.6}
                   onPress={() => handleTransView(txn)}
                 >
