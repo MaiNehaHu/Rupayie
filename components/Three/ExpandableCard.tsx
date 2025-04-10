@@ -45,7 +45,9 @@ const ExpandableCard = ({ people, transactions, categoryName }: { people: People
 
     const totalGiven = transactions
         .reduce((sum: number, acc: Transaction) =>
-            sum += acc.category.sign == "-" ? acc.amount : 0, 0)
+            sum += acc.category.sign == "-" ? acc.amount : 0, 0);
+
+    const categoryColor = transactions[0].category.hexColor
 
     return (
         <View style={styles.card}>
@@ -59,7 +61,10 @@ const ExpandableCard = ({ people, transactions, categoryName }: { people: People
                 </SafeAreaView>
 
                 <SafeAreaView style={styles.flex_row_btw}>
-                    <Text numberOfLines={1} style={{ maxWidth: "50%" }}>{categoryName}</Text>
+                    <SafeAreaView style={[styles.flex_row, { maxWidth: "50%" }]}>
+                        <View style={{ width: 10, height: 10, borderRadius: 20, backgroundColor: categoryColor }} />
+                        <Text numberOfLines={1}>{categoryName}</Text>
+                    </SafeAreaView>
                     <FontAwesome6
                         size={16}
                         color={textColor}
@@ -128,6 +133,12 @@ const styles = StyleSheet.create({
     flex_col: {
         display: "flex",
         gap: 7,
+    },
+    flex_row: {
+        gap: 7,
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
     },
     flex_row_btw: {
         display: "flex",
