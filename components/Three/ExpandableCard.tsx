@@ -26,7 +26,7 @@ interface Transaction {
     };
 }
 
-const ExpandableCard = ({ people, transactions }: { people: People, transactions: Transaction[] }) => {
+const ExpandableCard = ({ people, transactions, categoryName }: { people: People, transactions: Transaction[], categoryName: string }) => {
     const { name, relation } = people;
 
     const { currencyObj } = useUserData();
@@ -59,7 +59,7 @@ const ExpandableCard = ({ people, transactions }: { people: People, transactions
                 </SafeAreaView>
 
                 <SafeAreaView style={styles.flex_row_btw}>
-                    <Text numberOfLines={1} style={{ maxWidth: "50%" }}>{relation}</Text>
+                    <Text numberOfLines={1} style={{ maxWidth: "50%" }}>{categoryName}</Text>
                     <FontAwesome6
                         size={16}
                         color={textColor}
