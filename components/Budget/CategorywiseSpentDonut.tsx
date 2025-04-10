@@ -158,16 +158,18 @@ const OneDonut = ({
         strokeLinecap="butt"
       />
 
-      <SvgText
-        x={center}
-        y={center + 2}
-        fontSize="18"
-        fill={textColor}
-        textAnchor="middle"
-        fontWeight="400"
-      >
-        {formatAmount(totalAmountSpent, currencyObj)}
-      </SvgText>
+      {totalAmountSpent > 0 &&
+        <SvgText
+          x={center}
+          y={center + 2}
+          fontSize="18"
+          fill={textColor}
+          textAnchor="middle"
+          fontWeight="400"
+        >
+          {formatAmount(totalAmountSpent, currencyObj)}
+        </SvgText>
+      }
 
       {!placeholder && percentage > 5 && (
         <>
@@ -208,7 +210,7 @@ const OneDonut = ({
         <SvgText
           x={center}
           y={center + 5}
-          fontSize="16"
+          fontSize="20"
           fill={textColor}
           textAnchor="middle"
         >
