@@ -287,7 +287,7 @@ const EditBudget = () => {
               {budgetDeleting ? (
                 <ActivityIndicator size="small" color={"#FFF"} />
               ) : (
-                <FontAwesome6 name="trash" size={18} color={textColor} />
+                <FontAwesome6 name="trash" size={18} color={"#FFF"} />
               )}
             </TouchableOpacity>
 
