@@ -15,6 +15,8 @@ import { formatAmount } from "@/utils/formatAmount";
 import formatDateTimeSimple from "@/utils/formatDateTimeSimple";
 import { FontAwesome6 } from "@expo/vector-icons";
 import ReadTransaction from "@/components/Modals/ReadTransaction";
+import { TransactionCard } from "@/components/TransactionCard";
+import { useTransactionsCategory } from "@/context/transCategory";
 
 interface Transaction {
   _id: string;
@@ -41,6 +43,8 @@ interface Transaction {
 
 const Search = () => {
   const { categoriesList, transactionsList } = useUserData();
+  const { setClickedTransCategory } = useTransactionsCategory();
+
   const colorScheme = useColorScheme();
   const bgColor = colorScheme === "dark" ? "#1C1C1C" : "#EDEDED";
   const textColor = colorScheme === "dark" ? "#FFF" : "#000";
@@ -112,6 +116,8 @@ const Search = () => {
     setCategory(
       categoriesList?.filter((categ: any) => categ.type === type)[0]?.name
     );
+
+    setClickedTransCategory(type)
   }, [type]);
 
   return (
@@ -177,15 +183,18 @@ const Search = () => {
 
       <ScrollView style={{ marginTop: 10 }}>
         {searchResultList?.length > 0 ? (
-          searchResultList.map((txn: Transaction) => (
-            <TouchableOpacity
-              key={txn.createdAt.toString()}
-              activeOpacity={0.6}
-              onPress={() => handleTransView(txn)}
-            >
-              <TransactionCard {...txn} />
-            </TouchableOpacity>
-          ))
+          <SafeAreaView style={styles.flex_col}>
+            {searchResultList
+              .map((txn: Transaction) => (
+                <TouchableOpacity
+                  key={txn.createdAt.toString()}
+                  activeOpacity={0.6}
+                  onPress={() => handleTransView(txn)}
+                >
+                  <TransactionCard {...txn} />
+                </TouchableOpacity>
+              ))}
+          </SafeAreaView>
         ) : (
           <>
             <Text style={{ textAlign: "center", marginTop: 40 }}>
@@ -209,97 +218,6 @@ const Search = () => {
           handleCloseModal={handleCloseModal}
           transaction={clickedTransaction}
         />
-      )}
-    </View>
-  );
-};
-
-const TransactionCard = ({
-  _id,
-  note,
-  amount,
-  category,
-  status,
-  pushedIntoTransactions,
-  image,
-  createdAt,
-  people,
-}: Transaction) => {
-  const { currencyObj } = useUserData();
-  const colorScheme = useColorScheme();
-  const iconColor = colorScheme === "dark" ? "#FFF" : "#000";
-  const lightText = colorScheme == "dark" ? "#D9D9D9" : "#5C5C5C";
-
-  const isRecurring =
-    (pushedIntoTransactions == false || pushedIntoTransactions == true) &&
-    pushedIntoTransactions !== undefined;
-
-  return (
-    <View style={styles.transactionsCard}>
-      <SafeAreaView style={styles.flex_row_end_btw}>
-        {/* Category */}
-        <SafeAreaView style={[styles.flex_row, { maxWidth: "50%" }]}>
-          <View
-            style={[
-              styles.categoryCircle,
-              { backgroundColor: category.hexColor },
-            ]}
-          ></View>
-
-          <Text style={styles.text} numberOfLines={1}>{category?.name}</Text>
-        </SafeAreaView>
-
-        {/* Amount */}
-        <Text style={[styles.text, { maxWidth: "40%" }]}>{formatAmount(amount, currencyObj)}</Text>
-      </SafeAreaView>
-
-      <SafeAreaView
-        style={[
-          styles.flex_row_end_btw,
-          { marginTop: 7 },
-          { paddingBottom: isRecurring ? 7 : 12, marginTop: 7 },
-        ]}
-      >
-        {/* Note */}
-        <SafeAreaView style={{ width: "60%" }}>
-          <Text numberOfLines={1} style={styles.smallText}>
-            {note}
-          </Text>
-        </SafeAreaView>
-
-        {/* Date */}
-        <Text style={styles.createdAtText}>
-          {formatDateTimeSimple(createdAt)}
-        </Text>
-      </SafeAreaView>
-
-      {/* Image */}
-      {/* {image && (
-        <SafeAreaView style={styles.imageContainer}>
-          <Image source={{ uri: image }} style={styles.image} />
-        </SafeAreaView>
-      )} */}
-
-      {/* Auto added */}
-      {isRecurring && (
-        <>
-          <SafeAreaView
-            style={[
-              styles.flex_row,
-              styles.recurring,
-              { backgroundColor: `${category.hexColor}60` },
-            ]}
-          >
-            <FontAwesome6
-              name="repeat"
-              size={12}
-              style={{ color: iconColor }}
-            />
-            <Text style={[styles.smallItalicText, { color: lightText }]}>
-              Auto added by recurring
-            </Text>
-          </SafeAreaView>
-        </>
       )}
     </View>
   );
@@ -340,6 +258,11 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
+  },
+  flex_col: {
+    gap: 10,
+    display: "flex",
+    flexDirection: "column",
   },
   categoryCircle: {
     width: 15,
